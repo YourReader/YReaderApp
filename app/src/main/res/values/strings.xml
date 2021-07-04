@@ -1,0 +1,9 @@
+<resources>
+    <string name="app_name">YourReader</string>
+    <string name="yourreader">YourReader</string>
+    <string name="easily_listen_anything_you_want_to_read">Easily Listen anything you want to read</string>
+    <string name="continue_with_id_password">Continue with ID Password</string>
+    <string name="continue_with_google">Continue with Google</string>
+    <string name="signup">SignUp</string>
+    <string name="don_t_have_an_account">Don\'t have an Account?</string>
+</resources>
