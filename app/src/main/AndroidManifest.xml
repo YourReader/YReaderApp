@@ -28,12 +28,7 @@
 
         </activity>
 
-        <queries>
 
-            <intent>
-                <action android:name="android.intent.action.TTS_SERVICE" />
-            </intent>
-        </queries>
 
     </application>
 

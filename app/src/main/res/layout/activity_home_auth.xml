@@ -20,11 +20,14 @@
         android:layout_height="wrap_content"
         android:text="@string/yourreader"
         android:textColor="@color/black"
-        android:layout_gravity="center" 
+        android:layout_gravity="center"
+        android:fontFamily="@font/latoblack"
+
         android:textAlignment="center"
         android:textAllCaps="false"
         android:textSize="22sp"
         android:textStyle="bold"/>
+
 
     <TextView
         android:layout_width="wrap_content"
@@ -36,11 +39,14 @@
         android:textAlignment="center"
         android:textAllCaps="false"
         android:textSize="13sp"
+        android:fontFamily="@font/latobold"
         />
+
+
 
     <Button
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="50dp"
         android:id="@+id/home_mail_btn"
         android:background="@drawable/btn_circular_nor"
         android:textColor="@color/black"
