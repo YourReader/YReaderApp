@@ -2,15 +2,116 @@
 <RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
+    android:theme="@style/Theme.AppTheme"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".activities.LoginActivity">
 
+
+    <de.hdodenhof.circleimageview.CircleImageView
+        android:layout_width="170dp"
+        android:layout_height="170dp"
+        android:src="@drawable/logo"
+        android:layout_marginTop="60dp"
+        android:layout_marginStart="-10dp"
+        android:layout_marginLeft="-10dp"
+        android:id="@+id/lg_preview_logo"/>
+
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Login"
+        android:id="@+id/demo_txt_1"
+        android:text="@string/proceed_with_your"
+        android:layout_below="@id/lg_preview_logo"
+        android:textAlignment="center"
+        android:textAllCaps="false"
+        android:gravity="center_horizontal"
+        android:textSize="22sp"
+        android:layout_marginStart="20dp"
+        android:layout_marginLeft="20dp"
+        android:textColor="@color/black"
+        android:fontFamily="@font/latoblack"
+        />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/demo_txt_2"
+        android:text="@string/login"
+        android:layout_below="@id/demo_txt_1"
+        android:textAlignment="center"
+        android:textColor="@color/black"
+        android:textAllCaps="false"
+        android:gravity="center_horizontal"
+        android:textSize="22sp"
+        android:layout_marginStart="20dp"
+        android:layout_marginLeft="20dp"
+        android:fontFamily="@font/latobold"
+        android:layout_marginTop="10dp"
+
+        />
+    <EditText
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/log_email_edit"
+        android:fontFamily="@font/latoregular"
+        android:layout_marginStart="40dp"
+        android:layout_marginEnd="40dp"
+        android:layout_below="@id/demo_txt_2"
+        android:hint="@string/email"
+        android:textAllCaps="false"
+        android:layout_marginTop="40dp"
+        android:drawableEnd="@drawable/ic_email"
+        android:drawableRight="@drawable/ic_email" />
+
+    <EditText
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/log_pass_edit"
+        android:layout_marginStart="40dp"
+        android:fontFamily="@font/latoregular"
+        android:layout_marginEnd="40dp"
+        android:layout_below="@id/log_email_edit"
+        android:hint="@string/password"
+        android:drawableEnd="@drawable/ic_pass"
+        android:textAllCaps="false"
+        android:layout_marginTop="40dp"
+        android:drawableRight="@drawable/ic_pass" />
+
+    <androidx.appcompat.widget.AppCompatButton
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/btn_login_lg"
+        android:layout_below="@id/log_pass_edit"
+        android:background="@drawable/btn_circular"
+        android:text="@string/login"
+        android:layout_marginStart="40dp"
+        android:layout_marginEnd="40dp"
+        android:layout_marginTop="50dp"
+        android:textColor="@color/white"
+        android:textAllCaps="false"
+        android:textSize="20sp"
+        android:fontFamily="@font/latoregular"
+        />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/forgotpass_log"
+        android:text="@string/forgot_password"
+        android:layout_below="@id/btn_login_lg"
+        android:textAlignment="center"
+        android:textColor="@color/black"
+        android:textAllCaps="false"
+        android:gravity="center_horizontal"
+        android:textSize="13sp"
+        android:layout_marginStart="20dp"
+        android:layout_marginLeft="20dp"
+        android:fontFamily="@font/latoregular"
+        android:layout_marginTop="27dp"
         android:layout_centerHorizontal="true"
-        android:layout_centerVertical="true"/>
+
+        />
+
 
 </RelativeLayout>
