@@ -1,16 +1,15 @@
 package read.code.yourreader.activities
 
 import android.content.Intent
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
+import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.app.AppCompatDelegate
-import com.google.android.gms.auth.api.signin.GoogleSignInClient
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
+import kotlinx.android.synthetic.main.activity_home_auth.*
 import read.code.yourreader.R
-import read.code.yourreader.di.components.DaggerFactoryComponent
-import read.code.yourreader.mvvm.viewmodels.AuthViewModel
+
 
 class HomeAuth : AppCompatActivity() {
     private val TAG = "LoginActivity"
@@ -24,6 +23,13 @@ class HomeAuth : AppCompatActivity() {
 
         mAuth= FirebaseAuth.getInstance()
         checkUser()
+
+        home_no_account.setOnClickListener {
+            sendUserToRegisterActivity()
+        }
+        home_mail_btn.setOnClickListener {
+            sendUserToLoginActivity()
+        }
     }
     override fun onStart() {
         super.onStart()
@@ -47,6 +53,18 @@ class HomeAuth : AppCompatActivity() {
         }
     }
 
+    private fun sendUserToLoginActivity() {
+        Intent(this, LoginActivity::class.java).also {
+            startActivity(it)
+            overridePendingTransition(R.anim.slide_in_right,R.anim.slide_out_left)
+        }
+    }
+    private fun sendUserToRegisterActivity() {
+        Intent(this, RegisterActivity::class.java).also {
+            startActivity(it)
+            overridePendingTransition(R.anim.slide_in_right,R.anim.slide_out_left)
+        }
+    }
     private fun checkUser() {
         mAuth = FirebaseAuth.getInstance()
         currentuser = mAuth.currentUser
@@ -57,5 +75,8 @@ class HomeAuth : AppCompatActivity() {
 
     }
 
-
+    override fun finish() {
+        super.finish()
+        overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right)
+    }
 }
