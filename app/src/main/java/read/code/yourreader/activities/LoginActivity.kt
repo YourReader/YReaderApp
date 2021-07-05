@@ -110,7 +110,7 @@ class LoginActivity : AppCompatActivity() {
         if (currentuser != null) {
             verifiedboolean = currentuser!!.isEmailVerified
             if (verifiedboolean) {
-                sendUserToMainActivity();
+                viewModel.sendUserToMainActivity()
             }
         } else {
             Log.d(TAG, "onStart:Not Verified ")
@@ -118,12 +118,7 @@ class LoginActivity : AppCompatActivity() {
     }
 
 
-    private fun sendUserToMainActivity() {
-        Intent(this, MainActivity::class.java).also {
-            startActivity(it)
-            finish()
-        }
-    }
+
 
 
     override fun finish() {

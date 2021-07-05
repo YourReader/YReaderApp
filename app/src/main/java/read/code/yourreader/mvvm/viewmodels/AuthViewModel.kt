@@ -1,10 +1,12 @@
 package read.code.yourreader.mvvm.viewmodels
 
+import android.content.Intent
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers.IO
 import kotlinx.coroutines.launch
+import read.code.yourreader.activities.MainActivity
 
 import read.code.yourreader.mvvm.repository.AuthRepository
 
@@ -27,6 +29,10 @@ class AuthViewModel(
     fun forgotPassword(email:String)
     {
         repository.forgotPassword(email)
+    }
+
+     fun sendUserToMainActivity() {
+       repository.sendUserToMainActivity()
     }
 
 

@@ -29,5 +29,10 @@ abstract class BaseRepository(private var contextBase: Context) {
 
     }
 
-
+    fun sendUserToMainActivity() {
+        Intent(contextBase, MainActivity::class.java).also {
+            Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_NEW_TASK
+            contextBase.startActivity(it)
+        }
+    }
 }
