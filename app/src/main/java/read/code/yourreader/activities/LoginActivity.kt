@@ -35,7 +35,6 @@ class LoginActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_login)
 
-        //This is INIT
         init()
 
         home_no_account_log.setOnClickListener {
