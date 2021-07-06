@@ -20,7 +20,6 @@ import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.auth.GoogleAuthProvider
 import com.google.firebase.database.FirebaseDatabase
 import kotlinx.android.synthetic.main.activity_home_auth.*
-import kotlinx.android.synthetic.main.activity_login.*
 import read.code.yourreader.R
 import read.code.yourreader.di.components.DaggerFactoryComponent
 import read.code.yourreader.di.modules.FactoryModule
@@ -39,15 +38,14 @@ class HomeAuth : AppCompatActivity() {
     private lateinit var viewModel: AuthViewModel
     private lateinit var component: DaggerFactoryComponent
     private lateinit var googleSignInClient: GoogleSignInClient
+
+    @RequiresApi(Build.VERSION_CODES.KITKAT)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_home_auth)
         AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
 
         init()
-
-
-
 
         home_no_account.setOnClickListener {
             sendUserToRegisterActivity()
@@ -60,11 +58,10 @@ class HomeAuth : AppCompatActivity() {
             signIn()
         }
 
-
     }
 
     @RequiresApi(Build.VERSION_CODES.KITKAT)
-    private fun init(){
+    private fun init() {
         val window: Window = this.window
 
         window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS)
@@ -78,7 +75,7 @@ class HomeAuth : AppCompatActivity() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             window.setStatusBarColor(ContextCompat.getColor(this, R.color.my_statusbar_color))
         }
-        mAuth= FirebaseAuth.getInstance()
+        mAuth = FirebaseAuth.getInstance()
         checkUser()
 
 
@@ -100,6 +97,7 @@ class HomeAuth : AppCompatActivity() {
 
 
     }
+
     override fun onStart() {
         super.onStart()
         mAuth = FirebaseAuth.getInstance()
@@ -118,7 +116,7 @@ class HomeAuth : AppCompatActivity() {
     private fun sendUserToMainActivity() {
         Intent(this, MainActivity::class.java).also {
             startActivity(it)
-            overridePendingTransition(R.anim.slide_in_right,R.anim.slide_out_left)
+            overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left)
             finish()
         }
     }
@@ -126,15 +124,17 @@ class HomeAuth : AppCompatActivity() {
     private fun sendUserToLoginActivity() {
         Intent(this, LoginActivity::class.java).also {
             startActivity(it)
-            overridePendingTransition(R.anim.slide_in_right,R.anim.slide_out_left)
+            overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left)
         }
     }
+
     private fun sendUserToRegisterActivity() {
         Intent(this, RegisterActivity::class.java).also {
             startActivity(it)
-            overridePendingTransition(R.anim.slide_in_right,R.anim.slide_out_left)
+            overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left)
         }
     }
+
     private fun checkUser() {
         mAuth = FirebaseAuth.getInstance()
         currentuser = mAuth.currentUser
@@ -186,7 +186,7 @@ class HomeAuth : AppCompatActivity() {
                     }
                     Intent(this, MainActivity::class.java).also {
                         startActivity(it)
-                        overridePendingTransition(R.anim.slide_in_right,R.anim.slide_out_left)
+                        overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left)
                         finish()
                     }
                 } else {

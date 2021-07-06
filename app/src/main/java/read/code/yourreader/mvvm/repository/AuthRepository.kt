@@ -5,15 +5,12 @@ import android.content.Context
 import android.content.Intent
 import android.util.Log
 import android.widget.Toast
-import androidx.core.content.ContextCompat.startActivity
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.FirebaseDatabase
-import read.code.yourreader.activities.MainActivity
 import read.code.yourreader.activities.LoginActivity
+import read.code.yourreader.activities.MainActivity
 import read.code.yourreader.others.Constants.USERS
 import read.code.yourreader.others.Constants.USER_EMAIL
-import read.code.yourreader.others.Constants.USER_ID
-import read.code.yourreader.others.Constants.USER_NAME
 
 
 class AuthRepository(var context: Context) : BaseRepository(context) {
@@ -28,7 +25,8 @@ class AuthRepository(var context: Context) : BaseRepository(context) {
                 .addOnCompleteListener { task ->
                     if (task.isSuccessful) {
                         if (mAuth.currentUser!!.isEmailVerified) {
-                            Toast.makeText(context, "Signed In as $email", Toast.LENGTH_SHORT).show()
+                            Toast.makeText(context, "Signed In as $email", Toast.LENGTH_SHORT)
+                                .show()
                             Intent(context, MainActivity::class.java).also {
                                 it.flags =
                                     Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_NEW_TASK
@@ -48,21 +46,13 @@ class AuthRepository(var context: Context) : BaseRepository(context) {
 
     }
 
-
     fun forgotPassword(email: String) {
-        if (email.isNotEmpty())
-        {
+        if (email.isNotEmpty()) {
             mAuth.sendPasswordResetEmail(email).addOnCompleteListener {
 
             }
         }
     }
-
-
-
-
-
-
 
     fun register(email: String, password: String) {
         if (email.isNotEmpty() && password.isNotEmpty()) {
@@ -86,7 +76,11 @@ class AuthRepository(var context: Context) : BaseRepository(context) {
                         }
 
                     } else {
-                        Toast.makeText(context, "Something went Wrong Please try again", Toast.LENGTH_SHORT).show()
+                        Toast.makeText(
+                            context,
+                            "Something went Wrong Please try again",
+                            Toast.LENGTH_SHORT
+                        ).show()
                         Log.d(TAG, "login: Login Failed :- ${task.exception}")
                     }
                 }
@@ -95,8 +89,6 @@ class AuthRepository(var context: Context) : BaseRepository(context) {
         }
 
     }
-
-
 
 
 }

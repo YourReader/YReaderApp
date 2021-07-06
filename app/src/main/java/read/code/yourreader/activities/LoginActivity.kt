@@ -37,6 +37,7 @@ class LoginActivity : AppCompatActivity() {
     private var currentuser: FirebaseUser? = null
     private var verifiedboolean = false
     private lateinit var component: DaggerFactoryComponent
+    @RequiresApi(Build.VERSION_CODES.KITKAT)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_login)
@@ -47,6 +48,7 @@ class LoginActivity : AppCompatActivity() {
             sendToRegisterActivity()
         }
 
+        viewModel.shit()
         btn_login_lg.setOnClickListener {
             val email=log_email_edit.text.toString()
             val pass=log_pass_edit.text.toString()
@@ -101,7 +103,8 @@ class LoginActivity : AppCompatActivity() {
 
 
         viewModel =
-            ViewModelProviders.of(this, component.getFactory()).get(AuthViewModel::class.java)
+            ViewModelProviders.of(this, component.getFactory())
+                .get(AuthViewModel::class.java)
     }
 
 
