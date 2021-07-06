@@ -6,4 +6,27 @@
     <string name="continue_with_google">Continue with Google</string>
     <string name="signup">SignUp</string>
     <string name="don_t_have_an_account">Don\'t have an Account?</string>
+    <string name="proceed_with_your">Proceed with your</string>
+    <string name="login">Login</string>
+    <string name="username">Username</string>
+    <string name="password">Password</string>
+    <string name="email">Email</string>
+    <string name="forgot_password">Forgot Password?</string>
+    <string name="back">Back</string>
+    <string name="registration">Registration</string>
+    <string name="already_have_an_account">Already have an account?</string>
+    <string name="signin">SignIn</string>
+    <string name="register">Register</string>
+    <string name="or_continue_with">Or Continue with</string>
+    <string name="signout">signOut</string>
+    <string name="reading_now">Reading Now</string>
+    <string name="books_and_documents">Books and Documents</string>
+    <string name="have_read">Have Read</string>
+    <string name="formats">Formats</string>
+    <string name="folders">Folders</string>
+    <string name="downlaods">Downlaods</string>
+    <string name="settings">Settings</string>
+    <string name="send_feedback">Send Feedback</string>
+    <string name="close">Close</string>
+    <string name="open">Open</string>
 </resources>

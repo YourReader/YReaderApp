@@ -79,10 +79,6 @@ class AuthRepository(var context: Context) : BaseRepository(context) {
                             val user = mAuth.currentUser
                             if (user != null) {
                                 myRef.child(user.uid).child(USER_EMAIL).setValue(email)
-                                myRef.child(user.uid).child(USER_NAME).setValue(
-                                    user.displayName ?: " "
-                                )
-                                myRef.child(user.uid).child(USER_ID).setValue(user.uid)
                             }
                             Intent(context, LoginActivity::class.java).also {
                                 context.startActivity(it)
@@ -90,9 +86,7 @@ class AuthRepository(var context: Context) : BaseRepository(context) {
                         }
 
                     } else {
-                        Intent(context, LoginActivity::class.java).also {
-                            context.startActivity(it)
-                        }
+                        Toast.makeText(context, "Something went Wrong Please try again", Toast.LENGTH_SHORT).show()
                         Log.d(TAG, "login: Login Failed :- ${task.exception}")
                     }
                 }

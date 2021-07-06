@@ -5,6 +5,7 @@ import android.content.Intent
 import androidx.core.content.ContextCompat.startActivity
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.FirebaseDatabase
+import read.code.yourreader.R
 import read.code.yourreader.activities.HomeAuth
 import read.code.yourreader.activities.MainActivity
 import read.code.yourreader.others.Constants
@@ -35,4 +36,6 @@ abstract class BaseRepository(private var contextBase: Context) {
             contextBase.startActivity(it)
         }
     }
+
+
 }

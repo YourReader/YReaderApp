@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <group>
+
+
+    <item
+        android:title="@string/reading_now"
+        android:icon="@drawable/ic_reading_now"
+        android:id="@+id/reading_now"/>
+    <item
+        android:title="@string/books_and_documents"
+        android:icon="@drawable/ic_books"
+        android:id="@+id/books_docu"/>
+    <item
+        android:title="@string/have_read"
+        android:id="@+id/menu_haveread"
+        />
+    <item
+        android:id="@+id/formats_menu"
+        android:title="@string/formats"
+        android:icon="@drawable/ic_format"
+        />
+
+    <item
+        android:title="@string/folders"
+        android:id="@+id/menu_Folders"
+        android:icon="@drawable/ic_folders"
+        />
+    <item
+        android:title="@string/downlaods"
+        android:id="@+id/menu_Downlaods"
+        android:icon="@drawable/ic_download"
+        />
+    </group>
+    <group>
+    <item
+        android:title="@string/settings"
+        android:id="@+id/menu_settings"
+        android:icon="@drawable/ic_settings">
+
+    </item>
+        <item android:title="@string/send_feedback"
+            android:id="@+id/menu_feedback"
+            android:icon="@drawable/ic_feedback">
+
+        </item>
+    </group>
+
+
+
+
+</menu>

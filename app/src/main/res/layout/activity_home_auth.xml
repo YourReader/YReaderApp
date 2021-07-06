@@ -20,11 +20,15 @@
         android:layout_height="wrap_content"
         android:text="@string/yourreader"
         android:textColor="@color/black"
-        android:layout_gravity="center" 
+        android:layout_gravity="center"
+        android:fontFamily="@font/montserratregular"
+
+
         android:textAlignment="center"
         android:textAllCaps="false"
         android:textSize="22sp"
         android:textStyle="bold"/>
+
 
     <TextView
         android:layout_width="wrap_content"
@@ -36,17 +40,22 @@
         android:textAlignment="center"
         android:textAllCaps="false"
         android:textSize="13sp"
+        android:fontFamily="@font/montserratregular"
+
         />
+
+
 
     <Button
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="50dp"
         android:id="@+id/home_mail_btn"
         android:background="@drawable/btn_circular_nor"
         android:textColor="@color/black"
         android:layout_marginTop="60dp"
-        android:layout_marginEnd="40dp"
-        android:layout_marginStart="40dp"
+        android:layout_marginEnd="50dp"
+        android:theme="@style/Theme.YourReader"
+        android:layout_marginStart="50dp"
         android:text="@string/continue_with_id_password"
         android:textAllCaps="false"
         android:drawableLeft="@drawable/ic_email" />
@@ -54,12 +63,14 @@
     <Button
         android:layout_width="match_parent"
         android:layout_height="50dp"
-        android:layout_marginStart="40dp"
+        android:id="@+id/G_home_auth"
+        android:layout_marginStart="50dp"
         android:layout_marginTop="20dp"
-        android:layout_marginEnd="40dp"
+        android:layout_marginEnd="50dp"
         android:background="@drawable/btn_circular_nor"
         android:text="@string/continue_with_google"
         android:textAllCaps="false"
+        android:theme="@style/Theme.YourReader"
         android:textColor="@color/black"
         android:drawableLeft="@drawable/googlelogo2"
         />
@@ -70,7 +81,7 @@
         android:id="@+id/home_no_account"
         android:gravity="center|bottom"
         android:layout_gravity="bottom"
-        android:layout_marginTop="50dp"
+        android:layout_marginTop="90dp"
         >
         <TextView
             android:layout_width="wrap_content"

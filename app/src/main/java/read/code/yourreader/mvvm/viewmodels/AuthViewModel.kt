@@ -14,17 +14,14 @@ class AuthViewModel(
     val repository: AuthRepository
 ) : ViewModel() {
 
-    val email: MutableLiveData<String> = MutableLiveData()
 
 
-    val password:MutableLiveData<String> = MutableLiveData()
-
-    fun login() = CoroutineScope(IO).launch {
-        repository.login(email.value.toString(),password.value.toString())
+    fun login(email: String, password:String) = CoroutineScope(IO).launch {
+        repository.login(email,password)
     }
 
-    fun register() = CoroutineScope(IO).launch {
-        repository.register(email.value.toString(),password.value.toString())
+    fun register(email: String, password:String) = CoroutineScope(IO).launch {
+        repository.register(email,password)
     }
     fun forgotPassword(email:String)
     {
