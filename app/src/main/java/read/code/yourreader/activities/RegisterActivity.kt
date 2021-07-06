@@ -32,6 +32,7 @@ class RegisterActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_register)
         AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
+
         init()
 
         btn_reg_lg.setOnClickListener {
@@ -54,7 +55,6 @@ class RegisterActivity : AppCompatActivity() {
         overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right)
     }
 
-    @RequiresApi(Build.VERSION_CODES.KITKAT)
     private fun init(){
         val window: Window = this.window
 

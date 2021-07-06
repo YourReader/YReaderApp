@@ -41,7 +41,7 @@ class LoginActivity : AppCompatActivity() {
             sendToRegisterActivity()
         }
 
-        viewModel.shit()
+
         btn_login_lg.setOnClickListener {
             val email=log_email_edit.text.toString()
             val pass=log_pass_edit.text.toString()
