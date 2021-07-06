@@ -14,6 +14,7 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.auth.GoogleAuthProvider
 import com.google.firebase.database.FirebaseDatabase
+import kotlinx.android.synthetic.main.activity_login.*
 import read.code.yourreader.R
 import read.code.yourreader.di.components.DaggerFactoryComponent
 import read.code.yourreader.di.modules.FactoryModule
@@ -40,6 +41,9 @@ class LoginActivity : AppCompatActivity() {
 
 
 
+        go_back_login.setOnClickListener {
+            sendToHomeActivity()
+        }
 
         component = DaggerFactoryComponent.builder()
             .repositoryModule(RepositoryModule(this))
@@ -58,6 +62,14 @@ class LoginActivity : AppCompatActivity() {
         googleSignInClient = GoogleSignIn.getClient(this, gso)
 
     }
+
+    private fun sendToHomeActivity() {
+        Intent(this, HomeAuth::class.java).also {
+            startActivity(it)
+            overridePendingTransition(R.anim.slide_in_left,R.anim.slide_out_right)
+        }
+    }
+
 
     private fun signIn() {
         val signInIntent = googleSignInClient.signInIntent

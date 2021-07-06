@@ -49,6 +49,7 @@ class HomeAuth : AppCompatActivity() {
     private fun sendUserToMainActivity() {
         Intent(this, MainActivity::class.java).also {
             startActivity(it)
+            overridePendingTransition(R.anim.slide_in_right,R.anim.slide_out_left)
             finish()
         }
     }
