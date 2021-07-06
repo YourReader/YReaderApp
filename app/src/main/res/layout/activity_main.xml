@@ -20,6 +20,7 @@
             <com.google.android.material.appbar.MaterialToolbar
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
+                android:id="@+id/toolbar_main"
                 app:title="Reading Now"
                 app:titleTextColor="@color/white"
                 >
@@ -34,6 +35,8 @@
         android:layout_height="match_parent"
         android:id="@+id/navView"
         app:menu="@menu/menu1"
+
+        android:layout_marginTop="?attr/actionBarSize"
         android:layout_gravity="start"
         android:fitsSystemWindows="true"
         >

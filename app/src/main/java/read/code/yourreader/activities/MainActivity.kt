@@ -108,6 +108,9 @@ class MainActivity : AppCompatActivity(), TextToSpeech.OnInitListener {
         drawerlayout.addDrawerListener(toggle)
         toggle.syncState()
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
+        setSupportActionBar(toolbar_main);
+        supportActionBar?.setDisplayHomeAsUpEnabled(true);
+        supportActionBar?.setHomeButtonEnabled(true);
     }
 
     override fun onInit(status: Int) {
