@@ -32,9 +32,7 @@ class AuthViewModel(
        repository.sendUserToMainActivity()
     }
 
-    fun shit() {
-        repository.shit()
-    }
+
 
 
 }

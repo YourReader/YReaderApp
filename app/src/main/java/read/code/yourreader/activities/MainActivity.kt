@@ -41,6 +41,7 @@ class MainActivity : AppCompatActivity(), TextToSpeech.OnInitListener {
 
         init()
 
+
         navView.setNavigationItemSelectedListener {
             when (it.itemId) {
                 R.id.reading_now -> {
@@ -106,8 +107,12 @@ class MainActivity : AppCompatActivity(), TextToSpeech.OnInitListener {
         toggle.syncState()
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
         setSupportActionBar(toolbar_main);
-        supportActionBar?.setDisplayHomeAsUpEnabled(true);
-        supportActionBar?.setHomeButtonEnabled(true);
+        supportActionBar?.setDisplayHomeAsUpEnabled(true)
+        supportActionBar?.setHomeButtonEnabled(true)
+
+
+
+
     }
 
     override fun onInit(status: Int) {

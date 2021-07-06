@@ -4,6 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:id="@+id/drawerlayout"
+    android:fitsSystemWindows="true"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context=".activities.MainActivity">
 
@@ -38,7 +39,7 @@
         android:layout_height="match_parent"
         android:id="@+id/navView"
         app:menu="@menu/menu1"
-
+        android:background="@color/my_statusbar_color"
         android:layout_marginTop="?attr/actionBarSize"
         android:layout_gravity="start"
         android:fitsSystemWindows="true"
