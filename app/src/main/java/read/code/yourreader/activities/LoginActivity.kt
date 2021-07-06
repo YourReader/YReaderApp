@@ -25,7 +25,6 @@ import read.code.yourreader.mvvm.viewmodels.AuthViewModel
 
 class LoginActivity : AppCompatActivity() {
     private lateinit var viewModel: AuthViewModel
-
     private val TAG = "LoginActivity"
     private lateinit var mAuth: FirebaseAuth
     private var currentuser: FirebaseUser? = null
@@ -36,6 +35,7 @@ class LoginActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_login)
 
+        //This is INIT
         init()
 
         home_no_account_log.setOnClickListener {
