@@ -25,4 +25,8 @@
         <!-- Status bar color. -->
         <!-- Customize your theme here. -->
     </style>
+
+    <style name="ToolbarColoredBackArrow" parent="Theme.AppTheme">
+        <item name="android:textColorSecondary">@color/white</item>
+    </style>
 </resources>

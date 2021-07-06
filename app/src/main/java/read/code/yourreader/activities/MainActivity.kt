@@ -44,28 +44,28 @@ class MainActivity : AppCompatActivity(), TextToSpeech.OnInitListener {
         navView.setNavigationItemSelectedListener {
             when (it.itemId) {
                 R.id.reading_now -> {
-
+                    toolbar_main.title="Reading Now"
                 }
                 R.id.books_docu -> {
-
+                    toolbar_main.title="Books and Documents"
                 }
                 R.id.menu_haveread -> {
-
+                    toolbar_main.title="Have Read"
                 }
                 R.id.formats_menu -> {
-
+                    toolbar_main.title="Formats"
                 }
                 R.id.menu_Folders -> {
-
+                    toolbar_main.title="Folders"
                 }
                 R.id.menu_Downlaods -> {
-
+                    toolbar_main.title="Downloads"
                 }
                 R.id.menu_settings -> {
-
+                    toolbar_main.title="Settings"
                 }
                 R.id.menu_feedback -> {
-
+                    toolbar_main.title="Feedback"
                 }
 
             }
@@ -101,7 +101,7 @@ class MainActivity : AppCompatActivity(), TextToSpeech.OnInitListener {
 
         tts = TextToSpeech(this, this)
 
-        toggle = ActionBarDrawerToggle(this, drawerlayout, R.string.open, R.string.close)
+        toggle = ActionBarDrawerToggle(this, drawerlayout,toolbar_main, R.string.open, R.string.close)
         drawerlayout.addDrawerListener(toggle)
         toggle.syncState()
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
