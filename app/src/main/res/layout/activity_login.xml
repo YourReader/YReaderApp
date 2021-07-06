@@ -179,7 +179,7 @@
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/home_no_account_rege"
+        android:id="@+id/home_no_account_log"
         android:gravity="center|bottom"
         android:layout_gravity="bottom"
         android:layout_marginTop="90dp"

@@ -1,14 +1,22 @@
 package read.code.yourreader.activities
 
+import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.speech.tts.TextToSpeech
 import android.util.Log
+import android.view.MenuItem
+import android.view.Window
+import android.view.WindowManager
 import android.widget.Toast
+import androidx.annotation.RequiresApi
+import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.app.AppCompatDelegate
+import androidx.core.content.ContextCompat
 import androidx.lifecycle.ViewModelProviders
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
+import kotlinx.android.synthetic.main.activity_main.*
 import read.code.yourreader.R
 import read.code.yourreader.di.components.DaggerFactoryComponent
 import read.code.yourreader.di.modules.FactoryModule
@@ -24,18 +32,65 @@ class MainActivity : AppCompatActivity(), TextToSpeech.OnInitListener {
     private var tts:TextToSpeech?=null
     private val TAG = "MainActivity"
     private var currentuser: FirebaseUser? = null
+    lateinit var toggle:ActionBarDrawerToggle
+    @RequiresApi(Build.VERSION_CODES.KITKAT)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
         init()
 
+        navView.setNavigationItemSelectedListener {
+            when(it.itemId)
+            {
+                R.id.reading_now->{
+
+                }
+                R.id.books_docu->{
+
+                }
+                R.id.menu_haveread->{
+
+                }
+                R.id.formats_menu->{
+
+                }
+                R.id.menu_Folders->{
+
+                }
+                R.id.menu_Downlaods->{
+
+                }
+                R.id.menu_settings->{
+
+                }
+                R.id.menu_feedback->{
+
+                }
+
+            }
+            true
+        }
 
 
 
     }
 
+    @RequiresApi(Build.VERSION_CODES.KITKAT)
     private fun init() {
+        val window: Window = this.window
+
+        window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS)
+
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS)
+        }
+
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            window.statusBarColor = ContextCompat.getColor(this, R.color.my_statusbar_color)
+        }
         AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
         mAuth = FirebaseAuth.getInstance()
         component = DaggerFactoryComponent.builder()
@@ -49,6 +104,10 @@ class MainActivity : AppCompatActivity(), TextToSpeech.OnInitListener {
 
         tts= TextToSpeech(this,this)
 
+        toggle= ActionBarDrawerToggle(this,drawerlayout,R.string.open,R.string.close)
+        drawerlayout.addDrawerListener(toggle)
+        toggle.syncState()
+        supportActionBar?.setDisplayHomeAsUpEnabled(true)
     }
 
     override fun onInit(status: Int) {
@@ -76,7 +135,19 @@ class MainActivity : AppCompatActivity(), TextToSpeech.OnInitListener {
         }
         super.onDestroy()
     }
+    @RequiresApi(Build.VERSION_CODES.LOLLIPOP)
     private fun speakOut(text:String){
         tts!!.speak(text,TextToSpeech.QUEUE_FLUSH,null,"")
+    }
+
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+
+        if (toggle.onOptionsItemSelected(item))
+        {
+            return true
+        }
+        return super.onOptionsItemSelected(item)
+
     }
 }
