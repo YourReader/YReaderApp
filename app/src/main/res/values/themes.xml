@@ -28,6 +28,9 @@
         <item name="android:windowTranslucentNavigation" tools:targetApi="kitkat">true</item>
         <!-- Customize your theme here. -->
     </style>
+    <style name="ToolbarColoredBackArrow" parent="Theme.AppTheme">
+        <item name="android:textColorSecondary">@color/white</item>
 
+    </style>
 
 </resources>

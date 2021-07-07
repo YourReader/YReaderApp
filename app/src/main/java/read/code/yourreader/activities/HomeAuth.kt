@@ -74,7 +74,7 @@ class HomeAuth : AppCompatActivity() {
 
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            window.setStatusBarColor(ContextCompat.getColor(this, R.color.my_statusbar_color))
+            window.statusBarColor = ContextCompat.getColor(this, R.color.my_statusbar_color)
         }
         mAuth = FirebaseAuth.getInstance()
         checkUser()
@@ -106,7 +106,7 @@ class HomeAuth : AppCompatActivity() {
         if (currentuser != null) {
             verifiedboolean = currentuser!!.isEmailVerified
             if (verifiedboolean) {
-                sendUserToMainActivity();
+                sendUserToMainActivity()
             }
         } else {
             Log.d(TAG, "onStart:Not Verified ")

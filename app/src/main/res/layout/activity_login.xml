@@ -22,7 +22,7 @@
             android:src="@drawable/ic_back"
             android:id="@+id/bk_img"
             android:layout_centerVertical="true"
-            />
+            android:contentDescription="@string/todo" />
 
         <TextView
             android:layout_width="wrap_content"

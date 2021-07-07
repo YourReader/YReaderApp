@@ -1,5 +1,6 @@
 package read.code.yourreader.activities
 
+import android.content.Intent
 import android.os.Build
 import android.os.Bundle
 import android.speech.tts.TextToSpeech
@@ -46,9 +47,11 @@ class MainActivity : AppCompatActivity(), TextToSpeech.OnInitListener {
             when (it.itemId) {
                 R.id.reading_now -> {
                     toolbar_main.title="Reading Now"
+
                 }
                 R.id.books_docu -> {
                     toolbar_main.title="Books and Documents"
+
                 }
                 R.id.menu_haveread -> {
                     toolbar_main.title="Have Read"
@@ -106,7 +109,7 @@ class MainActivity : AppCompatActivity(), TextToSpeech.OnInitListener {
         drawerlayout.addDrawerListener(toggle)
         toggle.syncState()
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
-        setSupportActionBar(toolbar_main);
+        setSupportActionBar(toolbar_main)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
         supportActionBar?.setHomeButtonEnabled(true)
 
@@ -150,4 +153,6 @@ class MainActivity : AppCompatActivity(), TextToSpeech.OnInitListener {
         return super.onOptionsItemSelected(item)
 
     }
+
+
 }
