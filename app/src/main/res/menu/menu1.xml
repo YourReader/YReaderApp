@@ -15,6 +15,7 @@
     <item
         android:title="@string/have_read"
         android:id="@+id/menu_haveread"
+        android:icon="@drawable/ic_baseline_done_24"
         />
     <item
         android:id="@+id/formats_menu"

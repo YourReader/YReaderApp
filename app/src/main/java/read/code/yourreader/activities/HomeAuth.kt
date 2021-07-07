@@ -1,6 +1,8 @@
 package read.code.yourreader.activities
 
 import android.content.Intent
+import android.content.res.Configuration
+import android.media.VolumeShaper
 import android.os.Build
 import android.os.Bundle
 import android.util.Log
@@ -193,5 +195,23 @@ class HomeAuth : AppCompatActivity() {
                     Log.w(TAG, "signInWithCredential:failure", task.exception)
                 }
             }
+    }
+
+
+    override fun onResume() {
+        super.onResume()
+        var darkflag=resources.configuration.uiMode
+        if (darkflag== Configuration.UI_MODE_NIGHT_YES)
+        {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+                home_auth_ui.isForceDarkAllowed = true
+            }
+        }
+        else{
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+                home_auth_ui.isForceDarkAllowed = false
+            }
+        }
+
     }
 }
