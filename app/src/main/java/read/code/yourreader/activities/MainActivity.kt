@@ -74,7 +74,7 @@ class MainActivity : AppCompatActivity(), TextToSpeech.OnInitListener {
                 }
                 R.id.menu_use -> {
                     toolbar_main.title = "Use"
-                    //fragmentTransition(FeedbackFragment())
+                    fragmentTransition(FeedbackFragment())
                 }
                 R.id.home_menu -> {
                     toolbar_main.title = "Home"
@@ -85,6 +85,12 @@ class MainActivity : AppCompatActivity(), TextToSpeech.OnInitListener {
                     toolbar_main.title = "Downlaods"
                     fragmentTransition(DownloadsFragment())
                 }
+
+                R.id.menu_fav->{
+                    toolbar_main.title = "Favorites"
+                    fragmentTransition(FavoritesFragment())
+                }
+
 
 
 
