@@ -45,7 +45,6 @@ class HomeAuth : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_home_auth)
-       // AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
 
         init()
 
@@ -205,11 +204,14 @@ class HomeAuth : AppCompatActivity() {
         {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
                 home_auth_ui.isForceDarkAllowed = true
+                AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
             }
         }
         else{
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
                 home_auth_ui.isForceDarkAllowed = false
+                AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
+
             }
         }
 
