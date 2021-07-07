@@ -2,7 +2,6 @@ package read.code.yourreader.activities
 
 import android.content.Intent
 import android.content.res.Configuration
-import android.media.VolumeShaper
 import android.os.Build
 import android.os.Bundle
 import android.util.Log
@@ -22,6 +21,8 @@ import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.auth.GoogleAuthProvider
 import com.google.firebase.database.FirebaseDatabase
 import kotlinx.android.synthetic.main.activity_home_auth.*
+import read.code.yourreader.Login.LoginActivity
+import read.code.yourreader.Login.RegisterActivity
 import read.code.yourreader.R
 import read.code.yourreader.di.components.DaggerFactoryComponent
 import read.code.yourreader.di.modules.FactoryModule

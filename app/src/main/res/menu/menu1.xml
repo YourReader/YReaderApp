@@ -4,51 +4,53 @@
     <group>
 
 
-    <item
-        android:title="@string/reading_now"
-        android:icon="@drawable/ic_reading_now"
-        android:id="@+id/reading_now"/>
-    <item
-        android:title="@string/books_and_documents"
-        android:icon="@drawable/ic_books"
-        android:id="@+id/books_docu"/>
-    <item
-        android:title="@string/have_read"
-        android:id="@+id/menu_haveread"
-        android:icon="@drawable/ic_baseline_done_24"
-        />
-    <item
-        android:id="@+id/formats_menu"
-        android:title="@string/formats"
-        android:icon="@drawable/ic_format"
-        />
+        <item
+            android:id="@+id/reading_now"
+            android:icon="@drawable/ic_reading_now"
+            android:title="@string/reading_now" />
+        <item
+            android:id="@+id/books"
+            android:icon="@drawable/ic_books"
+            android:title="@string/books" />
+        <item
+            android:id="@+id/docu"
+            android:icon="@drawable/ic_books"
+            android:title="@string/documents" />
+        <item
+            android:id="@+id/menu_haveread"
+            android:icon="@drawable/ic_baseline_done_24"
+            android:title="@string/have_read" />
 
-    <item
-        android:title="@string/folders"
-        android:id="@+id/menu_Folders"
-        android:icon="@drawable/ic_folders"
-        />
-    <item
-        android:title="@string/downlaods"
-        android:id="@+id/menu_Downlaods"
-        android:icon="@drawable/ic_download"
-        />
+        <!--        What is use of following?
+                    following tabs seems confusing-->
+        <!--        <item-->
+        <!--            android:id="@+id/formats_menu"-->
+        <!--            android:icon="@drawable/ic_format"-->
+        <!--            android:title="@string/formats" />-->
+
+        <!--        <item-->
+        <!--            android:id="@+id/menu_Folders"-->
+        <!--            android:icon="@drawable/ic_folders"-->
+        <!--            android:title="@string/folders" />-->
+        <!--        <item-->
+        <!--            android:id="@+id/menu_Downlaods"-->
+        <!--            android:icon="@drawable/ic_download"-->
+        <!--            android:title="@string/downlaods" />-->
     </group>
     <group>
-    <item
-        android:title="@string/settings"
-        android:id="@+id/menu_settings"
-        android:icon="@drawable/ic_settings">
+        <item
+            android:id="@+id/menu_settings"
+            android:icon="@drawable/ic_settings"
+            android:title="@string/settings">
 
-    </item>
-        <item android:title="@string/send_feedback"
+        </item>
+        <item
             android:id="@+id/menu_feedback"
-            android:icon="@drawable/ic_feedback">
+            android:icon="@drawable/ic_feedback"
+            android:title="@string/send_feedback">
 
         </item>
     </group>
-
-
 
 
 </menu>

@@ -1,22 +1,20 @@
-package read.code.yourreader.activities
+package read.code.yourreader.Login
 
 import android.content.Intent
 import android.os.Build
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
 import android.view.Window
 import android.view.WindowManager
 import androidx.annotation.RequiresApi
-import androidx.appcompat.app.AppCompatDelegate
+import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.ViewModelProviders
-
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
-
 import kotlinx.android.synthetic.main.activity_login.*
 import read.code.yourreader.R
+import read.code.yourreader.activities.HomeAuth
 import read.code.yourreader.di.components.DaggerFactoryComponent
 import read.code.yourreader.di.modules.FactoryModule
 import read.code.yourreader.di.modules.RepositoryModule

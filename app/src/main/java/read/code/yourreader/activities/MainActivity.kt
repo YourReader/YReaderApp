@@ -1,6 +1,5 @@
 package read.code.yourreader.activities
 
-import android.content.Intent
 import android.os.Build
 import android.os.Bundle
 import android.speech.tts.TextToSpeech
@@ -12,13 +11,16 @@ import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.app.AppCompatActivity
-import androidx.appcompat.app.AppCompatDelegate
 import androidx.core.content.ContextCompat
+import androidx.core.view.GravityCompat
+import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProviders
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 import kotlinx.android.synthetic.main.activity_main.*
+import read.code.yourreader.Fragments.*
 import read.code.yourreader.R
+import read.code.yourreader.databinding.ActivityMainBinding
 import read.code.yourreader.di.components.DaggerFactoryComponent
 import read.code.yourreader.di.modules.FactoryModule
 import read.code.yourreader.di.modules.RepositoryModule
@@ -34,49 +36,65 @@ class MainActivity : AppCompatActivity(), TextToSpeech.OnInitListener {
     private val TAG = "MainActivity"
     private var currentuser: FirebaseUser? = null
     lateinit var toggle: ActionBarDrawerToggle
+    lateinit var binding: ActivityMainBinding
 
     @RequiresApi(Build.VERSION_CODES.KITKAT)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
+        binding = ActivityMainBinding.inflate(layoutInflater)
+        val view = binding.root
+        setContentView(view)
 
         init()
 
-
-        navView.setNavigationItemSelectedListener {
+        binding.navView.setNavigationItemSelectedListener {
             when (it.itemId) {
                 R.id.reading_now -> {
-                    toolbar_main.title="Reading Now"
+                    toolbar_main.title = "Reading now"
+                    fragmentTransition(ReadingNowFragment())
 
                 }
-                R.id.books_docu -> {
-                    toolbar_main.title="Books and Documents"
-
+                R.id.books -> {
+                    toolbar_main.title = "Books"
+                    fragmentTransition(BooksFragment())
+                }
+                R.id.docu -> {
+                    toolbar_main.title = "Documents"
+                    fragmentTransition(DocumentsFragment())
                 }
                 R.id.menu_haveread -> {
-                    toolbar_main.title="Have Read"
-                }
-                R.id.formats_menu -> {
-                    toolbar_main.title="Formats"
-                }
-                R.id.menu_Folders -> {
-                    toolbar_main.title="Folders"
-                }
-                R.id.menu_Downlaods -> {
-                    toolbar_main.title="Downloads"
+                    toolbar_main.title = "Have Read"
+                    fragmentTransition(DoneReadingFragment())
                 }
                 R.id.menu_settings -> {
-                    toolbar_main.title="Settings"
+                    toolbar_main.title = "Settings"
+                    fragmentTransition(SettingsFragment())
                 }
                 R.id.menu_feedback -> {
-                    toolbar_main.title="Feedback"
+                    toolbar_main.title = "Feedback"
+                    fragmentTransition(FeedbackFragment())
                 }
-
             }
+//                R.id.formats_menu -> {
+//                    toolbar_main.title="Formats"
+//                }
+//                R.id.menu_Folders -> {
+//                    toolbar_main.title="Folders"
+//                }
+//                R.id.menu_Downlaods -> {
+//                    toolbar_main.title="Downloads"
+//                }
             true
         }
+    }
 
-
+    private fun fragmentTransition(fragment: Fragment) {
+        supportFragmentManager.beginTransaction().apply {
+            replace(R.id.frame_main, fragment)
+            commit()
+        }
+        if (binding.drawerlayout.isDrawerOpen(GravityCompat.START))
+            binding.drawerlayout.closeDrawer(GravityCompat.START)
     }
 
     @RequiresApi(Build.VERSION_CODES.KITKAT)
@@ -105,16 +123,14 @@ class MainActivity : AppCompatActivity(), TextToSpeech.OnInitListener {
 
         tts = TextToSpeech(this, this)
 
-        toggle = ActionBarDrawerToggle(this, drawerlayout,toolbar_main, R.string.open, R.string.close)
+        toggle =
+            ActionBarDrawerToggle(this, drawerlayout, toolbar_main, R.string.open, R.string.close)
         drawerlayout.addDrawerListener(toggle)
         toggle.syncState()
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
         setSupportActionBar(toolbar_main)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
         supportActionBar?.setHomeButtonEnabled(true)
-
-
-
 
     }
 
