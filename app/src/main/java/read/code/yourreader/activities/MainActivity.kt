@@ -61,7 +61,7 @@ class MainActivity : AppCompatActivity(), TextToSpeech.OnInitListener {
                 }
 
                 R.id.menu_haveread -> {
-                    toolbar_main.title = "Have Read"
+                    toolbar_main.title = "Done Reading"
                     fragmentTransition(DoneReadingFragment())
                 }
                 R.id.menu_settings -> {
@@ -81,19 +81,16 @@ class MainActivity : AppCompatActivity(), TextToSpeech.OnInitListener {
                     fragmentTransition(HomeFragment())
                 }
 
+                R.id.menu_Downloads->{
+                    toolbar_main.title = "Downlaods"
+                    fragmentTransition(DownloadsFragment())
+                }
+
 
 
 
             }
-//                R.id.formats_menu -> {
-//                    toolbar_main.title="Formats"
-//                }
-//                R.id.menu_Folders -> {
-//                    toolbar_main.title="Folders"
-//                }
-//                R.id.menu_Downlaods -> {
-//                    toolbar_main.title="Downloads"
-//                }
+
             true
         }
     }
