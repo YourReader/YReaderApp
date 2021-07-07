@@ -66,10 +66,7 @@ class AuthRepository(var context: Context) : BaseRepository(context) {
                                 Toast.LENGTH_SHORT
                             ).show()
 
-                            val user = mAuth.currentUser
-                            if (user != null) {
-                                myRef.child(user.uid).child(USER_EMAIL).setValue(email)
-                            }
+
                             Intent(context, LoginActivity::class.java).also {
                                 context.startActivity(it)
                             }
