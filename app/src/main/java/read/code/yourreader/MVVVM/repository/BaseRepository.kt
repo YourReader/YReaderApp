@@ -35,8 +35,5 @@ abstract class BaseRepository(private var contextBase: Context) {
         }
     }
 
-    fun shit() {
-        TODO("Not yet implemented")
-    }
 
 }
