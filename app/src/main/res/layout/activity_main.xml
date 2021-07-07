@@ -1,18 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.drawerlayout.widget.DrawerLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
+<LinearLayout android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:id="@+id/drawerlayout"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:orientation="vertical"
     android:fitsSystemWindows="true"
+
+
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    tools:context=".activities.MainActivity">
+    tools:context=".activities.MainActivity"
+    xmlns:android="http://schemas.android.com/apk/res/android">
 
-
-    <androidx.constraintlayout.widget.ConstraintLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        >
 
         <com.google.android.material.appbar.AppBarLayout
             android:layout_width="match_parent"
@@ -33,14 +30,19 @@
         </com.google.android.material.appbar.AppBarLayout>
 
 
-    </androidx.constraintlayout.widget.ConstraintLayout>
+<androidx.drawerlayout.widget.DrawerLayout
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:id="@+id/drawerlayout"
+    >
+
+
     <com.google.android.material.navigation.NavigationView
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
         android:id="@+id/navView"
         app:menu="@menu/menu1"
-        android:background="@color/my_statusbar_color"
-        android:layout_marginTop="?attr/actionBarSize"
+        android:background="@color/white"
         android:layout_gravity="start"
         android:fitsSystemWindows="true"
         >
@@ -49,3 +51,5 @@
     </com.google.android.material.navigation.NavigationView>
 
 </androidx.drawerlayout.widget.DrawerLayout>
+
+    </LinearLayout>

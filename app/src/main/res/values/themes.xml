@@ -15,7 +15,7 @@
     </style>
     <style name="Theme.AppTheme" parent="Theme.MaterialComponents.Light.NoActionBar">
         <!-- Primary brand color. -->
-        <item name="colorPrimary">#10AAF0</item>
+        <item name="colorPrimary">#50A6C2</item>
         <item name="colorPrimaryVariant">@color/white</item>
         <item name="colorOnPrimary">@color/white</item>
         <!-- Secondary brand color. -->

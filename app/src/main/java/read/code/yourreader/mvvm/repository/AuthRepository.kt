@@ -89,7 +89,5 @@ class AuthRepository(var context: Context) : BaseRepository(context) {
         }
 
     }
-
-
 }
 

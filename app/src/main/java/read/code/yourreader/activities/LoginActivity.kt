@@ -42,6 +42,10 @@ class LoginActivity : AppCompatActivity() {
             sendToRegisterActivity()
         }
 
+        forgotpass_log.setOnClickListener {
+
+        }
+
 
         btn_login_lg.setOnClickListener {
             val email=log_email_edit.text.toString()
