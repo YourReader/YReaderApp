@@ -1,4 +1,4 @@
-package read.code.yourreader.Login
+package read.code.yourreader.Auth
 
 import android.content.Intent
 import android.os.Build
@@ -6,13 +6,12 @@ import android.os.Bundle
 import android.util.Log
 import android.view.Window
 import android.view.WindowManager
-import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.ViewModelProviders
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
-import kotlinx.android.synthetic.main.activity_login.*
+import kotlinx.android.synthetic.main.activity_register.*
 import read.code.yourreader.R
 import read.code.yourreader.activities.HomeAuth
 import read.code.yourreader.di.components.DaggerFactoryComponent
@@ -21,60 +20,40 @@ import read.code.yourreader.di.modules.RepositoryModule
 import read.code.yourreader.mvvm.repository.AuthRepository
 import read.code.yourreader.mvvm.viewmodels.AuthViewModel
 
-class LoginActivity : AppCompatActivity() {
+class RegisterActivity : AppCompatActivity() {
     private lateinit var viewModel: AuthViewModel
-    private val TAG = "LoginActivity"
+    private  val TAG = "RegisterActivity"
     private lateinit var mAuth: FirebaseAuth
     private var currentuser: FirebaseUser? = null
     private var verifiedboolean = false
     private lateinit var component: DaggerFactoryComponent
-    @RequiresApi(Build.VERSION_CODES.KITKAT)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_login)
+        setContentView(R.layout.activity_register)
+        //AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
 
         init()
 
-        home_no_account_log.setOnClickListener {
-            sendToRegisterActivity()
+        btn_reg_lg.setOnClickListener {
+            val email=reg_email_edit.text.toString()
+            val pass=reg_pass_edit.text.toString()
+
+            viewModel.register(email,pass)
         }
 
-        forgotpass_log.setOnClickListener {
-
-        }
-
-
-        btn_login_lg.setOnClickListener {
-            val email=log_email_edit.text.toString()
-            val pass=log_pass_edit.text.toString()
-            viewModel.login(email,pass)
-        }
-
-        go_back_login.setOnClickListener {
+        go_back_rege.setOnClickListener {
             sendToHomeActivity()
         }
 
 
 
-
-
     }
 
-    private fun sendToHomeActivity() {
-        Intent(this, HomeAuth::class.java).also {
-            startActivity(it)
-            overridePendingTransition(R.anim.slide_in_left,R.anim.slide_out_right)
-        }
-    }
-    private fun sendToRegisterActivity() {
-        Intent(this, RegisterActivity::class.java).also {
-            startActivity(it)
-            overridePendingTransition(R.anim.slide_in_left,R.anim.slide_out_right)
-        }
+    override fun finish() {
+        super.finish()
+        overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right)
     }
 
-
-    @RequiresApi(Build.VERSION_CODES.KITKAT)
     private fun init(){
         val window: Window = this.window
 
@@ -98,15 +77,8 @@ class LoginActivity : AppCompatActivity() {
 
 
         viewModel =
-            ViewModelProviders.of(this, component.getFactory())
-                .get(AuthViewModel::class.java)
+            ViewModelProviders.of(this, component.getFactory()).get(AuthViewModel::class.java)
     }
-
-
-
-
-
-
 
     override fun onStart() {
         super.onStart()
@@ -122,12 +94,11 @@ class LoginActivity : AppCompatActivity() {
         }
     }
 
-
-
-
-
-    override fun finish() {
-        super.finish()
-        overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right)
+    private fun sendToHomeActivity() {
+        Intent(this, HomeAuth::class.java).also {
+            startActivity(it)
+            overridePendingTransition(R.anim.slide_in_left,R.anim.slide_out_right)
+        }
     }
+
 }

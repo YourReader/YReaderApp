@@ -7,7 +7,7 @@ import android.util.Log
 import android.widget.Toast
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.FirebaseDatabase
-import read.code.yourreader.Login.LoginActivity
+import read.code.yourreader.Auth.LoginActivity
 import read.code.yourreader.activities.MainActivity
 import read.code.yourreader.others.Constants.USERS
 

@@ -1,5 +1,6 @@
 package read.code.yourreader.activities
 
+import android.content.Intent
 import android.os.Build
 import android.os.Bundle
 import android.speech.tts.TextToSpeech
@@ -55,13 +56,10 @@ class MainActivity : AppCompatActivity(), TextToSpeech.OnInitListener {
 
                 }
                 R.id.books -> {
-                    toolbar_main.title = "Books"
+                    toolbar_main.title = "Books and Documents"
                     fragmentTransition(BooksFragment())
                 }
-                R.id.docu -> {
-                    toolbar_main.title = "Documents"
-                    fragmentTransition(DocumentsFragment())
-                }
+
                 R.id.menu_haveread -> {
                     toolbar_main.title = "Have Read"
                     fragmentTransition(DoneReadingFragment())
@@ -74,6 +72,18 @@ class MainActivity : AppCompatActivity(), TextToSpeech.OnInitListener {
                     toolbar_main.title = "Feedback"
                     fragmentTransition(FeedbackFragment())
                 }
+                R.id.menu_use -> {
+                    toolbar_main.title = "Use"
+                    //fragmentTransition(FeedbackFragment())
+                }
+                R.id.home_menu -> {
+                    toolbar_main.title = "Home"
+                    fragmentTransition(HomeFragment())
+                }
+
+
+
+
             }
 //                R.id.formats_menu -> {
 //                    toolbar_main.title="Formats"
@@ -99,6 +109,7 @@ class MainActivity : AppCompatActivity(), TextToSpeech.OnInitListener {
 
     @RequiresApi(Build.VERSION_CODES.KITKAT)
     private fun init() {
+
         val window: Window = this.window
 
         window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS)
@@ -121,6 +132,7 @@ class MainActivity : AppCompatActivity(), TextToSpeech.OnInitListener {
 
         currentuser = mAuth.currentUser
 
+        checkUser()
         tts = TextToSpeech(this, this)
 
         toggle =
@@ -170,5 +182,23 @@ class MainActivity : AppCompatActivity(), TextToSpeech.OnInitListener {
 
     }
 
+    private fun checkUser() {
+        mAuth = FirebaseAuth.getInstance()
+        currentuser = mAuth.currentUser
 
+        if (currentuser == null) {
+            sendUserToHomeActivity()
+        }
+
+    }
+
+
+
+    private fun sendUserToHomeActivity() {
+        Intent(this, HomeAuth::class.java).also {
+            startActivity(it)
+            overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left)
+            finish()
+        }
+    }
 }

@@ -14,21 +14,25 @@
         <activity
             android:name=".activities.HomeAuth"
             android:screenOrientation="portrait">
+
+        </activity>
+        <activity
+            android:name=".Auth.RegisterActivity"
+            android:screenOrientation="portrait" />
+
+
+        <activity
+            android:name=".Auth.LoginActivity"
+            android:screenOrientation="portrait" />
+
+
+        <activity android:name=".activities.MainActivity"
+            android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
-        </activity>
-        <activity
-            android:name=".Login.RegisterActivity"
-            android:screenOrientation="portrait" />
-        <activity
-            android:name=".Login.LoginActivity"
-            android:screenOrientation="portrait" />
-        <activity android:name=".activities.MainActivity"
-            android:screenOrientation="portrait">
-
         </activity>
 
     </application>
