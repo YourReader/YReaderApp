@@ -1,60 +1,55 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:orientation="vertical"
-    android:fitsSystemWindows="true"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    tools:context=".activities.MainActivity"
-    xmlns:android="http://schemas.android.com/apk/res/android">
-
-
-        <com.google.android.material.appbar.AppBarLayout
-            android:layout_width="match_parent"
-            android:layout_height="?attr/actionBarSize"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent">
-
-            <com.google.android.material.appbar.MaterialToolbar
-                android:id="@+id/toolbar_main"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:theme="@style/ToolbarColoredBackArrow"
-                app:title="Reading Now"
-                app:titleTextColor="@color/white">
-
-            </com.google.android.material.appbar.MaterialToolbar>
-        </com.google.android.material.appbar.AppBarLayout>
-
-
-<androidx.drawerlayout.widget.DrawerLayout
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:id="@+id/drawerlayout"
-    >
+    android:fitsSystemWindows="true"
+    android:orientation="vertical"
+    tools:context=".activities.MainActivity">
 
-    <FrameLayout
+
+    <com.google.android.material.appbar.AppBarLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:id="@+id/frame_main">
+        android:layout_height="?attr/actionBarSize"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <com.google.android.material.appbar.MaterialToolbar
+            android:id="@+id/toolbar_main"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:theme="@style/ToolbarColoredBackArrow"
+            app:title="Your Reader"
+            app:titleTextColor="@color/white">
+
+        </com.google.android.material.appbar.MaterialToolbar>
+    </com.google.android.material.appbar.AppBarLayout>
 
 
-    </FrameLayout>
+    <androidx.drawerlayout.widget.DrawerLayout
+        android:id="@+id/drawerlayout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
 
-    <com.google.android.material.navigation.NavigationView
-        android:layout_width="wrap_content"
-        android:layout_height="match_parent"
-        android:id="@+id/navView"
-        app:menu="@menu/menu1"
-        android:background="@color/white"
-        android:layout_gravity="start"
-        android:fitsSystemWindows="true"
-        >
+        <FrameLayout
+            android:id="@+id/frame_main"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+
+        <com.google.android.material.navigation.NavigationView
+            android:id="@+id/navView"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_gravity="start"
+            android:background="@color/white"
+            android:fitsSystemWindows="true"
+            app:menu="@menu/menu1">
 
 
-    </com.google.android.material.navigation.NavigationView>
+        </com.google.android.material.navigation.NavigationView>
 
-</androidx.drawerlayout.widget.DrawerLayout>
+    </androidx.drawerlayout.widget.DrawerLayout>
 
-    </LinearLayout>
+</LinearLayout>
