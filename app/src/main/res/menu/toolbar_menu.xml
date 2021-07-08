@@ -11,6 +11,5 @@
         android:id="@+id/action_item_two"
         android:title="@string/premium"
         android:icon="@drawable/diamond"
-        app:showAsAction="withText"
-        />
+        app:showAsAction="withText" />
 </menu>

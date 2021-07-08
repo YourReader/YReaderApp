@@ -4,7 +4,7 @@ import androidx.lifecycle.ViewModel
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers.IO
 import kotlinx.coroutines.launch
-import read.code.yourreader.mvvm.repository.AuthRepository
+import read.code.yourreader.MVVVM.repository.AuthRepository
 
 class AuthViewModel(
     val repository: AuthRepository

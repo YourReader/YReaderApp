@@ -18,7 +18,7 @@ import read.code.yourreader.activities.HomeAuth
 import read.code.yourreader.di.components.DaggerFactoryComponent
 import read.code.yourreader.di.modules.FactoryModule
 import read.code.yourreader.di.modules.RepositoryModule
-import read.code.yourreader.mvvm.repository.AuthRepository
+import read.code.yourreader.MVVVM.repository.AuthRepository
 import read.code.yourreader.mvvm.viewmodels.AuthViewModel
 
 class LoginActivity : AppCompatActivity() {

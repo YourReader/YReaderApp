@@ -128,7 +128,6 @@ class MainActivity : AppCompatActivity(), TextToSpeech.OnInitListener {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             window.statusBarColor = ContextCompat.getColor(this, R.color.my_statusbar_color)
         }
-        //AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
         mAuth = FirebaseAuth.getInstance()
         component = DaggerFactoryComponent.builder()
             .repositoryModule(RepositoryModule(this))
@@ -215,9 +214,5 @@ class MainActivity : AppCompatActivity(), TextToSpeech.OnInitListener {
 
         return true
     }
-//    override fun onPrepareOptionsMenu(menu: Menu?): Boolean {
-//        menuInflater.inflate(R.menu.toolbar_menu, menu)
-//
-//        return super.onCreateOptionsMenu(menu)
-//    }
+
 }

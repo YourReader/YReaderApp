@@ -4,7 +4,7 @@ import android.content.Context
 
 import dagger.Module
 import dagger.Provides
-import read.code.yourreader.mvvm.repository.AuthRepository
+import read.code.yourreader.MVVVM.repository.AuthRepository
 import read.code.yourreader.mvvm.repository.BaseRepository
 import read.code.yourreader.mvvm.repository.MainRepository
 

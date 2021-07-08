@@ -2,7 +2,7 @@ package read.code.yourreader.mvvm.factory
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
-import read.code.yourreader.mvvm.repository.AuthRepository
+import read.code.yourreader.MVVVM.repository.AuthRepository
 import read.code.yourreader.mvvm.repository.BaseRepository
 import read.code.yourreader.mvvm.repository.MainRepository
 import read.code.yourreader.mvvm.viewmodels.AuthViewModel
