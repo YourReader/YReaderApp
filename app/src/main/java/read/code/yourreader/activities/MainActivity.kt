@@ -5,6 +5,7 @@ import android.os.Build
 import android.os.Bundle
 import android.speech.tts.TextToSpeech
 import android.util.Log
+import android.view.Menu
 import android.view.MenuItem
 import android.view.Window
 import android.view.WindowManager
@@ -29,6 +30,7 @@ import read.code.yourreader.mvvm.repository.MainRepository
 import read.code.yourreader.mvvm.viewmodels.MainViewModel
 import java.util.*
 
+
 class MainActivity : AppCompatActivity(), TextToSpeech.OnInitListener {
     private lateinit var mAuth: FirebaseAuth
     private lateinit var viewModel: MainViewModel
@@ -47,6 +49,8 @@ class MainActivity : AppCompatActivity(), TextToSpeech.OnInitListener {
         setContentView(view)
 
         init()
+        setSupportActionBar(toolbar_main);
+        toolbar_main.showOverflowMenu();
 
         binding.navView.setNavigationItemSelectedListener {
             when (it.itemId) {
@@ -204,4 +208,16 @@ class MainActivity : AppCompatActivity(), TextToSpeech.OnInitListener {
             finish()
         }
     }
+
+    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+        var inflater=menuInflater
+        inflater.inflate(R.menu.toolbar_menu,menu)
+
+        return true
+    }
+//    override fun onPrepareOptionsMenu(menu: Menu?): Boolean {
+//        menuInflater.inflate(R.menu.toolbar_menu, menu)
+//
+//        return super.onCreateOptionsMenu(menu)
+//    }
 }

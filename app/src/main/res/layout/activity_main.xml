@@ -13,6 +13,7 @@
         android:layout_width="match_parent"
         android:layout_height="?attr/actionBarSize"
         app:layout_constraintEnd_toEndOf="parent"
+        app:menu="@menu/toolbar_menu"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
@@ -45,7 +46,7 @@
             android:layout_gravity="start"
             android:background="@color/white"
             android:fitsSystemWindows="true"
-            app:menu="@menu/menu1">
+            app:menu="@menu/drawer_menu">
 
 
         </com.google.android.material.navigation.NavigationView>
