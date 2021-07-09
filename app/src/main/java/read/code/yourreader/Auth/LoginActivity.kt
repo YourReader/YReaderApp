@@ -54,10 +54,21 @@ class LoginActivity : AppCompatActivity() {
             sendToHomeActivity()
         }
 
+        forgotpass_log.setOnClickListener {
+            sendUserToForgotPasswordActivity()
+        }
 
 
 
 
+
+    }
+
+    private fun sendUserToForgotPasswordActivity() {
+        Intent(this, ForgotPassword::class.java).also {
+            startActivity(it)
+            overridePendingTransition(R.anim.slide_in_right,R.anim.slide_out_left)
+        }
     }
 
     private fun sendToHomeActivity() {
@@ -69,7 +80,7 @@ class LoginActivity : AppCompatActivity() {
     private fun sendToRegisterActivity() {
         Intent(this, RegisterActivity::class.java).also {
             startActivity(it)
-            overridePendingTransition(R.anim.slide_in_left,R.anim.slide_out_right)
+            overridePendingTransition(R.anim.slide_in_right,R.anim.slide_out_left)
         }
     }
 

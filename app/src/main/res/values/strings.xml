@@ -37,4 +37,5 @@
     <string name="fav">Favorites</string>
     <string name="search">Search</string>
     <string name="premium">Premium</string>
+    <string name="reset">Reset</string>
 </resources>
