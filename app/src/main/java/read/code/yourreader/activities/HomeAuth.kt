@@ -1,7 +1,6 @@
 package read.code.yourreader.activities
 
 import android.content.Intent
-import android.content.res.Configuration
 import android.os.Build
 import android.os.Bundle
 import android.util.Log
@@ -9,7 +8,6 @@ import android.view.Window
 import android.view.WindowManager
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
-import androidx.appcompat.app.AppCompatDelegate
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.ViewModelProviders
 import com.google.android.gms.auth.api.signin.GoogleSignIn
@@ -21,8 +19,8 @@ import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.auth.GoogleAuthProvider
 import com.google.firebase.database.FirebaseDatabase
 import kotlinx.android.synthetic.main.activity_home_auth.*
-import read.code.yourreader.Login.LoginActivity
-import read.code.yourreader.Login.RegisterActivity
+import read.code.yourreader.Auth.LoginActivity
+import read.code.yourreader.Auth.RegisterActivity
 import read.code.yourreader.R
 import read.code.yourreader.di.components.DaggerFactoryComponent
 import read.code.yourreader.di.modules.FactoryModule
@@ -78,7 +76,7 @@ class HomeAuth : AppCompatActivity() {
             window.statusBarColor = ContextCompat.getColor(this, R.color.my_statusbar_color)
         }
         mAuth = FirebaseAuth.getInstance()
-        checkUser()
+
 
 
         component = DaggerFactoryComponent.builder()
@@ -137,15 +135,7 @@ class HomeAuth : AppCompatActivity() {
         }
     }
 
-    private fun checkUser() {
-        mAuth = FirebaseAuth.getInstance()
-        currentuser = mAuth.currentUser
 
-        if (currentuser != null) {
-            sendUserToMainActivity()
-        }
-
-    }
 
     override fun finish() {
         super.finish()
@@ -198,23 +188,5 @@ class HomeAuth : AppCompatActivity() {
     }
 
 
-    override fun onResume() {
-        super.onResume()
-        var darkflag=resources.configuration.uiMode
-        if (darkflag== Configuration.UI_MODE_NIGHT_YES)
-        {
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
-                home_auth_ui.isForceDarkAllowed = true
-                AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
-            }
-        }
-        else{
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
-                home_auth_ui.isForceDarkAllowed = false
-                AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
 
-            }
-        }
-
-    }
 }

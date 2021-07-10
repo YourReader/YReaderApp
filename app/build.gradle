@@ -93,6 +93,9 @@ dependencies {
         implementation 'com.google.android.gms:play-services-auth:19.0.0'
 
 
+    //Pdf to Text
+    implementation 'com.itextpdf:itextg:5.5.10'
+
 
 
 
