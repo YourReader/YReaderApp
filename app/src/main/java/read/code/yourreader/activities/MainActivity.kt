@@ -150,6 +150,9 @@ class MainActivity : AppCompatActivity(), TextToSpeech.OnInitListener {
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
         supportActionBar?.setHomeButtonEnabled(true)
 
+        fragmentTransition(HomeFragment())
+
+
     }
 
     override fun onInit(status: Int) {

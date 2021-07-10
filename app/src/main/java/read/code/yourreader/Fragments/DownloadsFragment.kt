@@ -1,12 +1,13 @@
 package read.code.yourreader.Fragments
 
+import android.Manifest
 import android.Manifest.permission.READ_EXTERNAL_STORAGE
+import android.app.Activity
 import android.app.AlertDialog
 import android.content.ContentValues.TAG
 import android.content.pm.PackageManager
 import android.os.Build
 import android.os.Bundle
-import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -38,29 +39,29 @@ class DownloadsFragment : Fragment() {
     }
 
 
-    private fun checkPermissions(permissions:String, permission_name:String, code:Int){
+    private fun checkPermissions(permission:String,name:String,requestCode:Int){
         if (Build.VERSION.SDK_INT>=Build.VERSION_CODES.M){
             when{
-                 ContextCompat.checkSelfPermission(requireContext(),permissions)  == PackageManager.PERMISSION_GRANTED ->{
-                     Log.d(TAG, "checkPermissions: Permission Granted")
+                 ContextCompat.checkSelfPermission(requireContext(),permission)  == PackageManager.PERMISSION_GRANTED ->{
+                     android.util.Log.d(TAG, "checkPermissions: $name permission Granted")
                 }
-                shouldShowRequestPermissionRationale(permissions) -> showDialog(permissions,permission_name,code)
+                shouldShowRequestPermissionRationale(permission) -> showDialog(permission,name,requestCode)
 
-                else -> ActivityCompat.requestPermissions(requireActivity(), arrayOf(permissions),code)
+                else -> ActivityCompat.requestPermissions(requireActivity(), arrayOf(permission),requestCode)
             }
         }
     }
 
     private fun showDialog(permission: String, name: String, requestCode: Int) {
-        val builder=AlertDialog.Builder(requireContext())
+        val builder=AlertDialog.Builder(requireView().context)
 
         builder.apply {
             setMessage("Permission to Access Your Pdf and Readable Documents")
             setTitle("Permission Required")
             setPositiveButton("Ok"){
-                    _, _ ->
+                dialog,which->
 
-                ActivityCompat.requestPermissions(requireActivity(), arrayOf(permission),requestCode)
+                ActivityCompat.requestPermissions(requireView().context as Activity, arrayOf(permission),requestCode)
 
             }
         }
