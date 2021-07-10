@@ -1,17 +1,34 @@
 package read.code.yourreader.Fragments
 
 import android.content.Intent
+import android.graphics.pdf.PdfRenderer
 import android.net.Uri
+import android.os.Build
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.fragment.app.Fragment
+import com.itextpdf.text.pdf.PdfReader
+import com.itextpdf.text.pdf.parser.PdfTextExtractor
+import kotlinx.android.synthetic.main.fragment_home.*
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers.IO
+import kotlinx.coroutines.launch
 import read.code.yourreader.R
+import java.io.FileNotFoundException
+import java.io.IOException
+import java.io.InputStream
+import java.lang.StringBuilder
 
 
 class HomeFragment : Fragment() {
+
+
+
+     lateinit var inputStream : InputStream
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -47,6 +64,9 @@ class HomeFragment : Fragment() {
         val pdffile: Uri? = intent.getParcelableExtra(Intent.EXTRA_STREAM)
         if (pdffile != null) {
             Log.d("Pdf File Path : ", "" + pdffile.path)
+            extractTextFromPdfFile(pdffile)
+
+
         }
     }
 
@@ -54,8 +74,43 @@ class HomeFragment : Fragment() {
         val textdata = intent.getStringExtra(Intent.EXTRA_TEXT)
         if (textdata != null) {
             Log.d("Text Data : ", "" + textdata)
-            //downloadFile(textdata)
+
+
         }
+    }
+
+
+    private fun extractTextFromPdfFile(uri:Uri){
+        try{
+
+             inputStream= requireContext().contentResolver.openInputStream(uri)!!
+
+        }
+        catch (e:FileNotFoundException){
+            Toast.makeText(requireContext(), "File Not Found", Toast.LENGTH_SHORT).show()
+        }
+        var fileContent=""
+        var builder=StringBuilder()
+        var reader: PdfReader? =null
+        try {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                reader= PdfReader(inputStream)
+                var pages=reader.numberOfPages
+                for (i in 1..pages)
+                {
+                  fileContent=PdfTextExtractor.getTextFromPage(reader,i)
+
+                }
+                builder.append(fileContent)
+            }
+            reader?.close()
+            CoroutineScope(IO).launch {             text_home.text = builder.toString()
+            }
+        }
+        catch (e:IOException){
+
+        }
+
     }
 
 }
