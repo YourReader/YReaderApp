@@ -1,6 +1,10 @@
 package read.code.yourreader.activities
 
+import android.Manifest
+import android.app.AlertDialog
+import android.content.ContentValues
 import android.content.Intent
+import android.content.pm.PackageManager
 import android.os.Build
 import android.os.Bundle
 import android.speech.tts.TextToSpeech
@@ -13,6 +17,7 @@ import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.core.view.GravityCompat
 import androidx.fragment.app.Fragment
@@ -45,19 +50,19 @@ class MainActivity : AppCompatActivity(), TextToSpeech.OnInitListener {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
-        val view = binding.root
-        setContentView(view)
+        setContentView(binding.root)
 
         init()
-        setSupportActionBar(toolbar_main);
-        toolbar_main.showOverflowMenu();
+        setSupportActionBar(toolbar_main)
+        toolbar_main.showOverflowMenu()
+
+        checkPermissions(Manifest.permission.READ_EXTERNAL_STORAGE, "Storage", 100)
 
         binding.navView.setNavigationItemSelectedListener {
             when (it.itemId) {
                 R.id.reading_now -> {
                     toolbar_main.title = "Reading now"
                     fragmentTransition(ReadingNowFragment())
-
                 }
                 R.id.books -> {
                     toolbar_main.title = "Books and Documents"
@@ -85,22 +90,16 @@ class MainActivity : AppCompatActivity(), TextToSpeech.OnInitListener {
                     fragmentTransition(HomeFragment())
                 }
 
-                R.id.menu_Downloads->{
+                R.id.menu_Downloads -> {
                     toolbar_main.title = "Downlaods"
                     fragmentTransition(DownloadsFragment())
                 }
 
-                R.id.menu_fav->{
+                R.id.menu_fav -> {
                     toolbar_main.title = "Favorites"
                     fragmentTransition(FavoritesFragment())
                 }
-
-
-
-
-
             }
-
             true
         }
     }
@@ -151,7 +150,72 @@ class MainActivity : AppCompatActivity(), TextToSpeech.OnInitListener {
         supportActionBar?.setHomeButtonEnabled(true)
 
         fragmentTransition(HomeFragment())
+    }
 
+    fun checkPermissions(permission: String, name: String, requestCode: Int) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            when {
+                ContextCompat.checkSelfPermission(
+                    this,
+                    permission
+                ) == PackageManager.PERMISSION_GRANTED -> {
+                    Log.d(
+                        ContentValues.TAG,
+                        "checkPermissions: $name permission Granted"
+                    )
+                }
+                shouldShowRequestPermissionRationale(permission) -> showDialog(
+                    permission,
+                    name,
+                    requestCode
+                )
+
+                else -> ActivityCompat.requestPermissions(
+                    this,
+                    arrayOf(permission),
+                    requestCode
+                )
+            }
+        }
+    }
+
+    private fun showDialog(permission: String, name: String, requestCode: Int) {
+        val builder = AlertDialog.Builder(this)
+
+        builder.apply {
+            setMessage("Permission to Access Your Pdf and Readable Documents")
+            setTitle("Permission Required")
+            setPositiveButton("Ok") { dialog, which ->
+                ActivityCompat.requestPermissions(
+                    this@MainActivity,
+                    arrayOf(permission),
+                    requestCode
+                )
+            }
+        }
+
+        val dialog = builder.create()
+        dialog.show()
+    }
+
+    override fun onRequestPermissionsResult(
+        requestCode: Int,
+        permissions: Array<out String>,
+        grantResults: IntArray
+    ) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
+        fun innerCheck(name: String) {
+            if (grantResults.isEmpty() || grantResults[0] != PackageManager.PERMISSION_GRANTED) {
+//                Toast.makeText(this, "$name Permission Not Granted", Toast.LENGTH_SHORT)
+//                    .show()
+            } else {
+//                Toast.makeText(this, "$name Permission Granted", Toast.LENGTH_SHORT)
+//                    .show()
+            }
+        }
+        when (requestCode) {
+            100 -> innerCheck("Storage")
+        }
 
     }
 
@@ -172,7 +236,6 @@ class MainActivity : AppCompatActivity(), TextToSpeech.OnInitListener {
         if (tts != null) {
             tts!!.stop()
             tts!!.shutdown()
-
         }
         super.onDestroy()
     }
@@ -202,7 +265,6 @@ class MainActivity : AppCompatActivity(), TextToSpeech.OnInitListener {
     }
 
 
-
     private fun sendUserToHomeActivity() {
         Intent(this, HomeAuth::class.java).also {
             startActivity(it)
@@ -212,8 +274,8 @@ class MainActivity : AppCompatActivity(), TextToSpeech.OnInitListener {
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
-        var inflater=menuInflater
-        inflater.inflate(R.menu.toolbar_menu,menu)
+        var inflater = menuInflater
+        inflater.inflate(R.menu.toolbar_menu, menu)
 
         return true
     }
