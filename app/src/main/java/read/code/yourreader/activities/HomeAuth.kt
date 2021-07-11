@@ -18,11 +18,12 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.auth.GoogleAuthProvider
 import com.google.firebase.database.FirebaseDatabase
-import kotlinx.android.synthetic.main.activity_home_auth.*
 import read.code.yourreader.Auth.LoginActivity
 import read.code.yourreader.Auth.RegisterActivity
 import read.code.yourreader.MVVVM.repository.AuthRepository
 import read.code.yourreader.R
+import read.code.yourreader.databinding.ActivityHomeAuthBinding
+import read.code.yourreader.databinding.ActivityMainBinding
 import read.code.yourreader.di.components.DaggerFactoryComponent
 import read.code.yourreader.di.modules.FactoryModule
 import read.code.yourreader.di.modules.RepositoryModule
@@ -39,6 +40,8 @@ class HomeAuth : AppCompatActivity() {
     private lateinit var viewModel: AuthViewModel
     private lateinit var component: DaggerFactoryComponent
     private lateinit var googleSignInClient: GoogleSignInClient
+    lateinit var binding: ActivityHomeAuthBinding
+
 
     @RequiresApi(Build.VERSION_CODES.KITKAT)
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -47,14 +50,14 @@ class HomeAuth : AppCompatActivity() {
 
         init()
 
-        home_no_account.setOnClickListener {
+        binding.homeNoAccount.setOnClickListener {
             sendUserToRegisterActivity()
         }
-        home_mail_btn.setOnClickListener {
+        binding.homeMailBtn.setOnClickListener {
             sendUserToLoginActivity()
         }
 
-        G_home_auth.setOnClickListener {
+        binding.GHomeAuth.setOnClickListener {
             signIn()
         }
 

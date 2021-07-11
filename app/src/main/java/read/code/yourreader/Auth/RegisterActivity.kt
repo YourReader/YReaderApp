@@ -11,13 +11,14 @@ import androidx.core.content.ContextCompat
 import androidx.lifecycle.ViewModelProviders
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
-import kotlinx.android.synthetic.main.activity_register.*
 import read.code.yourreader.R
 import read.code.yourreader.activities.HomeAuth
 import read.code.yourreader.di.components.DaggerFactoryComponent
 import read.code.yourreader.di.modules.FactoryModule
 import read.code.yourreader.di.modules.RepositoryModule
 import read.code.yourreader.MVVVM.repository.AuthRepository
+import read.code.yourreader.databinding.ActivityMainBinding
+import read.code.yourreader.databinding.ActivityRegisterBinding
 import read.code.yourreader.mvvm.viewmodels.AuthViewModel
 
 class RegisterActivity : AppCompatActivity() {
@@ -27,21 +28,24 @@ class RegisterActivity : AppCompatActivity() {
     private var currentuser: FirebaseUser? = null
     private var verifiedboolean = false
     private lateinit var component: DaggerFactoryComponent
+    lateinit var binding: ActivityRegisterBinding
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_register)
         //AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
+        binding = ActivityRegisterBinding.inflate(layoutInflater)
 
         init()
 
-        btn_reg_lg.setOnClickListener {
-            val email=reg_email_edit.text.toString()
-            val pass=reg_pass_edit.text.toString()
+        binding.btnRegLg.setOnClickListener {
+            val email=binding.regEmailEdit.text.toString()
+            val pass=binding.regPassEdit.text.toString()
 
             viewModel.register(email,pass)
         }
 
-        go_back_rege.setOnClickListener {
+        binding.goBackRege.setOnClickListener {
             sendToHomeActivity()
         }
 

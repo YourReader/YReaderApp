@@ -1,24 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/pdfVIew"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".Fragments.HomeFragment">
 
-    <ScrollView
+
+    <com.github.barteksc.pdfviewer.PDFView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:padding="2dp"
-        android:id="@+id/scroll_home">
+        android:layout_height="match_parent"
+        android:id="@+id/pdfViewHome"
+        >
 
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="40dp"
-            android:layout_marginEnd="40dp"
-            android:padding="5dp"
-            android:id="@+id/text_home"/>
+    </com.github.barteksc.pdfviewer.PDFView>
 
-    </ScrollView>
 
-</FrameLayout>
+</RelativeLayout>

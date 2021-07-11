@@ -24,7 +24,6 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProviders
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
-import kotlinx.android.synthetic.main.activity_main.*
 import read.code.yourreader.Fragments.*
 import read.code.yourreader.R
 import read.code.yourreader.databinding.ActivityMainBinding
@@ -53,50 +52,51 @@ class MainActivity : AppCompatActivity(), TextToSpeech.OnInitListener {
         setContentView(binding.root)
 
         init()
-        setSupportActionBar(toolbar_main)
-        toolbar_main.showOverflowMenu()
+        setSupportActionBar(binding.toolbarMain)
+
+        binding.toolbarMain.showOverflowMenu()
 
         checkPermissions(Manifest.permission.READ_EXTERNAL_STORAGE, "Storage", 100)
 
         binding.navView.setNavigationItemSelectedListener {
             when (it.itemId) {
                 R.id.reading_now -> {
-                    toolbar_main.title = "Reading now"
+                    binding.toolbarMain.title = "Reading now"
                     fragmentTransition(ReadingNowFragment())
                 }
                 R.id.books -> {
-                    toolbar_main.title = "Books and Documents"
+                    binding.toolbarMain.title = "Books and Documents"
                     fragmentTransition(BooksFragment())
                 }
 
                 R.id.menu_haveread -> {
-                    toolbar_main.title = "Done Reading"
+                    binding.toolbarMain.title = "Done Reading"
                     fragmentTransition(DoneReadingFragment())
                 }
                 R.id.menu_settings -> {
-                    toolbar_main.title = "Settings"
+                    binding.toolbarMain.title = "Settings"
                     fragmentTransition(SettingsFragment())
                 }
                 R.id.menu_feedback -> {
-                    toolbar_main.title = "Feedback"
+                    binding.toolbarMain.title = "Feedback"
                     fragmentTransition(FeedbackFragment())
                 }
                 R.id.menu_use -> {
-                    toolbar_main.title = "Use"
+                    binding.toolbarMain.title = "Use"
                     fragmentTransition(FeedbackFragment())
                 }
                 R.id.home_menu -> {
-                    toolbar_main.title = "Home"
+                    binding.toolbarMain.title = "Home"
                     fragmentTransition(HomeFragment())
                 }
 
                 R.id.menu_Downloads -> {
-                    toolbar_main.title = "Downlaods"
+                    binding.toolbarMain.title = "Downlaods"
                     fragmentTransition(DownloadsFragment())
                 }
 
                 R.id.menu_fav -> {
-                    toolbar_main.title = "Favorites"
+                    binding.toolbarMain.title = "Favorites"
                     fragmentTransition(FavoritesFragment())
                 }
             }
@@ -141,11 +141,12 @@ class MainActivity : AppCompatActivity(), TextToSpeech.OnInitListener {
         tts = TextToSpeech(this, this)
 
         toggle =
-            ActionBarDrawerToggle(this, drawerlayout, toolbar_main, R.string.open, R.string.close)
-        drawerlayout.addDrawerListener(toggle)
+            ActionBarDrawerToggle(this, binding.drawerlayout, binding.toolbarMain, R.string.open, R.string.close)
+        binding.drawerlayout.addDrawerListener(toggle)
         toggle.syncState()
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
-        setSupportActionBar(toolbar_main)
+        setSupportActionBar(binding.toolbarMain
+        )
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
         supportActionBar?.setHomeButtonEnabled(true)
 

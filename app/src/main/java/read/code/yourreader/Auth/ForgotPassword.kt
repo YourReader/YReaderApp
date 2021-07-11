@@ -12,10 +12,11 @@ import androidx.core.content.ContextCompat
 import androidx.lifecycle.ViewModelProviders
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
-import kotlinx.android.synthetic.main.activity_forgot_password.*
 import read.code.yourreader.MVVVM.repository.AuthRepository
 import read.code.yourreader.R
-import read.code.yourreader.activities.HomeAuth
+import read.code.yourreader.databinding.ActivityForgotPasswordBinding
+import read.code.yourreader.databinding.ActivityMainBinding
+
 import read.code.yourreader.di.components.DaggerFactoryComponent
 import read.code.yourreader.di.modules.FactoryModule
 import read.code.yourreader.di.modules.RepositoryModule
@@ -29,6 +30,8 @@ class ForgotPassword : AppCompatActivity() {
     private var verifiedboolean = false
     private lateinit var component: DaggerFactoryComponent
 
+    lateinit var binding: ActivityForgotPasswordBinding
+
     @RequiresApi(Build.VERSION_CODES.KITKAT)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -37,13 +40,13 @@ class ForgotPassword : AppCompatActivity() {
         init()
 
 
-        go_back_login_fog.setOnClickListener {
+        binding.goBackLoginFog.setOnClickListener {
             sendToLoginActivity()
         }
 
 
-        btn_reset_pass.setOnClickListener {
-            val email=email_forgot.text.toString()
+        binding.btnResetPass.setOnClickListener {
+            val email=binding.emailForgot.text.toString()
             if (email.isNotEmpty())
             {
                 viewModel.forgotPassword(email)

@@ -1,7 +1,6 @@
 package read.code.yourreader.Fragments
 
 import android.content.Intent
-import android.graphics.pdf.PdfRenderer
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
@@ -13,15 +12,12 @@ import android.widget.Toast
 import androidx.fragment.app.Fragment
 import com.itextpdf.text.pdf.PdfReader
 import com.itextpdf.text.pdf.parser.PdfTextExtractor
-import kotlinx.android.synthetic.main.fragment_home.*
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers.IO
-import kotlinx.coroutines.launch
 import read.code.yourreader.R
+import read.code.yourreader.databinding.ActivityMainBinding
+import read.code.yourreader.databinding.FragmentHomeBinding
 import java.io.FileNotFoundException
 import java.io.IOException
 import java.io.InputStream
-import java.lang.StringBuilder
 
 
 class HomeFragment : Fragment() {
@@ -29,6 +25,8 @@ class HomeFragment : Fragment() {
 
 
      lateinit var inputStream : InputStream
+    lateinit var binding: FragmentHomeBinding
+
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -42,7 +40,7 @@ class HomeFragment : Fragment() {
     ): View? {
         // Inflate the layout for this fragment
         var view= inflater.inflate(R.layout.fragment_home, container, false)
-
+        binding = FragmentHomeBinding.inflate(layoutInflater)
         val intent = requireActivity().intent
         if (intent != null) {
             val action = intent.action
@@ -67,6 +65,19 @@ class HomeFragment : Fragment() {
             extractTextFromPdfFile(pdffile)
 
 
+
+            binding.pdfViewHome.fromUri(pdffile)
+                .pages(0, 2, 1, 3, 3, 3) // all pages are displayed by default
+                .enableSwipe(true) // allows to block changing pages using swipe
+                .swipeHorizontal(false)
+                .enableDoubletap(true)
+                .defaultPage(0)
+                .enableAnnotationRendering(false) // render annotations (such as comments, colors or forms)
+                .password(null)
+                .scrollHandle(null)
+                .load();
+
+
         }
     }
 
@@ -74,8 +85,6 @@ class HomeFragment : Fragment() {
         val textdata = intent.getStringExtra(Intent.EXTRA_TEXT)
         if (textdata != null) {
             Log.d("Text Data : ", "" + textdata)
-
-
         }
     }
 
@@ -104,8 +113,9 @@ class HomeFragment : Fragment() {
                 builder.append(fileContent)
             }
             reader?.close()
-            CoroutineScope(IO).launch {             text_home.text = builder.toString()
-            }
+//            CoroutineScope(IO).launch {
+//                //Add TTs Here
+//            }
         }
         catch (e:IOException){
 
