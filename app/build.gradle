@@ -3,7 +3,7 @@ plugins {
     id 'kotlin-android'
     id 'com.google.gms.google-services'
     id 'kotlin-kapt'
-
+    id 'kotlin-android-extensions'
 }
 
 android {
@@ -95,7 +95,11 @@ dependencies {
     //Pdf to Text
     implementation 'com.itextpdf:itextg:5.5.10'
 
-    implementation 'com.github.barteksc:android-pdf-viewer:2.3.0'
+   // implementation 'com.github.barteksc:android-pdf-viewer:2.3.0'
+    implementation 'com.github.barteksc:android-pdf-viewer:2.0.3'
+    implementation 'org.apache.commons:commons-collections4:4.1'
+
+
 
 
 

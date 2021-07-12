@@ -46,7 +46,8 @@ class HomeAuth : AppCompatActivity() {
     @RequiresApi(Build.VERSION_CODES.KITKAT)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_home_auth)
+        binding= ActivityHomeAuthBinding.inflate(layoutInflater)
+        setContentView(binding.root)
 
         init()
 
@@ -66,7 +67,6 @@ class HomeAuth : AppCompatActivity() {
     @RequiresApi(Build.VERSION_CODES.KITKAT)
     private fun init() {
         val window: Window = this.window
-
         window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS)
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS)

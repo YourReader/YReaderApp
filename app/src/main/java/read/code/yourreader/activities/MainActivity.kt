@@ -151,6 +151,8 @@ class MainActivity : AppCompatActivity(), TextToSpeech.OnInitListener {
         supportActionBar?.setHomeButtonEnabled(true)
 
         fragmentTransition(HomeFragment())
+        binding.toolbarMain.title = "Home"
+
     }
 
     fun checkPermissions(permission: String, name: String, requestCode: Int) {
