@@ -1,7 +1,7 @@
 package read.code.yourreader.Fragments
 
+import android.content.ContentValues.TAG
 import android.content.Intent
-import android.graphics.pdf.PdfRenderer
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
@@ -11,24 +11,29 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.Fragment
+import com.github.barteksc.pdfviewer.listener.OnErrorListener
+import com.github.barteksc.pdfviewer.listener.OnLoadCompleteListener
+import com.github.barteksc.pdfviewer.listener.OnPageChangeListener
+import com.github.barteksc.pdfviewer.scroll.DefaultScrollHandle
 import com.itextpdf.text.pdf.PdfReader
 import com.itextpdf.text.pdf.parser.PdfTextExtractor
+import com.shockwave.pdfium.PdfDocument
 import kotlinx.android.synthetic.main.fragment_home.*
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers.IO
-import kotlinx.coroutines.launch
 import read.code.yourreader.R
+import read.code.yourreader.databinding.FragmentHomeBinding
 import java.io.FileNotFoundException
 import java.io.IOException
 import java.io.InputStream
-import java.lang.StringBuilder
 
 
-class HomeFragment : Fragment() {
+class HomeFragment : Fragment() , OnPageChangeListener, OnLoadCompleteListener, OnErrorListener
+    {
 
 
 
      lateinit var inputStream : InputStream
+    lateinit var binding: FragmentHomeBinding
+
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -41,7 +46,7 @@ class HomeFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         // Inflate the layout for this fragment
-        var view= inflater.inflate(R.layout.fragment_home, container, false)
+        binding = FragmentHomeBinding.inflate(layoutInflater)
 
         val intent = requireActivity().intent
         if (intent != null) {
@@ -57,7 +62,7 @@ class HomeFragment : Fragment() {
             }
         }
 
-        return view
+        return binding.root
     }
 
     private fun handlePdfFile(intent: Intent) {
@@ -65,6 +70,8 @@ class HomeFragment : Fragment() {
         if (pdffile != null) {
             Log.d("Pdf File Path : ", "" + pdffile.path)
             extractTextFromPdfFile(pdffile)
+            displayFromUri(pdffile)
+            Log.d(TAG, "handlePdfFile: Pdf Loaded")
 
 
         }
@@ -74,8 +81,6 @@ class HomeFragment : Fragment() {
         val textdata = intent.getStringExtra(Intent.EXTRA_TEXT)
         if (textdata != null) {
             Log.d("Text Data : ", "" + textdata)
-
-
         }
     }
 
@@ -104,13 +109,48 @@ class HomeFragment : Fragment() {
                 builder.append(fileContent)
             }
             reader?.close()
-            CoroutineScope(IO).launch {             text_home.text = builder.toString()
-            }
+//            CoroutineScope(IO).launch {
+//                //Add TTs Here
+//            }
         }
         catch (e:IOException){
-
+            Log.d(TAG, "extractTextFromPdfFile: ${e.message}")
         }
 
     }
 
-}
+    private fun displayFromUri(uri: Uri) {
+            binding.pdfViewHome.fromUri(uri)
+                .password(null)
+                .defaultPage(0)
+                .enableSwipe(true)
+                .swipeHorizontal(false)
+                .enableDoubletap(true)
+                .enableAnnotationRendering(false)
+                .load()
+    }
+
+        override fun onPageChanged(page: Int, pageCount: Int) {
+            Log.d(TAG, "onPageChanged: Page Changed")
+        }
+
+        override fun loadComplete(nbPages: Int) {
+            val meta: PdfDocument.Meta = binding.pdfViewHome.documentMeta
+            Log.e(TAG, "title = " + meta.title)
+            Log.e(TAG, "author = " + meta.author)
+            Log.e(TAG, "subject = " + meta.subject)
+            Log.e(TAG, "keywords = " + meta.keywords)
+            Log.e(TAG, "creator = " + meta.creator)
+            Log.e(TAG, "producer = " + meta.producer)
+            Log.e(TAG, "creationDate = " + meta.creationDate)
+            Log.e(TAG, "modDate = " + meta.modDate)
+        }
+
+
+
+        override fun onError(t: Throwable?) {
+            Log.e(TAG, "Cannot load page ")
+        }
+
+
+    }

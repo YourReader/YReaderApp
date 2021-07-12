@@ -12,13 +12,14 @@ import androidx.core.content.ContextCompat
 import androidx.lifecycle.ViewModelProviders
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
-import kotlinx.android.synthetic.main.activity_login.*
 import read.code.yourreader.R
 import read.code.yourreader.activities.HomeAuth
 import read.code.yourreader.di.components.DaggerFactoryComponent
 import read.code.yourreader.di.modules.FactoryModule
 import read.code.yourreader.di.modules.RepositoryModule
 import read.code.yourreader.MVVVM.repository.AuthRepository
+import read.code.yourreader.databinding.ActivityLoginBinding
+import read.code.yourreader.databinding.ActivityMainBinding
 import read.code.yourreader.mvvm.viewmodels.AuthViewModel
 
 class LoginActivity : AppCompatActivity() {
@@ -28,33 +29,33 @@ class LoginActivity : AppCompatActivity() {
     private var currentuser: FirebaseUser? = null
     private var verifiedboolean = false
     private lateinit var component: DaggerFactoryComponent
+    lateinit var binding: ActivityLoginBinding
+
     @RequiresApi(Build.VERSION_CODES.KITKAT)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_login)
-
+        binding = ActivityLoginBinding.inflate(layoutInflater)
+        setContentView(binding.root)
         init()
 
-        home_no_account_log.setOnClickListener {
+        binding.homeNoAccountLog.setOnClickListener {
             sendToRegisterActivity()
         }
 
-        forgotpass_log.setOnClickListener {
-
-        }
 
 
-        btn_login_lg.setOnClickListener {
-            val email=log_email_edit.text.toString()
-            val pass=log_pass_edit.text.toString()
+
+        binding.btnLoginLg.setOnClickListener {
+            val email=binding.logEmailEdit.text.toString()
+            val pass=binding.logPassEdit.text.toString()
             viewModel.login(email,pass)
         }
 
-        go_back_login.setOnClickListener {
+        binding.goBackLogin.setOnClickListener {
             sendToHomeActivity()
         }
 
-        forgotpass_log.setOnClickListener {
+        binding.forgotpassLog.setOnClickListener {
             sendUserToForgotPasswordActivity()
         }
 
