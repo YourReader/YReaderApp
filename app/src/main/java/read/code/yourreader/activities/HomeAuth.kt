@@ -17,13 +17,11 @@ import com.google.android.gms.common.api.ApiException
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.auth.GoogleAuthProvider
-import com.google.firebase.database.FirebaseDatabase
 import read.code.yourreader.Auth.LoginActivity
 import read.code.yourreader.Auth.RegisterActivity
 import read.code.yourreader.MVVVM.repository.AuthRepository
 import read.code.yourreader.R
 import read.code.yourreader.databinding.ActivityHomeAuthBinding
-import read.code.yourreader.databinding.ActivityMainBinding
 import read.code.yourreader.di.components.DaggerFactoryComponent
 import read.code.yourreader.di.modules.FactoryModule
 import read.code.yourreader.di.modules.RepositoryModule
@@ -159,8 +157,6 @@ class HomeAuth : AppCompatActivity() {
     }
 
     private fun firebaseAuthWithGoogle(idToken: String) {
-        val database = FirebaseDatabase.getInstance()
-        val myRef = database.getReference(Constants.USERS)
         val credential = GoogleAuthProvider.getCredential(idToken, null)
         mAuth.signInWithCredential(credential)
             .addOnCompleteListener(this) { task ->
@@ -168,8 +164,7 @@ class HomeAuth : AppCompatActivity() {
                     Log.d(TAG, "signInWithCredential:success")
                     val user = mAuth.currentUser
                     if (user != null) {
-                        myRef.child(user.uid).child(Constants.USER_EMAIL).setValue(user.email)
-
+                        Log.d(TAG, "firebaseAuthWithGoogle: User Loged In")
                     }
                     Intent(this, MainActivity::class.java).also {
                         startActivity(it)

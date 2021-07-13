@@ -6,16 +6,12 @@ import android.content.Intent
 import android.util.Log
 import android.widget.Toast
 import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.database.FirebaseDatabase
 import read.code.yourreader.Auth.LoginActivity
 import read.code.yourreader.activities.MainActivity
 import read.code.yourreader.mvvm.repository.BaseRepository
-import read.code.yourreader.others.Constants.USERS
 
 
 class AuthRepository(var context: Context) : BaseRepository(context) {
-    private var database = FirebaseDatabase.getInstance()
-    private var myRef = database.getReference(USERS)
     private var mAuth = FirebaseAuth.getInstance()
 
 
@@ -65,8 +61,6 @@ class AuthRepository(var context: Context) : BaseRepository(context) {
                                 "Check your Email For Verification",
                                 Toast.LENGTH_SHORT
                             ).show()
-
-
                             Intent(context, LoginActivity::class.java).also {
                                 context.startActivity(it)
                             }
