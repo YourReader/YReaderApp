@@ -63,6 +63,7 @@ class MainActivity : AppCompatActivity(), TextToSpeech.OnInitListener {
                 R.id.reading_now -> {
                     toolbar_main.title = "Reading now"
                     fragmentTransition(ReadingNowFragment())
+
                 }
                 R.id.books -> {
                     toolbar_main.title = "Books and Documents"
