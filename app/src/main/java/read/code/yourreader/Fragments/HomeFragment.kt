@@ -10,6 +10,8 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.SeekBar
+import android.widget.SeekBar.OnSeekBarChangeListener
 import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.fragment.app.Fragment
@@ -26,7 +28,8 @@ import java.io.InputStream
 import java.util.*
 
 
-class HomeFragment : Fragment(), OnPageChangeListener, OnLoadCompleteListener, OnErrorListener {
+class HomeFragment : Fragment(), OnPageChangeListener, OnLoadCompleteListener, OnErrorListener,
+    TextToSpeech.OnInitListener {
 
 
     lateinit var inputStream: InputStream
@@ -46,7 +49,6 @@ class HomeFragment : Fragment(), OnPageChangeListener, OnLoadCompleteListener, O
     ): View? {
         // Inflate the layout for this fragment
         binding = FragmentHomeBinding.inflate(layoutInflater)
-        InitialiseTTS()
         val intent = requireActivity().intent
         if (intent != null) {
             val action = intent.action
@@ -72,6 +74,32 @@ class HomeFragment : Fragment(), OnPageChangeListener, OnLoadCompleteListener, O
             }
 
         }
+
+
+        binding.seekBarSpeed.setOnSeekBarChangeListener(object : OnSeekBarChangeListener {
+            override fun onProgressChanged(seekBar: SeekBar, progress: Int, fromUser: Boolean) {
+
+                var speed = binding.seekBarSpeed.progress.toFloat() / 50
+                if (speed < 0.1) speed = 0.1f
+                tts.setSpeechRate(speed)
+                Log.d(TAG, "onProgressChanged: $speed")
+            }
+
+            override fun onStartTrackingTouch(seekBar: SeekBar) {}
+            override fun onStopTrackingTouch(seekBar: SeekBar) {}
+        })
+
+        binding.seekBarPitch.setOnSeekBarChangeListener(object : OnSeekBarChangeListener {
+            override fun onProgressChanged(seekBar: SeekBar, progress: Int, fromUser: Boolean) {
+                var pitch = binding.seekBarPitch.progress.toFloat() / 50
+                if (pitch < 0.1) pitch = 0.1f
+
+                tts.setPitch(pitch)
+            }
+
+            override fun onStartTrackingTouch(seekBar: SeekBar) {}
+            override fun onStopTrackingTouch(seekBar: SeekBar) {}
+        })
 
         return binding.root
     }
@@ -204,27 +232,28 @@ class HomeFragment : Fragment(), OnPageChangeListener, OnLoadCompleteListener, O
         var speed = binding.seekBarSpeed.progress.toFloat() / 50
         if (speed < 0.1) speed = 0.1f
 
-        tts.setPitch(pitch)
-        tts.setSpeechRate(speed)
         tts.speak(text, TextToSpeech.QUEUE_FLUSH, null, "")
+
     }
 
     private fun InitialiseTTS() {
+        tts = TextToSpeech(context, this,"com.google.android.tts" )
 
-        tts = TextToSpeech(requireContext()) {
+    }
 
-            if (it == TextToSpeech.SUCCESS) {
-                var result = tts.setLanguage(Locale.ENGLISH)
-                if (result == TextToSpeech.LANG_MISSING_DATA || result == TextToSpeech.LANG_NOT_SUPPORTED) {
-                    Toast.makeText(requireContext(), "Language Not Supported", Toast.LENGTH_SHORT)
-                        .show()
-                    val installIntent = Intent()
-                    installIntent.action = TextToSpeech.Engine.ACTION_INSTALL_TTS_DATA
-                    startActivity(installIntent)
-                }
+    override fun onInit(status: Int) {
+        if (status == TextToSpeech.SUCCESS) {
+            var result = tts.setLanguage(Locale.ENGLISH)
+            if ( result == TextToSpeech.LANG_NOT_SUPPORTED) {
+                Toast.makeText(requireContext(), "Language Not Supported", Toast.LENGTH_SHORT)
+                    .show()
 
             }
+            if (result == TextToSpeech.LANG_MISSING_DATA ){
+                val installIntent = Intent()
+                installIntent.action = TextToSpeech.Engine.ACTION_INSTALL_TTS_DATA
+                startActivity(installIntent)
+            }
 
-        }
-    }
+        }    }
 }
