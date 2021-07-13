@@ -38,4 +38,9 @@
     <string name="search">Search</string>
     <string name="premium">Premium</string>
     <string name="reset">Reset</string>
+    <string name="pitch">Pitch</string>
+    <string name="speed">Speed</string>
+    <string name="noting_loaded">Nothing Loaded</string>
+    <string name="open_file">Open File</string>
+    <string name="play">Play</string>
 </resources>

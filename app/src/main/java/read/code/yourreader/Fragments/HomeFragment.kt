@@ -5,35 +5,34 @@ import android.content.Intent
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
+import android.speech.tts.TextToSpeech
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.annotation.RequiresApi
 import androidx.fragment.app.Fragment
 import com.github.barteksc.pdfviewer.listener.OnErrorListener
 import com.github.barteksc.pdfviewer.listener.OnLoadCompleteListener
 import com.github.barteksc.pdfviewer.listener.OnPageChangeListener
-import com.github.barteksc.pdfviewer.scroll.DefaultScrollHandle
 import com.itextpdf.text.pdf.PdfReader
 import com.itextpdf.text.pdf.parser.PdfTextExtractor
 import com.shockwave.pdfium.PdfDocument
-import kotlinx.android.synthetic.main.fragment_home.*
-import read.code.yourreader.R
 import read.code.yourreader.databinding.FragmentHomeBinding
 import java.io.FileNotFoundException
 import java.io.IOException
 import java.io.InputStream
+import java.util.*
 
 
-class HomeFragment : Fragment() , OnPageChangeListener, OnLoadCompleteListener, OnErrorListener
-    {
+class HomeFragment : Fragment(), OnPageChangeListener, OnLoadCompleteListener, OnErrorListener {
 
 
-
-     lateinit var inputStream : InputStream
+    lateinit var inputStream: InputStream
     lateinit var binding: FragmentHomeBinding
-
+    lateinit var tts: TextToSpeech
+    var builder = StringBuilder()
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -47,7 +46,7 @@ class HomeFragment : Fragment() , OnPageChangeListener, OnLoadCompleteListener, 
     ): View? {
         // Inflate the layout for this fragment
         binding = FragmentHomeBinding.inflate(layoutInflater)
-
+        InitialiseTTS()
         val intent = requireActivity().intent
         if (intent != null) {
             val action = intent.action
@@ -55,21 +54,37 @@ class HomeFragment : Fragment() , OnPageChangeListener, OnLoadCompleteListener, 
             if (Intent.ACTION_SEND == action && type != null) {
                 if (type.equals("text/plain", ignoreCase = true)) {
                     handleTextData(intent)
-                }
-                else if (type.equals("application/pdf", ignoreCase = true)) {
+                } else if (type.equals("application/pdf", ignoreCase = true)) {
                     handlePdfFile(intent)
                 }
             }
+        }
+
+
+        InitialiseTTS()
+        binding.openFileHome.setOnClickListener {
+
+        }
+
+        binding.btnPaly.setOnClickListener {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                speakOut(builder.toString())
+            }
+
         }
 
         return binding.root
     }
 
     private fun handlePdfFile(intent: Intent) {
+        InitialiseTTS()
+
         val pdffile: Uri? = intent.getParcelableExtra(Intent.EXTRA_STREAM)
         if (pdffile != null) {
             Log.d("Pdf File Path : ", "" + pdffile.path)
-            extractTextFromPdfFile(pdffile)
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                extractTextFromPdfFile(pdffile)
+            }
             displayFromUri(pdffile)
             Log.d(TAG, "handlePdfFile: Pdf Loaded")
 
@@ -78,6 +93,7 @@ class HomeFragment : Fragment() , OnPageChangeListener, OnLoadCompleteListener, 
     }
 
     private fun handleTextData(intent: Intent) {
+        InitialiseTTS()
         val textdata = intent.getStringExtra(Intent.EXTRA_TEXT)
         if (textdata != null) {
             Log.d("Text Data : ", "" + textdata)
@@ -85,72 +101,130 @@ class HomeFragment : Fragment() , OnPageChangeListener, OnLoadCompleteListener, 
     }
 
 
-    private fun extractTextFromPdfFile(uri:Uri){
-        try{
+    @RequiresApi(Build.VERSION_CODES.LOLLIPOP)
+    private fun extractTextFromPdfFile(uri: Uri) {
+        try {
 
-             inputStream= requireContext().contentResolver.openInputStream(uri)!!
+            inputStream = requireContext().contentResolver.openInputStream(uri)!!
 
-        }
-        catch (e:FileNotFoundException){
+        } catch (e: FileNotFoundException) {
             Toast.makeText(requireContext(), "File Not Found", Toast.LENGTH_SHORT).show()
         }
-        var fileContent=""
-        var builder=StringBuilder()
-        var reader: PdfReader? =null
+        var fileContent = ""
+        var reader: PdfReader? = null
         try {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                reader= PdfReader(inputStream)
-                var pages=reader.numberOfPages
-                for (i in 1..pages)
-                {
-                  fileContent=PdfTextExtractor.getTextFromPage(reader,i)
+                reader = PdfReader(inputStream)
+                var pages = reader.numberOfPages
+                for (i in 1..pages) {
+                    fileContent = PdfTextExtractor.getTextFromPage(reader, i)
 
                 }
                 builder.append(fileContent)
             }
             reader?.close()
-//            CoroutineScope(IO).launch {
-//                //Add TTs Here
-//            }
-        }
-        catch (e:IOException){
+        } catch (e: IOException) {
             Log.d(TAG, "extractTextFromPdfFile: ${e.message}")
         }
 
     }
 
     private fun displayFromUri(uri: Uri) {
-            binding.pdfViewHome.fromUri(uri)
-                .password(null)
-                .defaultPage(0)
-                .enableSwipe(true)
-                .swipeHorizontal(false)
-                .enableDoubletap(true)
-                .enableAnnotationRendering(false)
-                .load()
+        loadPdfLayout()
+        binding.pdfViewHome.fromUri(uri)
+            .password(null)
+            .defaultPage(0)
+            .enableSwipe(true)
+            .swipeHorizontal(false)
+            .enableDoubletap(true)
+            .enableAnnotationRendering(false)
+            .load()
     }
 
-        override fun onPageChanged(page: Int, pageCount: Int) {
-            Log.d(TAG, "onPageChanged: Page Changed")
-        }
+    override fun onPageChanged(page: Int, pageCount: Int) {
+        Log.d(TAG, "onPageChanged: Page Changed")
+    }
 
-        override fun loadComplete(nbPages: Int) {
-            val meta: PdfDocument.Meta = binding.pdfViewHome.documentMeta
-            Log.e(TAG, "title = " + meta.title)
-            Log.e(TAG, "author = " + meta.author)
-            Log.e(TAG, "subject = " + meta.subject)
-            Log.e(TAG, "keywords = " + meta.keywords)
-            Log.e(TAG, "creator = " + meta.creator)
-            Log.e(TAG, "producer = " + meta.producer)
-            Log.e(TAG, "creationDate = " + meta.creationDate)
-            Log.e(TAG, "modDate = " + meta.modDate)
-        }
+    override fun loadComplete(nbPages: Int) {
+        val meta: PdfDocument.Meta = binding.pdfViewHome.documentMeta
+        Log.e(TAG, "title = " + meta.title)
+        Log.e(TAG, "author = " + meta.author)
+        Log.e(TAG, "subject = " + meta.subject)
+        Log.e(TAG, "keywords = " + meta.keywords)
+        Log.e(TAG, "creator = " + meta.creator)
+        Log.e(TAG, "producer = " + meta.producer)
+        Log.e(TAG, "creationDate = " + meta.creationDate)
+        Log.e(TAG, "modDate = " + meta.modDate)
+    }
 
 
+    override fun onError(t: Throwable?) {
+        Log.e(TAG, "Cannot load page ")
+        Toast.makeText(requireContext(), "Cant Load Pdf", Toast.LENGTH_SHORT).show()
+        UnLoadPdfLayout()
+    }
 
-        override fun onError(t: Throwable?) {
-            Log.e(TAG, "Cannot load page ")
-        }
 
+    private fun loadPdfLayout() {
+        binding.layNoFile.visibility = View.GONE
+        binding.pdfViewHome.visibility = View.VISIBLE
+        binding.layPitch.visibility = View.VISIBLE
+        binding.laySpeed.visibility = View.VISIBLE
+        binding.seekBarPitch.visibility = View.VISIBLE
+        binding.seekBarSpeed.visibility = View.VISIBLE
+        binding.laySpeed.visibility = View.VISIBLE
+        binding.btnPaly.visibility = View.VISIBLE
 
     }
+
+    private fun UnLoadPdfLayout() {
+        binding.layNoFile.visibility = View.VISIBLE
+        binding.pdfViewHome.visibility = View.GONE
+        binding.layPitch.visibility = View.GONE
+        binding.laySpeed.visibility = View.GONE
+        binding.seekBarPitch.visibility = View.GONE
+        binding.seekBarSpeed.visibility = View.GONE
+        binding.laySpeed.visibility = View.GONE
+        binding.btnPaly.visibility = View.GONE
+
+    }
+
+    override fun onDestroy() {
+        InitialiseTTS()
+        tts.stop()
+        tts.shutdown()
+        super.onDestroy()
+    }
+
+    @RequiresApi(Build.VERSION_CODES.LOLLIPOP)
+    private fun speakOut(text: String) {
+
+        var pitch = binding.seekBarPitch.progress.toFloat() / 50
+        if (pitch < 0.1) pitch = 0.1f
+        var speed = binding.seekBarSpeed.progress.toFloat() / 50
+        if (speed < 0.1) speed = 0.1f
+
+        tts.setPitch(pitch)
+        tts.setSpeechRate(speed)
+        tts.speak(text, TextToSpeech.QUEUE_FLUSH, null, "")
+    }
+
+    private fun InitialiseTTS() {
+
+        tts = TextToSpeech(requireContext()) {
+
+            if (it == TextToSpeech.SUCCESS) {
+                var result = tts.setLanguage(Locale.ENGLISH)
+                if (result == TextToSpeech.LANG_MISSING_DATA || result == TextToSpeech.LANG_NOT_SUPPORTED) {
+                    Toast.makeText(requireContext(), "Language Not Supported", Toast.LENGTH_SHORT)
+                        .show()
+                    val installIntent = Intent()
+                    installIntent.action = TextToSpeech.Engine.ACTION_INSTALL_TTS_DATA
+                    startActivity(installIntent)
+                }
+
+            }
+
+        }
+    }
+}

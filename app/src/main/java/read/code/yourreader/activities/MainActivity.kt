@@ -13,7 +13,6 @@ import android.view.Menu
 import android.view.MenuItem
 import android.view.Window
 import android.view.WindowManager
-import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.app.AppCompatActivity
@@ -35,11 +34,10 @@ import read.code.yourreader.mvvm.viewmodels.MainViewModel
 import java.util.*
 
 
-class MainActivity : AppCompatActivity(), TextToSpeech.OnInitListener {
+class MainActivity : AppCompatActivity() {
     private lateinit var mAuth: FirebaseAuth
     private lateinit var viewModel: MainViewModel
     private lateinit var component: DaggerFactoryComponent
-    private var tts: TextToSpeech? = null
     private val TAG = "MainActivity"
     private var currentuser: FirebaseUser? = null
     lateinit var toggle: ActionBarDrawerToggle
@@ -138,7 +136,6 @@ class MainActivity : AppCompatActivity(), TextToSpeech.OnInitListener {
         currentuser = mAuth.currentUser
 
         checkUser()
-        tts = TextToSpeech(this, this)
 
         toggle =
             ActionBarDrawerToggle(this, binding.drawerlayout, binding.toolbarMain, R.string.open, R.string.close)
@@ -222,31 +219,11 @@ class MainActivity : AppCompatActivity(), TextToSpeech.OnInitListener {
 
     }
 
-    override fun onInit(status: Int) {
-        if (status == TextToSpeech.SUCCESS) {
-            var result = tts!!.setLanguage(Locale.US)
-            if (result == TextToSpeech.LANG_MISSING_DATA) {
-                Toast.makeText(this, "Language is not Supported", Toast.LENGTH_SHORT).show()
-            } else if (result == TextToSpeech.LANG_AVAILABLE) {
-                Log.d(TAG, "onInit: Initialised")
-            }
-        } else {
-            Log.d(TAG, "onInit: Initialisation Failed")
-        }
-    }
 
-    override fun onDestroy() {
-        if (tts != null) {
-            tts!!.stop()
-            tts!!.shutdown()
-        }
-        super.onDestroy()
-    }
 
-    @RequiresApi(Build.VERSION_CODES.LOLLIPOP)
-    private fun speakOut(text: String) {
-        tts!!.speak(text, TextToSpeech.QUEUE_FLUSH, null, "")
-    }
+
+
+
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
 
