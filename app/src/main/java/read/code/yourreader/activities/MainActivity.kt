@@ -1,22 +1,25 @@
 package read.code.yourreader.activities
 
+import BooksFragment
 import android.Manifest
 import android.app.AlertDialog
-import android.content.ContentValues
 import android.content.Intent
-import android.content.pm.PackageManager
+import android.net.Uri
 import android.os.Build
+import android.os.Build.VERSION.SDK_INT
 import android.os.Bundle
-import android.speech.tts.TextToSpeech
+import android.os.Environment
+import android.provider.Settings
 import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import android.view.Window
 import android.view.WindowManager
+import android.widget.Toast
+import androidx.annotation.Nullable
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.core.view.GravityCompat
 import androidx.fragment.app.Fragment
@@ -31,14 +34,13 @@ import read.code.yourreader.di.modules.FactoryModule
 import read.code.yourreader.di.modules.RepositoryModule
 import read.code.yourreader.mvvm.repository.MainRepository
 import read.code.yourreader.mvvm.viewmodels.MainViewModel
-import java.util.*
 
 
 class MainActivity : AppCompatActivity() {
     private lateinit var mAuth: FirebaseAuth
     private lateinit var viewModel: MainViewModel
     private lateinit var component: DaggerFactoryComponent
-    private val TAG = "MainActivity"
+    private val TAG = "mActivity"
     private var currentuser: FirebaseUser? = null
     lateinit var toggle: ActionBarDrawerToggle
     lateinit var binding: ActivityMainBinding
@@ -53,8 +55,6 @@ class MainActivity : AppCompatActivity() {
         setSupportActionBar(binding.toolbarMain)
 
         binding.toolbarMain.showOverflowMenu()
-
-        checkPermissions(Manifest.permission.READ_EXTERNAL_STORAGE, "Storage", 100)
 
         binding.navView.setNavigationItemSelectedListener {
             when (it.itemId) {
@@ -118,11 +118,11 @@ class MainActivity : AppCompatActivity() {
 
         window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS)
 
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+        if (SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS)
         }
 
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+        if (SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             window.statusBarColor = ContextCompat.getColor(this, R.color.my_statusbar_color)
         }
         mAuth = FirebaseAuth.getInstance()
@@ -138,11 +138,18 @@ class MainActivity : AppCompatActivity() {
         checkUser()
 
         toggle =
-            ActionBarDrawerToggle(this, binding.drawerlayout, binding.toolbarMain, R.string.open, R.string.close)
+            ActionBarDrawerToggle(
+                this,
+                binding.drawerlayout,
+                binding.toolbarMain,
+                R.string.open,
+                R.string.close
+            )
         binding.drawerlayout.addDrawerListener(toggle)
         toggle.syncState()
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
-        setSupportActionBar(binding.toolbarMain
+        setSupportActionBar(
+            binding.toolbarMain
         )
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
         supportActionBar?.setHomeButtonEnabled(true)
@@ -150,80 +157,73 @@ class MainActivity : AppCompatActivity() {
         fragmentTransition(HomeFragment())
         binding.toolbarMain.title = "Home"
 
+
     }
 
-    fun checkPermissions(permission: String, name: String, requestCode: Int) {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+    @RequiresApi(Build.VERSION_CODES.R)
+    private fun checkPermissions(permission: String, name: String, requestCode: Int) {
+        Log.d(TAG, "checkPermissions: PERMISSION ASKED $name")
+        if (SDK_INT >= Build.VERSION_CODES.M) {
+            Log.d(TAG, "checkPermissions:  IS => M")
             when {
-                ContextCompat.checkSelfPermission(
-                    this,
-                    permission
-                ) == PackageManager.PERMISSION_GRANTED -> {
-                    Log.d(
-                        ContentValues.TAG,
-                        "checkPermissions: $name permission Granted"
-                    )
-                }
-                shouldShowRequestPermissionRationale(permission) -> showDialog(
-                    permission,
-                    name,
-                    requestCode
-                )
+                Environment.isExternalStorageManager() ->
+                    Log.d(TAG, "checkPermissions: $name permission Granted")
 
-                else -> ActivityCompat.requestPermissions(
-                    this,
-                    arrayOf(permission),
-                    requestCode
-                )
+                shouldShowRequestPermissionRationale(permission) -> {
+                    Log.d(TAG, "checkPermissions: IN THAT WEIRD SCOPE")
+                    showManagePermissionDialog()
+                }
+                else -> {
+                    Log.d(TAG, "checkPermissions: IN ELSE $permission")
+                    showManagePermissionDialog()
+                }
             }
         }
+
     }
 
-    private fun showDialog(permission: String, name: String, requestCode: Int) {
+    @RequiresApi(Build.VERSION_CODES.R)
+    private fun showManagePermissionDialog() {
         val builder = AlertDialog.Builder(this)
-
         builder.apply {
-            setMessage("Permission to Access Your Pdf and Readable Documents")
+            setMessage("To open Books , PDF's and documents the application needs permissions")
             setTitle("Permission Required")
-            setPositiveButton("Ok") { dialog, which ->
-                ActivityCompat.requestPermissions(
-                    this@MainActivity,
-                    arrayOf(permission),
-                    requestCode
-                )
+            setPositiveButton("Grant") { _, _ ->
+                try {
+                    val intent = Intent(Settings.ACTION_MANAGE_APP_ALL_FILES_ACCESS_PERMISSION)
+                    intent.addCategory("android.intent.category.DEFAULT")
+                    intent.data =
+                        Uri.parse(String.format("package:%s", applicationContext.packageName))
+                    startActivityForResult(intent, 2296)
+                } catch (e: Exception) {
+                    val intent = Intent()
+                    intent.action = Settings.ACTION_MANAGE_ALL_FILES_ACCESS_PERMISSION
+                    startActivityForResult(intent, 2296)
+                }
             }
         }
-
         val dialog = builder.create()
         dialog.show()
     }
 
-    override fun onRequestPermissionsResult(
-        requestCode: Int,
-        permissions: Array<out String>,
-        grantResults: IntArray
-    ) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
-        fun innerCheck(name: String) {
-            if (grantResults.isEmpty() || grantResults[0] != PackageManager.PERMISSION_GRANTED) {
-//                Toast.makeText(this, "$name Permission Not Granted", Toast.LENGTH_SHORT)
-//                    .show()
-            } else {
-//                Toast.makeText(this, "$name Permission Granted", Toast.LENGTH_SHORT)
-//                    .show()
+    override fun onActivityResult(requestCode: Int, resultCode: Int, @Nullable data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        if (requestCode == 2296) {
+            if (SDK_INT >= Build.VERSION_CODES.R) {
+                if (Environment.isExternalStorageManager()) {
+                    Toast.makeText(this@MainActivity, "Permission Granted", Toast.LENGTH_SHORT)
+                        .show()
+                } else if (SDK_INT >= Build.VERSION_CODES.R) {
+                    checkPermissions(
+                        android.Manifest.permission.MANAGE_EXTERNAL_STORAGE,
+                        "MANAGE",
+                        101
+                    )
+
+                }
             }
         }
-        when (requestCode) {
-            100 -> innerCheck("Storage")
-        }
-
     }
-
-
-
-
-
-
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
 
@@ -240,10 +240,11 @@ class MainActivity : AppCompatActivity() {
 
         if (currentuser == null) {
             sendUserToHomeActivity()
+        } else if (SDK_INT >= Build.VERSION_CODES.R) {
+            checkPermissions(Manifest.permission.MANAGE_EXTERNAL_STORAGE, "MANAGE", 101)
         }
 
     }
-
 
     private fun sendUserToHomeActivity() {
         Intent(this, HomeAuth::class.java).also {
