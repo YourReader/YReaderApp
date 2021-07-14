@@ -19,7 +19,6 @@ import android.widget.Toast
 import androidx.annotation.Nullable
 import androidx.annotation.RequiresApi
 import androidx.fragment.app.Fragment
-import kotlinx.android.synthetic.main.fragment_books.*
 import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.launch
 import read.code.yourreader.databinding.FragmentBooksBinding
@@ -50,6 +49,7 @@ class BooksFragment : Fragment() {
         }
         binding.loadDocuBooks.setOnClickListener {
             loadFiles()
+
         }
 
         return binding.root
@@ -98,6 +98,7 @@ class BooksFragment : Fragment() {
                     bitmap = Bitmap.createBitmap(1000, 1000, Bitmap.Config.ARGB_4444)
                     val page: PdfRenderer.Page = renderer.openPage(0)
                     page.render(bitmap, null, null, PdfRenderer.Page.RENDER_MODE_FOR_DISPLAY)
+                    hideLoadDocuLayout()
                 } else {
                     TODO("VERSION.SDK_INT < LOLLIPOP")
                 }
@@ -174,5 +175,12 @@ class BooksFragment : Fragment() {
                 }
             }
         }
+    }
+
+    fun hideLoadDocuLayout()
+    {
+        binding.noticeNoLoaded.visibility=View.GONE
+        binding.loadDocuBooks.visibility=View.GONE
+
     }
 }
