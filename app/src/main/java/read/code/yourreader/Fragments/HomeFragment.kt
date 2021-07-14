@@ -20,7 +20,6 @@ import com.github.barteksc.pdfviewer.listener.OnLoadCompleteListener
 import com.github.barteksc.pdfviewer.listener.OnPageChangeListener
 import com.itextpdf.text.pdf.PdfReader
 import com.itextpdf.text.pdf.parser.PdfTextExtractor
-import com.shockwave.pdfium.PdfDocument
 import read.code.yourreader.databinding.FragmentHomeBinding
 import java.io.FileNotFoundException
 import java.io.IOException
@@ -37,11 +36,6 @@ class HomeFragment : Fragment(), OnPageChangeListener, OnLoadCompleteListener, O
     lateinit var tts: TextToSpeech
     var builder = StringBuilder()
 
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-
-    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -115,8 +109,6 @@ class HomeFragment : Fragment(), OnPageChangeListener, OnLoadCompleteListener, O
             }
             displayFromUri(pdffile)
             Log.d(TAG, "handlePdfFile: Pdf Loaded")
-
-
         }
     }
 
@@ -132,7 +124,6 @@ class HomeFragment : Fragment(), OnPageChangeListener, OnLoadCompleteListener, O
     @RequiresApi(Build.VERSION_CODES.LOLLIPOP)
     private fun extractTextFromPdfFile(uri: Uri) {
         try {
-
             inputStream = requireContext().contentResolver.openInputStream(uri)!!
 
         } catch (e: FileNotFoundException) {
@@ -174,7 +165,7 @@ class HomeFragment : Fragment(), OnPageChangeListener, OnLoadCompleteListener, O
     }
 
     override fun loadComplete(nbPages: Int) {
-        val meta: PdfDocument.Meta = binding.pdfViewHome.documentMeta
+        val meta: com.shockwave.pdfium.PdfDocument.Meta = binding.pdfViewHome.documentMeta
         Log.e(TAG, "title = " + meta.title)
         Log.e(TAG, "author = " + meta.author)
         Log.e(TAG, "subject = " + meta.subject)
