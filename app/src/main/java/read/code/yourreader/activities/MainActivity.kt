@@ -76,12 +76,12 @@ class MainActivity : AppCompatActivity() {
                     fragmentTransition(SettingsFragment())
                 }
                 R.id.menu_feedback -> {
-                    binding.toolbarMain.title = "Feedback"
-                    fragmentTransition(FeedbackFragment())
+
+
                 }
                 R.id.menu_use -> {
                     binding.toolbarMain.title = "Use"
-                    fragmentTransition(FeedbackFragment())
+
                 }
                 R.id.home_menu -> {
                     binding.toolbarMain.title = "Home"
@@ -97,6 +97,12 @@ class MainActivity : AppCompatActivity() {
                     binding.toolbarMain.title = "Favorites"
                     fragmentTransition(FavoritesFragment())
                 }
+                R.id.menu_Trash -> {
+                    binding.toolbarMain.title = "Trash"
+                    fragmentTransition(TrashFragment())
+                }
+
+
             }
             true
         }

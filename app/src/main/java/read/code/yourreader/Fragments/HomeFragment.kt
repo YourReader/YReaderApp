@@ -55,7 +55,7 @@ class HomeFragment : Fragment(), OnPageChangeListener, OnLoadCompleteListener, O
                 }
             }
 
-            if (Intent.ACTION_VIEW == action && type != null) {
+            if (Intent.ACTION_SEND == action && type != null) {
                 if (type.equals("text/plain", ignoreCase = true)) {
                     handleTextData(intent)
                 } else if (type.equals("application/pdf", ignoreCase = true)) {
