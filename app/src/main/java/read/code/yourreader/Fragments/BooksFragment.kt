@@ -87,6 +87,8 @@ class BooksFragment : Fragment() {
         }
         if (permissionGranted)
         {
+            binding.progressBarBooks.visibility=View.VISIBLE
+
             MainScope().launch {
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
                     Search_Dir(dir)
@@ -181,6 +183,8 @@ class BooksFragment : Fragment() {
     {
         binding.noticeNoLoaded.visibility=View.GONE
         binding.loadDocuBooks.visibility=View.GONE
+        binding.progressBarBooks.visibility=View.GONE
+
 
     }
 }
