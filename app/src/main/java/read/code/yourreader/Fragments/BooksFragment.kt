@@ -1,3 +1,5 @@
+package read.code.yourreader.Fragments
+
 import android.annotation.SuppressLint
 import android.graphics.Bitmap
 import android.graphics.pdf.PdfRenderer

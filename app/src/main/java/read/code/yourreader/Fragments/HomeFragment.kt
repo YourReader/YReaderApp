@@ -54,6 +54,14 @@ class HomeFragment : Fragment(), OnPageChangeListener, OnLoadCompleteListener, O
                     handlePdfFile(intent)
                 }
             }
+
+            if (Intent.ACTION_VIEW == action && type != null) {
+                if (type.equals("text/plain", ignoreCase = true)) {
+                    handleTextData(intent)
+                } else if (type.equals("application/pdf", ignoreCase = true)) {
+                    handlePdfFile(intent)
+                }
+            }
         }
 
 
@@ -72,11 +80,11 @@ class HomeFragment : Fragment(), OnPageChangeListener, OnLoadCompleteListener, O
 
         binding.seekBarSpeed.setOnSeekBarChangeListener(object : OnSeekBarChangeListener {
             override fun onProgressChanged(seekBar: SeekBar, progress: Int, fromUser: Boolean) {
-
+                var speechRate=(progress.toFloat() +1.0)/10
                 var speed = binding.seekBarSpeed.progress.toFloat() / 50
                 if (speed < 0.1) speed = 0.1f
-                tts.setSpeechRate(speed)
-                Log.d(TAG, "onProgressChanged: $speed")
+                tts.setSpeechRate(speechRate.toFloat())
+                Log.d(TAG, "onProgressChanged: $speechRate")
             }
 
             override fun onStartTrackingTouch(seekBar: SeekBar) {}
@@ -85,7 +93,8 @@ class HomeFragment : Fragment(), OnPageChangeListener, OnLoadCompleteListener, O
 
         binding.seekBarPitch.setOnSeekBarChangeListener(object : OnSeekBarChangeListener {
             override fun onProgressChanged(seekBar: SeekBar, progress: Int, fromUser: Boolean) {
-                var pitch = binding.seekBarPitch.progress.toFloat() / 50
+                var pitch :Float =(progress.toFloat() +1)/10;
+                //var pitch = binding.seekBarPitch.progress.toFloat() / 50
                 if (pitch < 0.1) pitch = 0.1f
 
                 tts.setPitch(pitch)
