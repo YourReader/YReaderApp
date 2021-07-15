@@ -46,6 +46,7 @@ class BooksFragment : Fragment() {
         // Inflate the layout for this fragment
         _binding = FragmentBooksBinding.inflate(inflater, container, false)
 
+        pdfs.clear()
         binding.loadDocuBooks.setOnClickListener {
             Log.d(TAG, "onCreateView:CLICKED ")
             loadFiles()
@@ -63,14 +64,30 @@ class BooksFragment : Fragment() {
     }
 
 
-    private fun Search_Dir(dir: File) {
-        Log.d(TAG, "Search_Dir: INNN")
+    private fun Search_Dir_PDF(dir: File) {
         val pdfPattern = ".pdf"
         val FileList = dir.listFiles()
         if (FileList != null) {
             for (i in FileList.indices) {
                 if (FileList[i].isDirectory) {
-                    Search_Dir(FileList[i])
+                    Search_Dir_PDF(FileList[i])
+                } else {
+                    if (FileList[i].name.endsWith(pdfPattern)) {
+                        pdfs.add(FileList[i])
+                        Log.d("TAG", "Search_Dir: MP4: ${FileList[i]}")
+                    }
+                }
+            }
+        }
+    }
+
+    private fun Search_Dir_WORD(dir: File) {
+        val pdfPattern = ".docx"
+        val FileList = dir.listFiles()
+        if (FileList != null) {
+            for (i in FileList.indices) {
+                if (FileList[i].isDirectory) {
+                    Search_Dir_WORD(FileList[i])
                 } else {
                     if (FileList[i].name.endsWith(pdfPattern)) {
                         pdfs.add(FileList[i])
@@ -85,6 +102,7 @@ class BooksFragment : Fragment() {
     @SuppressLint("SetTextI18n")
     private fun loadFiles() {
         handlePermissions()
+
         Log.d(TAG, "loadFiles: after HandlePermissions")
         if (permissionGranted) {
             Log.d(TAG, "loadFiles: Permissions granted: $permissionGranted ")
@@ -92,7 +110,7 @@ class BooksFragment : Fragment() {
 
             MainScope().launch {
                 Log.d(TAG, "loadFiles: MAIN SCOPE ")
-                Search_Dir(dir)
+                Search_Dir_PDF(dir)
                 val fd = ParcelFileDescriptor.open(
                     pdfs[pdfs.size - 1],
                     ParcelFileDescriptor.MODE_READ_ONLY
@@ -102,6 +120,7 @@ class BooksFragment : Fragment() {
                 bitmap = Bitmap.createBitmap(1000, 1000, Bitmap.Config.ARGB_4444)
                 val page: PdfRenderer.Page = renderer.openPage(0)
                 page.render(bitmap, null, null, PdfRenderer.Page.RENDER_MODE_FOR_DISPLAY)
+                Search_Dir_WORD(dir)
                 hideLoadDocuLayout()
                 binding.bm.setImageBitmap(bitmap)
                 binding.hellotext.text = pdfs[pdfs.size - 1].toString() + " Size: " + pdfs.size
