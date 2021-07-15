@@ -2,8 +2,10 @@ package read.code.yourreader.activities
 
 
 import android.Manifest
+import android.annotation.SuppressLint
 import android.app.AlertDialog
 import android.content.Intent
+import android.content.pm.PackageManager
 import android.net.Uri
 import android.os.Build
 import android.os.Build.VERSION.SDK_INT
@@ -20,6 +22,7 @@ import androidx.annotation.Nullable
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.core.view.GravityCompat
 import androidx.fragment.app.Fragment
@@ -76,12 +79,12 @@ class MainActivity : AppCompatActivity() {
                     fragmentTransition(SettingsFragment())
                 }
                 R.id.menu_feedback -> {
-
+                    // TODO: 7/15/2021
 
                 }
                 R.id.menu_use -> {
                     binding.toolbarMain.title = "Use"
-
+                    // TODO: 7/15/2021
                 }
                 R.id.home_menu -> {
                     binding.toolbarMain.title = "Home"
@@ -101,8 +104,6 @@ class MainActivity : AppCompatActivity() {
                     binding.toolbarMain.title = "Trash"
                     fragmentTransition(TrashFragment())
                 }
-
-
             }
             true
         }
@@ -124,13 +125,9 @@ class MainActivity : AppCompatActivity() {
 
         window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS)
 
-        if (SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS)
-        }
+        window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS)
 
-        if (SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            window.statusBarColor = ContextCompat.getColor(this, R.color.my_statusbar_color)
-        }
+        window.statusBarColor = ContextCompat.getColor(this, R.color.my_statusbar_color)
         mAuth = FirebaseAuth.getInstance()
         component = DaggerFactoryComponent.builder()
             .repositoryModule(RepositoryModule(this))
@@ -166,50 +163,74 @@ class MainActivity : AppCompatActivity() {
 
     }
 
-    @RequiresApi(Build.VERSION_CODES.R)
-    private fun checkPermissions(permission: String, name: String, requestCode: Int) {
-        Log.d(TAG, "checkPermissions: PERMISSION ASKED $name")
-        if (SDK_INT >= Build.VERSION_CODES.M) {
-            Log.d(TAG, "checkPermissions:  IS => M")
+    private fun checkManagePermission(
+        permission: String,
+        name: String,
+        requestCode: Int,
+        normal: Boolean
+    ) {
+        if (SDK_INT >= Build.VERSION_CODES.R) {
             when {
                 Environment.isExternalStorageManager() ->
                     Log.d(TAG, "checkPermissions: $name permission Granted")
 
                 shouldShowRequestPermissionRationale(permission) -> {
                     Log.d(TAG, "checkPermissions: IN THAT WEIRD SCOPE")
-                    showManagePermissionDialog()
+                    showManagePermissionDialog(normal, name)
                 }
                 else -> {
                     Log.d(TAG, "checkPermissions: IN ELSE $permission")
-                    showManagePermissionDialog()
+                    showManagePermissionDialog(normal, name)
                 }
             }
+        } else {
+            showManagePermissionDialog(true, name)
         }
-
     }
 
-    @RequiresApi(Build.VERSION_CODES.R)
-    private fun showManagePermissionDialog() {
-        val builder = AlertDialog.Builder(this)
-        builder.apply {
-            setMessage("To open Books , PDF's and documents the application needs permissions")
-            setTitle("Permission Required")
-            setPositiveButton("Grant") { _, _ ->
-                try {
-                    val intent = Intent(Settings.ACTION_MANAGE_APP_ALL_FILES_ACCESS_PERMISSION)
-                    intent.addCategory("android.intent.category.DEFAULT")
-                    intent.data =
-                        Uri.parse(String.format("package:%s", applicationContext.packageName))
-                    startActivityForResult(intent, 2296)
-                } catch (e: Exception) {
-                    val intent = Intent()
-                    intent.action = Settings.ACTION_MANAGE_ALL_FILES_ACCESS_PERMISSION
-                    startActivityForResult(intent, 2296)
+    @SuppressLint("InlinedApi")
+    private fun showManagePermissionDialog(normal: Boolean = true, name: String) {
+        Log.d(TAG, "showManagePermissionDialog: Name: $name  Normal: $normal")
+        if (!normal) {
+            val builder = AlertDialog.Builder(this)
+            builder.apply {
+                setMessage("To open Books , PDF's and documents the application needs permissions")
+                setTitle("Permission Required")
+                setPositiveButton("Grant") { _, _ ->
+
+                    try {
+                        val intent = Intent(Settings.ACTION_MANAGE_APP_ALL_FILES_ACCESS_PERMISSION)
+                        intent.addCategory("android.intent.category.DEFAULT")
+                        intent.data =
+                            Uri.parse(String.format("package:%s", applicationContext.packageName))
+                        startActivityForResult(intent, 2296)
+                    } catch (e: Exception) {
+                        val intent = Intent()
+                        intent.action = Settings.ACTION_MANAGE_ALL_FILES_ACCESS_PERMISSION
+                        startActivityForResult(intent, 2296)
+                    }
+
                 }
             }
+            val dialog = builder.create()
+            dialog.show()
+        } else {
+            ActivityCompat.requestPermissions(this@MainActivity, arrayOf(name), 100)
         }
-        val dialog = builder.create()
-        dialog.show()
+    }
+
+    override fun onRequestPermissionsResult(
+        requestCode: Int,
+        permissions: Array<out String>,
+        grantResults: IntArray
+    ) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
+        if (requestCode == 100 && grantResults.isNotEmpty())
+            for (i in grantResults.indices)
+                if (grantResults[i] == PackageManager.PERMISSION_GRANTED)
+                    Log.d(TAG, "onRequestPermissionsResult: GRANTED $requestCode")
+                else
+                    showManagePermissionDialog(true, Manifest.permission.READ_EXTERNAL_STORAGE)
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, @Nullable data: Intent?) {
@@ -220,10 +241,11 @@ class MainActivity : AppCompatActivity() {
                     Toast.makeText(this@MainActivity, "Permission Granted", Toast.LENGTH_SHORT)
                         .show()
                 } else if (SDK_INT >= Build.VERSION_CODES.R) {
-                    checkPermissions(
+                    checkManagePermission(
                         android.Manifest.permission.MANAGE_EXTERNAL_STORAGE,
                         "MANAGE",
-                        101
+                        101,
+                        false
                     )
 
                 }
@@ -243,13 +265,46 @@ class MainActivity : AppCompatActivity() {
     private fun checkUser() {
         mAuth = FirebaseAuth.getInstance()
         currentuser = mAuth.currentUser
-
         if (currentuser == null) {
             sendUserToHomeActivity()
-        } else if (SDK_INT >= Build.VERSION_CODES.R) {
-            checkPermissions(Manifest.permission.MANAGE_EXTERNAL_STORAGE, "MANAGE", 101)
+        } else {
+            handlePermissions()
         }
 
+    }
+
+    private fun handlePermissions() {
+        Log.d(TAG, "handlePermissions: $SDK_INT")
+        if (SDK_INT >= Build.VERSION_CODES.R) {
+            checkManagePermission(Manifest.permission.MANAGE_EXTERNAL_STORAGE, "MANAGE", 101, false)
+        } else {
+            checkStoragePermission(Manifest.permission.READ_EXTERNAL_STORAGE, "STORAGE", 100, true)
+        }
+    }
+
+    private fun checkStoragePermission(
+        permission: String,
+        name: String,
+        requestCode: Int,
+        normal: Boolean
+    ) {
+        Log.d(TAG, "checkStoragePermission: NAME :$name ")
+        when {
+            ActivityCompat.checkSelfPermission(
+                this@MainActivity,
+                permission
+            ) == PackageManager.PERMISSION_GRANTED ->
+                Log.d(TAG, "checkPermissions: $name permission Granted")
+
+            shouldShowRequestPermissionRationale(permission) -> {
+                Log.d(TAG, "checkStoragePermission: In that weird scope")
+                showManagePermissionDialog(normal, name)
+            }
+            else -> {
+                Log.d(TAG, "checkPermissions: IN ELSE $permission")
+                showManagePermissionDialog(normal, name)
+            }
+        }
     }
 
     private fun sendUserToHomeActivity() {
