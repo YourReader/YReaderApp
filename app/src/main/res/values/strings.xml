@@ -44,4 +44,9 @@
     <string name="open_file">Open File</string>
     <string name="play">Play</string>
     <string name="trash">Trash</string>
+    <string name="assignment_1">AssignMent 1</string>
+    <string name="_3mb">3MB</string>
+    <string name="pdf">PDF</string>
+    <string name="_2_3x">2.3X</string>
+    <string name="done">Done</string>
 </resources>

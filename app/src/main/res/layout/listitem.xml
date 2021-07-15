@@ -1,0 +1,221 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <com.google.android.material.card.MaterialCardView
+        android:id="@+id/cardView_Item"
+        android:layout_width="match_parent"
+        android:layout_height="150dp"
+        android:layout_margin="10dp"
+        android:padding="10dp"
+        app:cardCornerRadius="8dp">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:padding="5dp"
+
+            >
+
+            <ImageView
+                android:id="@+id/img_listItem"
+                android:layout_width="80dp"
+                android:layout_height="120dp"
+                android:layout_marginStart="15dp"
+                android:layout_marginTop="10dp"
+                android:src="@color/grey" />
+
+            <TextView
+                android:id="@+id/fileName_list"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="15dp"
+                android:layout_marginTop="20dp"
+                android:layout_toEndOf="@id/img_listItem"
+                android:fontFamily="@font/montserratregular"
+                android:text="@string/assignment_1"
+                android:textAlignment="center"
+                android:textColor="@color/black" />
+
+            <TextView
+                android:id="@+id/size_file_listItem"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/fileName_list"
+                android:layout_marginStart="15dp"
+                android:layout_marginTop="3dp"
+                android:layout_toEndOf="@id/img_listItem"
+                android:fontFamily="@font/montserratregular"
+                android:text="@string/_3mb"
+                android:textAlignment="center"
+                android:textColor="@color/black"
+                android:textSize="8sp" />
+
+            <TextView
+                android:id="@+id/file_type_ListItem"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/fileName_list"
+                android:layout_marginStart="5dp"
+                android:layout_marginTop="3dp"
+                android:layout_toEndOf="@id/size_file_listItem"
+                android:fontFamily="@font/montserratregular"
+                android:text="@string/pdf"
+                android:textAlignment="center"
+                android:textColor="@color/black"
+                android:textSize="8sp" />
+
+            <RelativeLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/file_type_ListItem"
+                android:layout_marginStart="15dp"
+                android:layout_marginTop="10dp"
+                android:layout_toEndOf="@id/img_listItem"
+
+
+                >
+
+                <RelativeLayout
+                    android:id="@+id/Relitem1"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:padding="5dp">
+
+                    <TextView
+                        android:id="@+id/speed_ListItem"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="15dp"
+                        android:layout_marginTop="10dp"
+                        android:fontFamily="@font/montserratregular"
+                        android:text="@string/_2_3x"
+                        android:textAlignment="center"
+                        android:textColor="@color/black"
+                        android:textSize="14sp"
+
+                        />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@id/speed_ListItem"
+                        android:layout_marginStart="15dp"
+                        android:layout_marginTop="5dp"
+                        android:fontFamily="@font/montserratregular"
+                        android:text="@string/speed"
+                        android:textAlignment="center"
+                        android:textColor="@color/black"
+                        android:textSize="8sp"
+
+                        />
+                </RelativeLayout>
+
+
+                <RelativeLayout
+                    android:id="@+id/Relitem2"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_toEndOf="@id/Relitem1"
+
+                    android:padding="5dp">
+
+                    <ImageView
+                        android:id="@+id/doneTick_listItem"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="20dp"
+                        android:layout_marginTop="10dp"
+                        android:fontFamily="@font/montserratregular"
+                        android:src="@drawable/ic_baseline_done_24"
+                        android:text="@string/_2_3x"
+                        android:textAlignment="center"
+                        android:textColor="@color/black"
+                        android:textSize="14sp"
+
+                        />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@id/doneTick_listItem"
+                        android:layout_marginStart="20dp"
+                        android:layout_marginTop="2dp"
+                        android:fontFamily="@font/montserratregular"
+                        android:text="@string/done"
+                        android:textAlignment="center"
+                        android:textColor="@color/black"
+                        android:textSize="8sp"
+
+                        />
+
+
+                </RelativeLayout>
+
+
+                <RelativeLayout
+                    android:id="@+id/Relitem3"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_toEndOf="@id/Relitem2"
+
+                    android:padding="5dp">
+
+                    <ImageView
+                        android:id="@+id/like_img_List"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="20dp"
+                        android:layout_marginTop="10dp"
+                        android:fontFamily="@font/montserratregular"
+                        android:src="@drawable/ic_favorite"
+                        android:text="@string/_2_3x"
+                        android:textAlignment="center"
+                        android:textColor="@color/black"
+                        android:textSize="14sp"
+
+                        />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@+id/like_img_List"
+                        android:layout_marginStart="20dp"
+                        android:layout_marginTop="2dp"
+                        android:fontFamily="@font/montserratregular"
+                        android:text="@string/done"
+                        android:textAlignment="center"
+                        android:textColor="@color/black"
+                        android:textSize="8sp"
+
+                        />
+
+                </RelativeLayout>
+
+
+                <RelativeLayout
+                    android:id="@+id/Relitem4"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerInParent="true"
+                    android:layout_toEndOf="@id/Relitem3"
+                    android:padding="5dp">
+
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:src="@drawable/ic_dots"
+                        android:layout_marginStart="15dp"/>
+                </RelativeLayout>
+
+
+            </RelativeLayout>
+
+
+        </RelativeLayout>
+
+
+    </com.google.android.material.card.MaterialCardView>
+</RelativeLayout>
