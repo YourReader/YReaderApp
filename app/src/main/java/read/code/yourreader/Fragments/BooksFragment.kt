@@ -120,6 +120,7 @@ class BooksFragment : Fragment() {
             when {
                 Environment.isExternalStorageManager() -> {
                     Log.d(TAG, "checkPermissions: $name permission Granted")
+                    hideLoadDocuLayout()
                 }
 
                 shouldShowRequestPermissionRationale(permission) -> {
