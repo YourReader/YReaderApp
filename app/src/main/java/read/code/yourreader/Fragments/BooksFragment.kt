@@ -22,11 +22,13 @@ import android.widget.Toast
 import androidx.annotation.Nullable
 import androidx.annotation.RequiresApi
 import androidx.core.app.ActivityCompat
+
 import androidx.fragment.app.Fragment
 import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.launch
 import read.code.yourreader.databinding.FragmentBooksBinding
 import java.io.File
+
 
 
 class BooksFragment : Fragment() {
@@ -46,7 +48,6 @@ class BooksFragment : Fragment() {
         // Inflate the layout for this fragment
         _binding = FragmentBooksBinding.inflate(inflater, container, false)
 
-        pdfs.clear()
         binding.loadDocuBooks.setOnClickListener {
             Log.d(TAG, "onCreateView:CLICKED ")
             loadFiles()
@@ -54,6 +55,8 @@ class BooksFragment : Fragment() {
 
         return binding.root
     }
+
+
 
     private fun handlePermissions() {
         if (SDK_INT >= Build.VERSION_CODES.R) {
@@ -244,4 +247,8 @@ class BooksFragment : Fragment() {
         binding.progressBarBooks.visibility = View.GONE
 
     }
+
+
+
+
 }
