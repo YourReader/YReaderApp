@@ -22,7 +22,6 @@ import android.widget.Toast
 import androidx.annotation.Nullable
 import androidx.annotation.RequiresApi
 import androidx.core.app.ActivityCompat
-
 import androidx.fragment.app.Fragment
 import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.launch
@@ -30,11 +29,10 @@ import read.code.yourreader.databinding.FragmentBooksBinding
 import java.io.File
 
 
-
 class BooksFragment : Fragment() {
     @RequiresApi(Build.VERSION_CODES.KITKAT)
     var dir = File(Environment.getExternalStorageDirectory().absolutePath)
-    private var pdfs = ArrayList<File>()
+    private var pdfs = ArrayList<String>()
     private var _binding: FragmentBooksBinding? = null
     private val binding get() = _binding!!
     lateinit var bitmap: Bitmap
@@ -57,7 +55,6 @@ class BooksFragment : Fragment() {
     }
 
 
-
     private fun handlePermissions() {
         if (SDK_INT >= Build.VERSION_CODES.R) {
             checkPermissions(Manifest.permission.MANAGE_EXTERNAL_STORAGE, "MANAGE", 101)
@@ -65,7 +62,6 @@ class BooksFragment : Fragment() {
             checkPermissions(Manifest.permission.READ_EXTERNAL_STORAGE, "STORAGE", 100)
         }
     }
-
 
     private fun Search_Dir_PDF(dir: File) {
         val pdfPattern = ".pdf"
@@ -76,8 +72,8 @@ class BooksFragment : Fragment() {
                     Search_Dir_PDF(FileList[i])
                 } else {
                     if (FileList[i].name.endsWith(pdfPattern)) {
-                        pdfs.add(FileList[i])
-                        Log.d("TAG", "Search_Dir: MP4: ${FileList[i]}")
+                        pdfs.add(FileList[i].toString())
+                        Log.d("TAG", "Search_Dir: PDF: ${FileList[i]}")
                     }
                 }
             }
@@ -93,7 +89,7 @@ class BooksFragment : Fragment() {
                     Search_Dir_WORD(FileList[i])
                 } else {
                     if (FileList[i].name.endsWith(pdfPattern)) {
-                        pdfs.add(FileList[i])
+                        pdfs.add(FileList[i].toString())
                         Log.d("TAG", "Search_Dir: MP4: ${FileList[i]}")
                     }
                 }
@@ -110,12 +106,15 @@ class BooksFragment : Fragment() {
         if (permissionGranted) {
             Log.d(TAG, "loadFiles: Permissions granted: $permissionGranted ")
             binding.progressBarBooks.visibility = View.VISIBLE
-
             MainScope().launch {
                 Log.d(TAG, "loadFiles: MAIN SCOPE ")
                 Search_Dir_PDF(dir)
+                Log.d(
+                    TAG,
+                    "loadFiles: PDF: ${pdfs[pdfs.size - 1]} FILE: ${File(pdfs[pdfs.size - 1])}"
+                )
                 val fd = ParcelFileDescriptor.open(
-                    pdfs[pdfs.size - 1],
+                    File(pdfs[pdfs.size - 1]),
                     ParcelFileDescriptor.MODE_READ_ONLY
                 )
                 Log.d(TAG, "loadFiles: PDFS SIZE: ${pdfs.size}")
@@ -247,8 +246,6 @@ class BooksFragment : Fragment() {
         binding.progressBarBooks.visibility = View.GONE
 
     }
-
-
 
 
 }

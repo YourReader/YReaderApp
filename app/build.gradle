@@ -58,7 +58,10 @@ dependencies {
     //Constraints layout
     implementation 'androidx.constraintlayout:constraintlayout:2.0.4'
 
-    //lifeCycle
+    //Room
+    implementation "androidx.room:room-runtime:2.3.0"
+    kapt "androidx.room:room-compiler:2.3.0"
+    implementation "androidx.room:room-ktx:2.3.0"
 
     // ViewModel and LiveData
     implementation "androidx.lifecycle:lifecycle-extensions:2.2.0"
@@ -69,11 +72,15 @@ dependencies {
     def multidex_version = "2.0.1"
     implementation "androidx.multidex:multidex:$multidex_version"
 
+    // Preferences DataStore
+    implementation "androidx.datastore:datastore-preferences:1.0.0-rc01"
 
     //Dagger
     kapt("org.jetbrains.kotlinx:kotlinx-metadata-jvm:0.2.0")
     implementation 'com.google.dagger:dagger:2.31'
-    kapt 'com.google.dagger:dagger-compiler:2.28'
+    kapt 'com.google.dagger:dagger-compiler:2.28.3'
+
+
 
     //Circle Image View
     implementation 'de.hdodenhof:circleimageview:3.1.0'
@@ -82,13 +89,12 @@ dependencies {
     // Also declare the dependency for the Google Play services library and specify its version
     implementation 'com.google.android.gms:play-services-auth:19.0.0'
 
+    implementation "org.jetbrains.kotlinx:kotlinx-serialization-json:1.0.1"
 
     //Pdf to Text
     implementation 'com.itextpdf:itextg:5.5.10'
     implementation 'com.github.barteksc:android-pdf-viewer:2.3.0'
     implementation 'org.apache.commons:commons-collections4:4.1'
-
-
 
 
 }
