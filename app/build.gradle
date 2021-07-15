@@ -85,7 +85,7 @@ dependencies {
 
     //Pdf to Text
     implementation 'com.itextpdf:itextg:5.5.10'
-    implementation 'com.github.barteksc:android-pdf-viewer:2.0.3'
+    implementation 'com.github.barteksc:android-pdf-viewer:2.3.0'
     implementation 'org.apache.commons:commons-collections4:4.1'
 
 
