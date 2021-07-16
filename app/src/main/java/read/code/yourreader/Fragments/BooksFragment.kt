@@ -22,24 +22,30 @@ import android.widget.Toast
 import androidx.annotation.Nullable
 import androidx.annotation.RequiresApi
 import androidx.core.app.ActivityCompat
-
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.ViewModelProvider
 import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.launch
+import read.code.yourreader.MVVVM.viewmodels.FilesViewModel
+import read.code.yourreader.data.Files
 import read.code.yourreader.databinding.FragmentBooksBinding
 import java.io.File
-
 
 
 class BooksFragment : Fragment() {
     @RequiresApi(Build.VERSION_CODES.KITKAT)
     var dir = File(Environment.getExternalStorageDirectory().absolutePath)
-    private var pdfs = ArrayList<File>()
+    private var pdfs = ArrayList<String>()
     private var _binding: FragmentBooksBinding? = null
     private val binding get() = _binding!!
     lateinit var bitmap: Bitmap
     var permissionGranted = false
     private val TAG = "bFragment"
+    private lateinit var mFilesViewModel: FilesViewModel
+    val pdfPattern = ".pdf"
+    val pdfPattern2 = ".docx"
+    val pdfPattern3 = ".doc"
+    val pdfPattern4 = ".txt"
 
     override fun onCreateView( //the fragment is initialized and bound to the nav host activity.
         inflater: LayoutInflater, container: ViewGroup?,
@@ -47,6 +53,8 @@ class BooksFragment : Fragment() {
     ): View {
         // Inflate the layout for this fragment
         _binding = FragmentBooksBinding.inflate(inflater, container, false)
+
+        mFilesViewModel = ViewModelProvider(this).get(FilesViewModel::class.java)
 
         binding.loadDocuBooks.setOnClickListener {
             Log.d(TAG, "onCreateView:CLICKED ")
@@ -57,7 +65,6 @@ class BooksFragment : Fragment() {
     }
 
 
-
     private fun handlePermissions() {
         if (SDK_INT >= Build.VERSION_CODES.R) {
             checkPermissions(Manifest.permission.MANAGE_EXTERNAL_STORAGE, "MANAGE", 101)
@@ -66,35 +73,53 @@ class BooksFragment : Fragment() {
         }
     }
 
+    private fun searchFiles(dir: File) {
 
-    private fun Search_Dir_PDF(dir: File) {
-        val pdfPattern = ".pdf"
         val FileList = dir.listFiles()
         if (FileList != null) {
             for (i in FileList.indices) {
                 if (FileList[i].isDirectory) {
-                    Search_Dir_PDF(FileList[i])
+                    searchFiles(FileList[i])
                 } else {
                     if (FileList[i].name.endsWith(pdfPattern)) {
-                        pdfs.add(FileList[i])
-                        Log.d("TAG", "Search_Dir: MP4: ${FileList[i]}")
+                        mFilesViewModel.addFile(
+                            Files(
+                                path = FileList[i].toString(),
+                                type = pdfPattern
+                            )
+                        )
+                        pdfs.add(FileList[i].toString())
+                        Log.d(TAG, "searchFiles: Successfully added $pdfPattern")
                     }
-                }
-            }
-        }
-    }
-
-    private fun Search_Dir_WORD(dir: File) {
-        val pdfPattern = ".docx"
-        val FileList = dir.listFiles()
-        if (FileList != null) {
-            for (i in FileList.indices) {
-                if (FileList[i].isDirectory) {
-                    Search_Dir_WORD(FileList[i])
-                } else {
-                    if (FileList[i].name.endsWith(pdfPattern)) {
-                        pdfs.add(FileList[i])
-                        Log.d("TAG", "Search_Dir: MP4: ${FileList[i]}")
+                    if (FileList[i].name.endsWith(pdfPattern2)) {
+                        mFilesViewModel.addFile(
+                            Files(
+                                path = FileList[i].toString(),
+                                type = pdfPattern2
+                            )
+                        )
+                        pdfs.add(FileList[i].toString())
+                        Log.d(TAG, "searchFiles: Successfully added $pdfPattern2")
+                    }
+                    if (FileList[i].name.endsWith(pdfPattern3)) {
+                        mFilesViewModel.addFile(
+                            Files(
+                                path = FileList[i].toString(),
+                                type = pdfPattern3
+                            )
+                        )
+                        pdfs.add(FileList[i].toString())
+                        Log.d(TAG, "searchFiles: Successfully added $pdfPattern3")
+                    }
+                    if (FileList[i].name.endsWith(pdfPattern4)) {
+                        mFilesViewModel.addFile(
+                            Files(
+                                path = FileList[i].toString(),
+                                type = pdfPattern4
+                            )
+                        )
+                        pdfs.add(FileList[i].toString())
+                        Log.d(TAG, "searchFiles: Successfully added $pdfPattern4")
                     }
                 }
             }
@@ -110,12 +135,15 @@ class BooksFragment : Fragment() {
         if (permissionGranted) {
             Log.d(TAG, "loadFiles: Permissions granted: $permissionGranted ")
             binding.progressBarBooks.visibility = View.VISIBLE
-
             MainScope().launch {
                 Log.d(TAG, "loadFiles: MAIN SCOPE ")
-                Search_Dir_PDF(dir)
+                searchFiles(dir)
+                Log.d(
+                    TAG,
+                    "loadFiles: PDF: ${pdfs[pdfs.size - 1]} FILE: ${File(pdfs[pdfs.size - 1])}"
+                )
                 val fd = ParcelFileDescriptor.open(
-                    pdfs[pdfs.size - 1],
+                    File(pdfs[pdfs.size - 1]),
                     ParcelFileDescriptor.MODE_READ_ONLY
                 )
                 Log.d(TAG, "loadFiles: PDFS SIZE: ${pdfs.size}")
@@ -123,7 +151,7 @@ class BooksFragment : Fragment() {
                 bitmap = Bitmap.createBitmap(1000, 1000, Bitmap.Config.ARGB_4444)
                 val page: PdfRenderer.Page = renderer.openPage(0)
                 page.render(bitmap, null, null, PdfRenderer.Page.RENDER_MODE_FOR_DISPLAY)
-                Search_Dir_WORD(dir)
+//                Search_Dir_WORD(dir)
                 hideLoadDocuLayout()
                 binding.bm.setImageBitmap(bitmap)
                 binding.hellotext.text = pdfs[pdfs.size - 1].toString() + " Size: " + pdfs.size
@@ -247,8 +275,6 @@ class BooksFragment : Fragment() {
         binding.progressBarBooks.visibility = View.GONE
 
     }
-
-
 
 
 }
