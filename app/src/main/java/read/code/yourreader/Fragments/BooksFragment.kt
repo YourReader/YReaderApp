@@ -51,7 +51,6 @@ class BooksFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        // Inflate the layout for this fragment
         _binding = FragmentBooksBinding.inflate(inflater, container, false)
 
         mFilesViewModel = ViewModelProvider(this).get(FilesViewModel::class.java)
