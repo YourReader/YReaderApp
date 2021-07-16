@@ -10,5 +10,8 @@ import kotlinx.android.parcel.Parcelize
 data class Files(
     @PrimaryKey(autoGenerate = true)
     val id: Int = 0,
-    val paths: ArrayList<String>
+    val path: String,
+    val type: String,
+    val favorites: Boolean = false,
+    val readingNow: Boolean = false
 ) : Parcelable
