@@ -49,4 +49,16 @@
     <string name="pdf">PDF</string>
     <string name="_2_3x">2.3X</string>
     <string name="done">Done</string>
+
+
+    <string-array name="upgradeEntries">
+        <item>Upgrade</item>
+        <item>Cancel</item>
+    </string-array>
+
+    <string-array name="upgradeValues">
+        <item>Upgrade</item>
+        <item>Cancel</item>
+    </string-array>
+
 </resources>

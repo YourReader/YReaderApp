@@ -42,6 +42,7 @@ class HomeFragment : Fragment(), OnPageChangeListener, OnLoadCompleteListener, O
         savedInstanceState: Bundle?
     ): View? {
         // Inflate the layout for this fragment
+        InitialiseTTS()
         binding = FragmentHomeBinding.inflate(layoutInflater)
         val intent = requireActivity().intent
         if (intent != null) {
@@ -65,7 +66,6 @@ class HomeFragment : Fragment(), OnPageChangeListener, OnLoadCompleteListener, O
         }
 
 
-        InitialiseTTS()
         binding.openFileHome.setOnClickListener {
 
         }
@@ -79,29 +79,36 @@ class HomeFragment : Fragment(), OnPageChangeListener, OnLoadCompleteListener, O
 
 
         binding.seekBarSpeed.setOnSeekBarChangeListener(object : OnSeekBarChangeListener {
+            var speechRate:Float=0.1F
             override fun onProgressChanged(seekBar: SeekBar, progress: Int, fromUser: Boolean) {
-                var speechRate=(progress.toFloat() +1.0)/10
-                var speed = binding.seekBarSpeed.progress.toFloat() / 50
-                if (speed < 0.1) speed = 0.1f
-                tts.setSpeechRate(speechRate.toFloat())
+                 speechRate= ((progress +1.0)/10).toFloat()
+                 speechRate = binding.seekBarSpeed.progress.toFloat() / 50
+            //    if (speed < 0.1) speed = 0.1f
                 Log.d(TAG, "onProgressChanged: $speechRate")
             }
 
             override fun onStartTrackingTouch(seekBar: SeekBar) {}
-            override fun onStopTrackingTouch(seekBar: SeekBar) {}
+            override fun onStopTrackingTouch(seekBar: SeekBar) {
+                tts.setSpeechRate(speechRate)
+
+            }
         })
 
         binding.seekBarPitch.setOnSeekBarChangeListener(object : OnSeekBarChangeListener {
+            var pitch :Float = 0.1F
             override fun onProgressChanged(seekBar: SeekBar, progress: Int, fromUser: Boolean) {
-                var pitch :Float =(progress.toFloat() +1)/10;
-                //var pitch = binding.seekBarPitch.progress.toFloat() / 50
-                if (pitch < 0.1) pitch = 0.1f
+                 pitch  =(progress.toFloat() +1)/100;
+                if (pitch < 2.0)
+                Log.d(TAG, "onProgressChanged: $pitch")
 
-                tts.setPitch(pitch)
+
             }
 
             override fun onStartTrackingTouch(seekBar: SeekBar) {}
-            override fun onStopTrackingTouch(seekBar: SeekBar) {}
+            override fun onStopTrackingTouch(seekBar: SeekBar) {
+                tts.setPitch(pitch)
+
+            }
         })
 
         return binding.root
@@ -238,8 +245,7 @@ class HomeFragment : Fragment(), OnPageChangeListener, OnLoadCompleteListener, O
 
     private fun InitialiseTTS() {
         tts = TextToSpeech(context, this,"com.google.android.tts" )
-
-    }
+            }
 
     override fun onInit(status: Int) {
         if (status == TextToSpeech.SUCCESS) {
