@@ -98,6 +98,10 @@ dependencies {
     implementation 'org.apache.commons:commons-collections4:4.1'
 
 
+    // Pref
+    implementation "androidx.preference:preference-ktx:1.1.1"
+
+
 
 
 

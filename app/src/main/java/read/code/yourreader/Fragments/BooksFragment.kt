@@ -112,14 +112,14 @@ class BooksFragment : Fragment() {
                         Log.d(TAG, "searchFiles: Successfully added $pdfPattern3")
                     }
                     if (FileList[i].name.endsWith(pdfPattern4)) {
-                        mFilesViewModel.addFile(
-                            Files(
-                                path = FileList[i].toString(),
-                                type = pdfPattern4
-                            )
-                        )
-                        pdfs.add(FileList[i].toString())
-                        Log.d(TAG, "searchFiles: Successfully added $pdfPattern4")
+//                        mFilesViewModel.addFile(
+//                            Files(
+//                                path = FileList[i].toString(),
+//                                type = pdfPattern4
+//                            )
+//                        )
+//                        pdfs.add(FileList[i].toString())
+//                        Log.d(TAG, "searchFiles: Successfully added $pdfPattern4")
                     }
                 }
             }
@@ -151,7 +151,6 @@ class BooksFragment : Fragment() {
                 bitmap = Bitmap.createBitmap(1000, 1000, Bitmap.Config.ARGB_4444)
                 val page: PdfRenderer.Page = renderer.openPage(0)
                 page.render(bitmap, null, null, PdfRenderer.Page.RENDER_MODE_FOR_DISPLAY)
-//                Search_Dir_WORD(dir)
                 hideLoadDocuLayout()
                 binding.bm.setImageBitmap(bitmap)
                 binding.hellotext.text = pdfs[pdfs.size - 1].toString() + " Size: " + pdfs.size
