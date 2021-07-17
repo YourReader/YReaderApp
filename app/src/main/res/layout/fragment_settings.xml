@@ -22,7 +22,6 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/design_Content_swipe"
         android:weightSum="100"
         android:layout_marginTop="10dp"
         android:padding="10dp"
@@ -34,7 +33,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="90"
-            android:id="@+id/rel_brightNess">
+            >
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -51,7 +50,6 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/adjust_brightness_by_swiping_up_and_down_on_left_side_of_screen"
-                android:layout_below="@id/title_swipe"
                 android:textAlignment="textStart"
                 android:textColor="@color/black"
                 android:textAllCaps="false"
@@ -69,7 +67,7 @@
             android:layout_height="wrap_content"
             android:layout_weight="10"
             android:gravity="end|center"
-
+            android:id="@+id/brightNessSwitch"
             />
 
 
@@ -78,7 +76,6 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/design_ScreenOn"
         android:layout_marginTop="10dp"
         android:padding="10dp"
         android:weightSum="100"
@@ -90,12 +87,11 @@
             android:layout_height="wrap_content"
             android:orientation="vertical"
             android:layout_weight="90"
-            android:id="@+id/rel_ScreenOn">
+            >
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:id="@+id/title_ScreenOn"
-                android:text="Screen On"
+                android:text="@string/screen_on"
                 android:textColor="@color/black"
                 android:textAlignment="center"
                 android:textAllCaps="false"
@@ -125,6 +121,7 @@
             android:layout_marginStart="0dp"
             android:layout_weight="10"
             android:gravity="end|center"
+            android:id="@+id/screenOnSwitch"
             />
 
 
@@ -133,7 +130,6 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/design_DarkMode"
         android:layout_marginTop="10dp"
         android:padding="10dp"
         android:weightSum="100"
@@ -145,12 +141,11 @@
             android:layout_height="wrap_content"
             android:orientation="vertical"
             android:layout_weight="90"
-            android:id="@+id/rel_DarkMode">
+            >
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:id="@+id/title_Darkmode"
-                android:text="Dark Mode"
+                android:text="@string/dark_mode"
                 android:textColor="@color/black"
                 android:textAlignment="center"
                 android:textAllCaps="false"
@@ -180,14 +175,154 @@
             android:layout_marginStart="0dp"
             android:layout_weight="10"
             android:gravity="end|center"
+            android:id="@+id/darkModeSwitch"
             />
 
 
     </LinearLayout>
 
 
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/permissions"
+        android:textColor="@color/primary_color"
+        android:textAlignment="center"
+        android:textAllCaps="false"
+        android:textSize="16sp"
+        android:fontFamily="@font/montserratsemibold"
+        android:layout_marginTop="20dp"
+        android:layout_marginStart="20dp"
+        />
 
 
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/design_PermissionsPdf"
+        android:layout_marginTop="10dp"
+        android:padding="10dp"
+        android:weightSum="100"
+        android:orientation="horizontal"
+
+        >
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:layout_weight="90"
+            >
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/access_pdf_and_docs"
+                android:textColor="@color/black"
+                android:textAlignment="center"
+                android:textAllCaps="false"
+                android:textSize="16sp"
+                android:fontFamily="@font/montserratsemibold"
+                android:layout_marginStart="10dp"
+                />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="15dp"
+                android:text="@string/app_has_permission"
+                android:textAlignment="textStart"
+                android:textColor="@color/black"
+                android:textAllCaps="false"
+                android:textSize="9sp"
+                android:fontFamily="@font/montserratsemibold"
+                android:layout_marginTop="10dp"
+                android:layout_marginStart="10dp"
+                />
+
+        </LinearLayout>
+
+
+        <androidx.appcompat.widget.SwitchCompat
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="0dp"
+            android:layout_weight="10"
+            android:gravity="end|center"
+            />
+
+
+    </LinearLayout>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/account"
+        android:textColor="@color/primary_color"
+        android:textAlignment="center"
+        android:textAllCaps="false"
+        android:textSize="16sp"
+        android:fontFamily="@font/montserratsemibold"
+        android:layout_marginTop="20dp"
+        android:layout_marginStart="20dp"
+        />
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:id="@+id/upgrade_toPremium"
+        android:padding="10dp"
+        android:weightSum="100"
+        android:orientation="horizontal"
+
+        >
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:layout_weight="100"
+            >
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Upgrade To Premium"
+                android:textColor="@color/black"
+                android:textAlignment="center"
+                android:textAllCaps="false"
+                android:textSize="16sp"
+                android:fontFamily="@font/montserratsemibold"
+                android:layout_marginStart="10dp"
+                />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="15dp"
+                android:text="No Ads, Best Quality Human like Voice"
+                android:textAlignment="textStart"
+                android:textColor="@color/black"
+                android:textAllCaps="false"
+                android:textSize="9sp"
+                android:fontFamily="@font/montserratsemibold"
+                android:layout_marginTop="10dp"
+                android:layout_marginStart="10dp"
+                />
+
+        </LinearLayout>
+
+
+
+
+
+    </LinearLayout>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/SignOut_Settings"
+        android:text="@string/signout"
+        android:textColor="@color/black"
+        android:textAlignment="center"
+        android:textAllCaps="false"
+        android:textSize="16sp"
+        android:fontFamily="@font/montserratsemibold"
+        android:layout_marginTop="20dp"
+        android:layout_marginStart="20dp"
+        />
 
 
 </LinearLayout>

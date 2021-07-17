@@ -18,7 +18,7 @@
     <string name="signin">SignIn</string>
     <string name="register">Register</string>
     <string name="or_continue_with">Or Continue with</string>
-    <string name="signout">signOut</string>
+    <string name="signout">SignOut</string>
     <string name="reading_now">Reading Now</string>
     <string name="books">Books and Documents </string>
     <string name="documents">Documents</string>
@@ -79,5 +79,11 @@
     <string name="reading">Reading</string>
     <string name="keep_screen_on">Keep Screen On while Reading without touching</string>
     <string name="enable_dark_mode">Enable Dark Mode by turning on the switch</string>
+    <string name="permissions">Permissions</string>
+    <string name="access_pdf_and_docs">Access Pdf and Docs</string>
+    <string name="app_has_permission">App has permission to Access your PDF and Docs</string>
+    <string name="screen_on">Screen On</string>
+    <string name="dark_mode">Dark Mode</string>
+    <string name="account">Account</string>
 
 </resources>
