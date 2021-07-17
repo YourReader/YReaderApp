@@ -29,9 +29,7 @@
         android:layout_marginStart="40dp"
         android:layout_weight="1"
         android:visibility="gone"
-        android:fontFamily="@font/montserratregular"
-        android:layout_marginLeft="40dp"
-        />
+        android:fontFamily="@font/montserratsemibold" />
     <SeekBar
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -50,11 +48,9 @@
         android:text="@string/speed"
         android:id="@+id/lay_Speed"
         android:layout_marginStart="40dp"
-        android:fontFamily="@font/montserratregular"
+        android:fontFamily="@font/montserratsemibold"
         android:visibility="gone"
-        android:layout_weight="1"
-        android:layout_marginLeft="40dp"
-        />
+        android:layout_weight="1" />
     <SeekBar
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -71,6 +67,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="@string/play"
+        android:fontFamily="@font/montserratsemibold"
         android:id="@+id/btn_paly"
         android:visibility="gone"/>
 
@@ -85,7 +82,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/notice_noting"
-            android:fontFamily="@font/montserratregular"
+            android:fontFamily="@font/montserratsemibold"
             android:text="@string/noting_loaded"
             android:layout_centerHorizontal="true"
             android:layout_centerVertical="true"
@@ -98,6 +95,7 @@
             android:layout_marginStart="40dp"
             android:layout_marginTop="15dp"
             android:layout_marginEnd="40dp"
+            android:fontFamily="@font/montserratsemibold"
             android:id="@+id/openFile_Home"
             android:layout_below="@+id/notice_noting"
             android:text="@string/open_file"
