@@ -1,43 +1,33 @@
 package read.code.yourreader.Fragments
 
-import android.annotation.SuppressLint
 import android.os.Bundle
-import android.util.Log
-import androidx.core.content.ContentProviderCompat.requireContext
-import androidx.preference.Preference
-
-
-import androidx.preference.PreferenceFragmentCompat
-import androidx.preference.PreferenceManager
+import androidx.fragment.app.Fragment
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
 import read.code.yourreader.R
 
-class SettingsFragment :  PreferenceFragmentCompat()  {
+
+
+
+class SettingsFragment : Fragment() {
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        addPreferencesFromResource(R.xml.settings2)
+
     }
 
-    override fun onCreatePreferences(savedInstanceState: Bundle?, rootKey: String?) {
-        val sp=PreferenceManager.getDefaultSharedPreferences(requireContext())
-
-        val swipeBrightNess=sp.getBoolean("BrightnessBySwipe",true)
-
-        val darkMode=sp.getBoolean("DarkMode",false)
-        val screenOn=sp.getBoolean("ScreenOn",false)
-        val AccessDocs=sp.getBoolean("AccessDocs",false)
-
-        val upgradeToPremium=sp.getString("Upgrade","")
+    override fun onCreateView(
+        inflater: LayoutInflater, container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
+        // Inflate the layout for this fragment
+        val view= inflater.inflate(R.layout.fragment_settings, container, false)
 
 
-        Log.d("TAG", "onCreatePreferences: $swipeBrightNess \n $darkMode " +
-                "\n $screenOn \n $AccessDocs \n $upgradeToPremium \n ")
-
-
-
+        return view
     }
 
 
 }
-

@@ -10,6 +10,9 @@ import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.ViewModelProviders
+import com.google.android.gms.auth.api.signin.GoogleSignIn
+import com.google.android.gms.auth.api.signin.GoogleSignInClient
+import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 import read.code.yourreader.MVVVM.repository.AuthRepository
@@ -27,6 +30,7 @@ class LoginActivity : AppCompatActivity() {
     private lateinit var mAuth: FirebaseAuth
     private var currentuser: FirebaseUser? = null
     private var verifiedboolean = false
+    private lateinit var googleSignInClient: GoogleSignInClient
     private lateinit var component: DaggerFactoryComponent
     lateinit var binding: ActivityLoginBinding
 
@@ -55,6 +59,12 @@ class LoginActivity : AppCompatActivity() {
             sendUserToForgotPasswordActivity()
         }
 
+        val gso = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+            .requestIdToken(getString(R.string.default_web_client_id))
+            .requestEmail()
+            .build()
+
+        googleSignInClient = GoogleSignIn.getClient(this, gso)
 
     }
 
@@ -84,13 +94,9 @@ class LoginActivity : AppCompatActivity() {
     private fun init() {
         val window: Window = this.window
         window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS)
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS)
-        }
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             window.statusBarColor = ContextCompat.getColor(this, R.color.my_statusbar_color)
-        }
-        // AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
+
 
         mAuth = FirebaseAuth.getInstance()
         component = DaggerFactoryComponent.builder()
@@ -122,4 +128,6 @@ class LoginActivity : AppCompatActivity() {
         super.finish()
         overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right)
     }
+
+
 }
