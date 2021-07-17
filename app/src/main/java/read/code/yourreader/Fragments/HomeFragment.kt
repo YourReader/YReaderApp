@@ -33,14 +33,14 @@ class HomeFragment : Fragment(), OnPageChangeListener, OnLoadCompleteListener, O
 
     lateinit var inputStream: InputStream
     lateinit var binding: FragmentHomeBinding
-    lateinit var tts: TextToSpeech
+    var tts: TextToSpeech?=null
     var builder = StringBuilder()
 
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         // Inflate the layout for this fragment
         InitialiseTTS()
         binding = FragmentHomeBinding.inflate(layoutInflater)
@@ -71,9 +71,7 @@ class HomeFragment : Fragment(), OnPageChangeListener, OnLoadCompleteListener, O
         }
 
         binding.btnPaly.setOnClickListener {
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                speakOut(builder.toString())
-            }
+            speakOut(builder.toString())
 
         }
 
@@ -83,13 +81,12 @@ class HomeFragment : Fragment(), OnPageChangeListener, OnLoadCompleteListener, O
             override fun onProgressChanged(seekBar: SeekBar, progress: Int, fromUser: Boolean) {
                  speechRate= ((progress +1.0)/10).toFloat()
                  speechRate = binding.seekBarSpeed.progress.toFloat() / 50
-            //    if (speed < 0.1) speed = 0.1f
                 Log.d(TAG, "onProgressChanged: $speechRate")
             }
 
             override fun onStartTrackingTouch(seekBar: SeekBar) {}
             override fun onStopTrackingTouch(seekBar: SeekBar) {
-                tts.setSpeechRate(speechRate)
+                tts!!.setSpeechRate(speechRate)
 
             }
         })
@@ -106,7 +103,7 @@ class HomeFragment : Fragment(), OnPageChangeListener, OnLoadCompleteListener, O
 
             override fun onStartTrackingTouch(seekBar: SeekBar) {}
             override fun onStopTrackingTouch(seekBar: SeekBar) {
-                tts.setPitch(pitch)
+                tts!!.setPitch(pitch)
 
             }
         })
@@ -120,9 +117,7 @@ class HomeFragment : Fragment(), OnPageChangeListener, OnLoadCompleteListener, O
         val pdffile: Uri? = intent.getParcelableExtra(Intent.EXTRA_STREAM)
         if (pdffile != null) {
             Log.d("Pdf File Path : ", "" + pdffile.path)
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                extractTextFromPdfFile(pdffile)
-            }
+            extractTextFromPdfFile(pdffile)
             displayFromUri(pdffile)
             Log.d(TAG, "handlePdfFile: Pdf Loaded")
         }
@@ -146,18 +141,16 @@ class HomeFragment : Fragment(), OnPageChangeListener, OnLoadCompleteListener, O
             Toast.makeText(requireContext(), "File Not Found", Toast.LENGTH_SHORT).show()
         }
         var fileContent = ""
-        var reader: PdfReader? = null
+        val reader: PdfReader?
         try {
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                reader = PdfReader(inputStream)
-                var pages = reader.numberOfPages
-                for (i in 1..pages) {
-                    fileContent = PdfTextExtractor.getTextFromPage(reader, i)
+            reader = PdfReader(inputStream)
+            val pages = reader.numberOfPages
+            for (i in 1..pages) {
+                fileContent = PdfTextExtractor.getTextFromPage(reader, i)
 
-                }
-                builder.append(fileContent)
             }
-            reader?.close()
+            builder.append(fileContent)
+            reader.close()
         } catch (e: IOException) {
             Log.d(TAG, "extractTextFromPdfFile: ${e.message}")
         }
@@ -225,22 +218,17 @@ class HomeFragment : Fragment(), OnPageChangeListener, OnLoadCompleteListener, O
     }
 
     override fun onDestroy() {
-        InitialiseTTS()
-        tts.stop()
-        tts.shutdown()
+        if(tts!=null)
+        {
+            tts!!.stop()
+            tts!!.shutdown()
+        }
         super.onDestroy()
     }
 
     @RequiresApi(Build.VERSION_CODES.LOLLIPOP)
     private fun speakOut(text: String) {
-
-        var pitch = binding.seekBarPitch.progress.toFloat() / 50
-        if (pitch < 0.1) pitch = 0.1f
-        var speed = binding.seekBarSpeed.progress.toFloat() / 50
-        if (speed < 0.1) speed = 0.1f
-
-        tts.speak(text, TextToSpeech.QUEUE_FLUSH, null, "")
-
+        tts!!.speak(text, TextToSpeech.QUEUE_FLUSH, null, "")
     }
 
     private fun InitialiseTTS() {
@@ -249,7 +237,7 @@ class HomeFragment : Fragment(), OnPageChangeListener, OnLoadCompleteListener, O
 
     override fun onInit(status: Int) {
         if (status == TextToSpeech.SUCCESS) {
-            var result = tts.setLanguage(Locale.ENGLISH)
+            val result = tts!!.setLanguage(Locale.ENGLISH)
             if ( result == TextToSpeech.LANG_NOT_SUPPORTED) {
                 Toast.makeText(requireContext(), "Language Not Supported", Toast.LENGTH_SHORT)
                     .show()

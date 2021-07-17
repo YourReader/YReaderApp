@@ -19,7 +19,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
-        android:fontFamily="@font/montserratregular"
+        android:fontFamily="@font/montserratsemibold"
         android:text="@string/yourreader"
         android:textAlignment="center"
 
@@ -35,7 +35,7 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center"
         android:layout_marginTop="10dp"
-        android:fontFamily="@font/montserratregular"
+        android:fontFamily="@font/montserratsemibold"
         android:text="@string/easily_listen_anything_you_want_to_read"
         android:textAlignment="center"
         android:textAllCaps="false"
@@ -45,7 +45,7 @@
         />
 
 
-    <Button
+    <androidx.appcompat.widget.AppCompatButton
         android:id="@+id/home_mail_btn"
         android:layout_width="match_parent"
         android:layout_height="50dp"
@@ -53,25 +53,64 @@
         android:layout_marginTop="60dp"
         android:layout_marginEnd="50dp"
         android:background="@drawable/btn_circular_nor"
-        android:drawableLeft="@drawable/ic_email"
         android:text="@string/continue_with_id_password"
         android:textAllCaps="false"
         android:textColor="@color/black"
+        android:fontFamily="@font/montserratsemibold"
         android:theme="@style/Theme.YourReader" />
 
-    <Button
-        android:id="@+id/G_home_auth"
+
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="50dp"
-        android:layout_marginStart="50dp"
-        android:layout_marginTop="20dp"
-        android:layout_marginEnd="50dp"
+        android:elevation="2dp"
+        android:id="@+id/G_home_auth"
+        android:layout_below="@+id/shit_txt"
+        android:orientation="horizontal"
         android:background="@drawable/btn_circular_nor"
-        android:drawableLeft="@drawable/googlelogo2"
-        android:text="@string/continue_with_google"
-        android:textAllCaps="false"
-        android:textColor="@color/black"
-        android:theme="@style/Theme.YourReader" />
+        android:weightSum="100"
+        android:gravity="center"
+        android:layout_marginTop="20dp"
+        android:layout_marginStart="50dp"
+        android:layout_marginEnd="50dp"
+        >
+
+        <RelativeLayout
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="15"
+
+            >
+            <ImageView
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:src="@drawable/google_logo"
+                android:layout_centerInParent="true"
+
+                />
+        </RelativeLayout>
+
+
+        <RelativeLayout
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="85"
+            >
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/continue_with_google"
+                android:textAllCaps="false"
+                android:textColor="@color/black"
+                android:textAlignment="center"
+                android:fontFamily="@font/montserratsemibold"
+                android:layout_centerVertical="true"
+                android:layout_centerHorizontal="true"
+                />
+        </RelativeLayout>
+
+
+    </LinearLayout>
 
     <RelativeLayout
         android:id="@+id/home_no_account"
@@ -88,6 +127,7 @@
             android:layout_gravity="center"
             android:layout_marginTop="20dp"
             android:gravity="center"
+            android:fontFamily="@font/montserratsemibold"
             android:text="@string/don_t_have_an_account"
             android:textSize="12sp" />
 
@@ -97,11 +137,10 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:layout_marginStart="5dp"
-            android:layout_marginLeft="5dp"
             android:layout_marginTop="20dp"
             android:layout_toEndOf="@id/lev1"
-            android:layout_toRightOf="@id/lev1"
             android:gravity="center"
+            android:fontFamily="@font/montserratsemibold"
             android:text="@string/signup"
             android:textColor="@color/blue"
             android:textSize="12sp" />

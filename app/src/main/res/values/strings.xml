@@ -60,5 +60,24 @@
         <item>Upgrade</item>
         <item>Cancel</item>
     </string-array>
+    <!-- Preference Titles -->
+    <string name="messages_header">Messages</string>
+    <string name="sync_header">Sync</string>
+
+    <!-- Messages Preferences -->
+    <string name="signature_title">Your signature</string>
+    <string name="reply_title">Default reply action</string>
+
+    <!-- Sync Preferences -->
+    <string name="sync_title">Sync email periodically</string>
+    <string name="attachment_title">Download incoming attachments</string>
+    <string name="attachment_summary_on">Automatically download attachments for incoming emails
+    </string>
+    <string name="attachment_summary_off">Only download attachments when manually requested</string>
+    <string name="adjust_brightness_by_swiping_up_and_down_on_left_side_of_screen">Adjust Brightness by swiping Up and Down on Left Side of Screen</string>
+    <string name="brightness_by_swipe">Brightness By Swipe</string>
+    <string name="reading">Reading</string>
+    <string name="keep_screen_on">Keep Screen On while Reading without touching</string>
+    <string name="enable_dark_mode">Enable Dark Mode by turning on the switch</string>
 
 </resources>

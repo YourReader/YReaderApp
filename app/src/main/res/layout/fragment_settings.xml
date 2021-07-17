@@ -1,0 +1,193 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context=".Fragments.SettingsFragment">
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/reading"
+        android:textColor="@color/primary_color"
+        android:textAlignment="center"
+        android:textAllCaps="false"
+        android:textSize="16sp"
+        android:fontFamily="@font/montserratsemibold"
+        android:layout_marginTop="20dp"
+        android:layout_marginStart="20dp"
+        />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/design_Content_swipe"
+        android:weightSum="100"
+        android:layout_marginTop="10dp"
+        android:padding="10dp"
+        android:orientation="horizontal"
+
+        >
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="90"
+            android:id="@+id/rel_brightNess">
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/title_swipe"
+                android:text="@string/brightness_by_swipe"
+                android:textColor="@color/black"
+                android:textAlignment="center"
+                android:textAllCaps="false"
+                android:textSize="16sp"
+                android:fontFamily="@font/montserratsemibold"
+                android:layout_marginStart="10dp"
+                />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/adjust_brightness_by_swiping_up_and_down_on_left_side_of_screen"
+                android:layout_below="@id/title_swipe"
+                android:textAlignment="textStart"
+                android:textColor="@color/black"
+                android:textAllCaps="false"
+                android:textSize="9sp"
+                android:fontFamily="@font/montserratsemibold"
+                android:layout_marginTop="10dp"
+                android:layout_marginStart="10dp"
+                />
+
+        </LinearLayout>
+
+
+        <androidx.appcompat.widget.SwitchCompat
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="10"
+            android:gravity="end|center"
+
+            />
+
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/design_ScreenOn"
+        android:layout_marginTop="10dp"
+        android:padding="10dp"
+        android:weightSum="100"
+        android:orientation="horizontal"
+
+        >
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:layout_weight="90"
+            android:id="@+id/rel_ScreenOn">
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/title_ScreenOn"
+                android:text="Screen On"
+                android:textColor="@color/black"
+                android:textAlignment="center"
+                android:textAllCaps="false"
+                android:textSize="16sp"
+                android:fontFamily="@font/montserratsemibold"
+                android:layout_marginStart="10dp"
+                />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="15dp"
+                android:text="@string/keep_screen_on"
+                android:textAlignment="textStart"
+                android:textColor="@color/black"
+                android:textAllCaps="false"
+                android:textSize="9sp"
+                android:fontFamily="@font/montserratsemibold"
+                android:layout_marginTop="10dp"
+                android:layout_marginStart="10dp"
+                />
+
+        </LinearLayout>
+
+
+        <androidx.appcompat.widget.SwitchCompat
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="0dp"
+            android:layout_weight="10"
+            android:gravity="end|center"
+            />
+
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/design_DarkMode"
+        android:layout_marginTop="10dp"
+        android:padding="10dp"
+        android:weightSum="100"
+        android:orientation="horizontal"
+
+        >
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:layout_weight="90"
+            android:id="@+id/rel_DarkMode">
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/title_Darkmode"
+                android:text="Dark Mode"
+                android:textColor="@color/black"
+                android:textAlignment="center"
+                android:textAllCaps="false"
+                android:textSize="16sp"
+                android:fontFamily="@font/montserratsemibold"
+                android:layout_marginStart="10dp"
+                />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="15dp"
+                android:text="@string/enable_dark_mode"
+                android:textAlignment="textStart"
+                android:textColor="@color/black"
+                android:textAllCaps="false"
+                android:textSize="9sp"
+                android:fontFamily="@font/montserratsemibold"
+                android:layout_marginTop="10dp"
+                android:layout_marginStart="10dp"
+                />
+
+        </LinearLayout>
+
+
+        <androidx.appcompat.widget.SwitchCompat
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="0dp"
+            android:layout_weight="10"
+            android:gravity="end|center"
+            />
+
+
+    </LinearLayout>
+
+
+
+
+
+
+</LinearLayout>

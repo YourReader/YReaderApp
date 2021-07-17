@@ -14,8 +14,7 @@
         android:layout_height="wrap_content"
         android:id="@+id/go_back_login"
         android:layout_marginTop="12dp"
-        android:layout_marginStart="15dp"
-        android:layout_marginLeft="10dp">
+        android:layout_marginStart="15dp">
 
         <ImageView
             android:layout_width="wrap_content"
@@ -34,7 +33,7 @@
             android:layout_marginTop="11dp"
             android:layout_toEndOf="@+id/bk_img"
             android:layout_toRightOf="@+id/bk_img"
-            android:fontFamily="@font/montserratregular"
+            android:fontFamily="@font/montserratsemibold"
             android:gravity="center_horizontal"
             android:text="@string/back"
             android:textAlignment="center"
@@ -50,7 +49,6 @@
         android:src="@drawable/logo"
         android:layout_marginTop="60dp"
         android:layout_marginStart="-10dp"
-        android:layout_marginLeft="-10dp"
         android:id="@+id/lg_preview_logo"/>
 
     <TextView
@@ -64,9 +62,8 @@
         android:gravity="center_horizontal"
         android:textSize="22sp"
         android:layout_marginStart="30dp"
-        android:layout_marginLeft="30dp"
         android:textColor="@color/black"
-        android:fontFamily="@font/montserratregular"
+        android:fontFamily="@font/montserratsemibold"
         />
 
     <TextView
@@ -82,8 +79,7 @@
         android:gravity="center_horizontal"
         android:textSize="22sp"
         android:layout_marginStart="30dp"
-        android:layout_marginLeft="30dp"
-        android:fontFamily="@font/montserratregular"
+        android:fontFamily="@font/montserratsemibold"
         android:layout_marginTop="10dp"
 
         />
@@ -112,8 +108,7 @@
         android:inputType="textEmailAddress"
         android:drawableStart="@drawable/ic_email"
         android:drawablePadding="10dp"
-        android:drawableLeft="@drawable/ic_email"
-        android:fontFamily="@font/montserratregular"
+        android:fontFamily="@font/montserratsemibold"
         />
     </com.google.android.material.textfield.TextInputLayout>
 
@@ -139,8 +134,8 @@
         android:drawablePadding="10dp"
         android:inputType="textPassword"
         android:drawableStart="@drawable/ic_pass"
-        android:fontFamily="@font/montserratregular"
-        android:drawableLeft="@drawable/ic_pass" />
+        android:fontFamily="@font/montserratsemibold"
+        />
     </com.google.android.material.textfield.TextInputLayout>
 
     <androidx.appcompat.widget.AppCompatButton
@@ -156,7 +151,7 @@
         android:textColor="@color/white"
         android:textAllCaps="false"
         android:textSize="20sp"
-        android:fontFamily="@font/montserratregular"
+        android:fontFamily="@font/montserratsemibold"
         />
 
     <TextView
@@ -174,7 +169,6 @@
         android:layout_alignParentEnd="true"
         android:gravity="center_horizontal"
         android:layout_marginEnd="31dp"
-        android:layout_alignParentRight="true"
         android:layout_marginRight="20dp" />
 
     <RelativeLayout
@@ -192,7 +186,7 @@
             android:gravity="center"
             android:layout_gravity="center"
             android:text="@string/don_t_have_an_account"
-            android:fontFamily="@font/montserratregular"
+            android:fontFamily="@font/montserratsemibold"
             android:textSize="12sp"
             android:id="@+id/lev1"
             android:layout_marginTop="20dp"/>
@@ -204,13 +198,11 @@
             android:layout_toEndOf="@id/lev1"
             android:textColor="@color/blue"
             android:layout_gravity="center"
-            android:fontFamily="@font/montserratregular"
+            android:fontFamily="@font/montserratsemibold"
             android:text="@string/signup"
             android:textSize="12sp"
             android:layout_marginTop="20dp"
-            android:layout_toRightOf="@id/lev1"
-            android:layout_marginStart="5dp"
-            android:layout_marginLeft="5dp" />
+            android:layout_marginStart="5dp" />
 
     </RelativeLayout>
 
