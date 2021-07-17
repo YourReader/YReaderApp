@@ -24,6 +24,7 @@ import androidx.annotation.RequiresApi
 import androidx.core.app.ActivityCompat
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.lifecycleScope
 import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.launch
 import read.code.yourreader.MVVVM.viewmodels.FilesViewModel
@@ -35,34 +36,41 @@ import java.io.File
 class BooksFragment : Fragment() {
     @RequiresApi(Build.VERSION_CODES.KITKAT)
     var dir = File(Environment.getExternalStorageDirectory().absolutePath)
-    private var pdfs = ArrayList<String>()
+    private var pdfs = ArrayList<Files>()
     private var _binding: FragmentBooksBinding? = null
     private val binding get() = _binding!!
-    lateinit var bitmap: Bitmap
-    var permissionGranted = false
+    private lateinit var bitmap: Bitmap
+    private var permissionGranted = false
     private val TAG = "bFragment"
     private lateinit var mFilesViewModel: FilesViewModel
-    val pdfPattern = ".pdf"
-    val pdfPattern2 = ".docx"
-    val pdfPattern3 = ".doc"
-    val pdfPattern4 = ".txt"
+    private val pdfPattern = ".pdf"
+    private val pdfPattern2 = ".docx"
+    private val pdfPattern3 = ".doc"
+    private val pdfPattern4 = ".txt"
+    private var isEmpty = true
 
-    override fun onCreateView( //the fragment is initialized and bound to the nav host activity.
+    override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
         _binding = FragmentBooksBinding.inflate(inflater, container, false)
-
         mFilesViewModel = ViewModelProvider(this).get(FilesViewModel::class.java)
-
-        binding.loadDocuBooks.setOnClickListener {
-            Log.d(TAG, "onCreateView:CLICKED ")
-            loadFiles()
+        MainScope().launch {
+            mFilesViewModel.readAllData.observe(requireActivity(), {
+                isEmpty = it.isNullOrEmpty()
+                Log.d(
+                    TAG,
+                    "checkDb: EMPTY: $isEmpty Null/MT: ${it.isNullOrEmpty()} Size ${it.size}"
+                )
+            })
         }
 
+        binding.loadDocuBooks.setOnClickListener {
+            binding.progressBarBooks.visibility = View.VISIBLE
+            loadFiles()
+        }
         return binding.root
     }
-
 
     private fun handlePermissions() {
         if (SDK_INT >= Build.VERSION_CODES.R) {
@@ -73,7 +81,6 @@ class BooksFragment : Fragment() {
     }
 
     private fun searchFiles(dir: File) {
-
         val FileList = dir.listFiles()
         if (FileList != null) {
             for (i in FileList.indices) {
@@ -87,7 +94,7 @@ class BooksFragment : Fragment() {
                                 type = pdfPattern
                             )
                         )
-                        pdfs.add(FileList[i].toString())
+                        pdfs.add(Files(path = FileList[i].toString(), type = pdfPattern))
                         Log.d(TAG, "searchFiles: Successfully added $pdfPattern")
                     }
                     if (FileList[i].name.endsWith(pdfPattern2)) {
@@ -97,7 +104,7 @@ class BooksFragment : Fragment() {
                                 type = pdfPattern2
                             )
                         )
-                        pdfs.add(FileList[i].toString())
+                        pdfs.add(Files(path = FileList[i].toString(), type = pdfPattern))
                         Log.d(TAG, "searchFiles: Successfully added $pdfPattern2")
                     }
                     if (FileList[i].name.endsWith(pdfPattern3)) {
@@ -107,67 +114,81 @@ class BooksFragment : Fragment() {
                                 type = pdfPattern3
                             )
                         )
-                        pdfs.add(FileList[i].toString())
+                        pdfs.add(Files(path = FileList[i].toString(), type = pdfPattern))
                         Log.d(TAG, "searchFiles: Successfully added $pdfPattern3")
                     }
-                    if (FileList[i].name.endsWith(pdfPattern4)) {
+//                    if (FileList[i].name.endsWith(pdfPattern4)) {
 //                        mFilesViewModel.addFile(
 //                            Files(
 //                                path = FileList[i].toString(),
 //                                type = pdfPattern4
 //                            )
 //                        )
-//                        pdfs.add(FileList[i].toString())
+//                        pdfs.add(Files(path = FileList[i].toString(), type = pdfPattern4))
 //                        Log.d(TAG, "searchFiles: Successfully added $pdfPattern4")
-                    }
+//                    }
                 }
             }
         }
     }
 
-
     @SuppressLint("SetTextI18n")
     private fun loadFiles() {
         handlePermissions()
 
-        Log.d(TAG, "loadFiles: after HandlePermissions")
-        if (permissionGranted) {
-            Log.d(TAG, "loadFiles: Permissions granted: $permissionGranted ")
-            binding.progressBarBooks.visibility = View.VISIBLE
-            MainScope().launch {
-                Log.d(TAG, "loadFiles: MAIN SCOPE ")
-                searchFiles(dir)
-                Log.d(
-                    TAG,
-                    "loadFiles: PDF: ${pdfs[pdfs.size - 1]} FILE: ${File(pdfs[pdfs.size - 1])}"
-                )
-                val fd = ParcelFileDescriptor.open(
-                    File(pdfs[pdfs.size - 1]),
-                    ParcelFileDescriptor.MODE_READ_ONLY
-                )
-                Log.d(TAG, "loadFiles: PDFS SIZE: ${pdfs.size}")
-                val renderer = PdfRenderer(fd)
-                bitmap = Bitmap.createBitmap(1000, 1000, Bitmap.Config.ARGB_4444)
-                val page: PdfRenderer.Page = renderer.openPage(0)
-                page.render(bitmap, null, null, PdfRenderer.Page.RENDER_MODE_FOR_DISPLAY)
-                hideLoadDocuLayout()
-                binding.bm.setImageBitmap(bitmap)
-                binding.hellotext.text = pdfs[pdfs.size - 1].toString() + " Size: " + pdfs.size
+        lifecycleScope.launch {
+            if (!permissionGranted) {
+                Log.d(TAG, "loadFiles: No permissions")
+            } else if (permissionGranted) {
+                if (isEmpty) {
+                    Log.d(TAG, "loadFiles: First Time User")
+                    searchFiles(dir)
+                    val fd = ParcelFileDescriptor.open(
+                        File(pdfs[pdfs.size - 1].path),
+                        ParcelFileDescriptor.MODE_READ_ONLY
+                    )
+                    val renderer = PdfRenderer(fd)
+                    bitmap = Bitmap.createBitmap(1000, 1000, Bitmap.Config.ARGB_4444)
+                    val page: PdfRenderer.Page = renderer.openPage(0)
+                    page.render(bitmap, null, null, PdfRenderer.Page.RENDER_MODE_FOR_DISPLAY)
+                    binding.bm.setImageBitmap(bitmap)
+                    binding.hellotext.text = " ${pdfs[pdfs.size - 1]}   Size:  ${pdfs.size}"
+                    Print()
+                    hideLoadDocuLayout()
+
+                } else if (!isEmpty) {
+                    Log.d(TAG, "loadFiles: Not First Time User")
+                    mFilesViewModel.readAllData.observe(requireActivity(), {
+                        pdfs.add(it[0])
+                        pdfs[0]
+                        val fd = ParcelFileDescriptor.open(
+                            File(pdfs[0].path),
+                            ParcelFileDescriptor.MODE_READ_ONLY
+                        )
+                        val renderer = PdfRenderer(fd)
+                        bitmap = Bitmap.createBitmap(1000, 1000, Bitmap.Config.ARGB_4444)
+                        val page: PdfRenderer.Page = renderer.openPage(0)
+                        page.render(bitmap, null, null, PdfRenderer.Page.RENDER_MODE_FOR_DISPLAY)
+                        hideLoadDocuLayout()
+                        binding.bm.setImageBitmap(bitmap)
+                        binding.hellotext.text = " ${pdfs[pdfs.size - 1]}   Size:  ${pdfs.size}"
+                    })
+                }
             }
-        } else {
-            Log.d(TAG, "loadFiles: ELSE")
-            Toast.makeText(
-                requireContext(),
-                "Cant Load Documents without Permission",
-                Toast.LENGTH_SHORT
-            ).show()
+        }
+    }
+
+    private fun Print() {
+        MainScope().launch {
+            mFilesViewModel.readAllData.observe(requireActivity(), {
+                Log.d(TAG, "Print: ${it.size}")
+            })
         }
     }
 
     private fun checkPermissions(permission: String, name: String, requestCode: Int) {
         Log.d(TAG, "checkPermissions: PERMISSION ASKED $name")
         if (SDK_INT >= Build.VERSION_CODES.R) {
-            Log.d(TAG, "checkPermissions:  IS => M")
             when {
                 Environment.isExternalStorageManager() -> {
                     permissionGranted = true
@@ -243,7 +264,7 @@ class BooksFragment : Fragment() {
                     permissionGranted = true
                 } else if (SDK_INT >= Build.VERSION_CODES.R) {
                     checkPermissions(
-                        android.Manifest.permission.MANAGE_EXTERNAL_STORAGE,
+                        Manifest.permission.MANAGE_EXTERNAL_STORAGE,
                         "MANAGE",
                         101
                     )
@@ -274,5 +295,8 @@ class BooksFragment : Fragment() {
 
     }
 
-
+    override fun onDestroy() {
+        super.onDestroy()
+        _binding = null
+    }
 }
