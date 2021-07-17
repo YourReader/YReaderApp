@@ -1,7 +1,7 @@
 package read.code.yourreader.Room
 
-import androidx.lifecycle.LiveData
 import androidx.room.*
+import kotlinx.coroutines.flow.Flow
 import read.code.yourreader.data.Files
 
 @Dao
@@ -17,5 +17,5 @@ interface FileDao {
     suspend fun delete(files: Files)
 
     @Query("SELECT * FROM files_table")
-    fun getFiles(): LiveData<List<Files>>
+    fun getFiles(): Flow<List<Files>>
 }
