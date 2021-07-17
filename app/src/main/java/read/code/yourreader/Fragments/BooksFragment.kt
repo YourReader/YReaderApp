@@ -40,14 +40,14 @@ class BooksFragment : Fragment() {
     private var _binding: FragmentBooksBinding? = null
     private val binding get() = _binding!!
     private lateinit var bitmap: Bitmap
-    var permissionGranted = false
+    private var permissionGranted = false
     private val TAG = "bFragment"
     private lateinit var mFilesViewModel: FilesViewModel
     private val pdfPattern = ".pdf"
     private val pdfPattern2 = ".docx"
     private val pdfPattern3 = ".doc"
     private val pdfPattern4 = ".txt"
-    var isEmpty = true
+    private var isEmpty = true
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -264,7 +264,7 @@ class BooksFragment : Fragment() {
                     permissionGranted = true
                 } else if (SDK_INT >= Build.VERSION_CODES.R) {
                     checkPermissions(
-                        android.Manifest.permission.MANAGE_EXTERNAL_STORAGE,
+                        Manifest.permission.MANAGE_EXTERNAL_STORAGE,
                         "MANAGE",
                         101
                     )
