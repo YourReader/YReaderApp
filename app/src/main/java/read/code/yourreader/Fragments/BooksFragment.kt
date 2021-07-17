@@ -24,7 +24,8 @@ import androidx.annotation.RequiresApi
 import androidx.core.app.ActivityCompat
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.lifecycleScope
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.launch
 import read.code.yourreader.MVVVM.viewmodels.FilesViewModel
@@ -136,7 +137,7 @@ class BooksFragment : Fragment() {
     private fun loadFiles() {
         handlePermissions()
 
-        lifecycleScope.launch {
+        CoroutineScope(Dispatchers.IO).launch {
             if (!permissionGranted) {
                 Log.d(TAG, "loadFiles: No permissions")
             } else if (permissionGranted) {
