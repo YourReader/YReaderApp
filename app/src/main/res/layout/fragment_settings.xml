@@ -53,9 +53,9 @@
                 android:textAlignment="textStart"
                 android:textColor="@color/black"
                 android:textAllCaps="false"
-                android:textSize="9sp"
-                android:fontFamily="@font/montserratsemibold"
-                android:layout_marginTop="10dp"
+                android:textSize="12sp"
+                android:fontFamily="@font/montserratregular"
+                android:layout_marginTop="5dp"
                 android:layout_marginStart="10dp"
                 />
 
@@ -106,9 +106,9 @@
                 android:textAlignment="textStart"
                 android:textColor="@color/black"
                 android:textAllCaps="false"
-                android:textSize="9sp"
-                android:fontFamily="@font/montserratsemibold"
-                android:layout_marginTop="10dp"
+                android:textSize="12sp"
+                android:fontFamily="@font/montserratregular"
+                android:layout_marginTop="5dp"
                 android:layout_marginStart="10dp"
                 />
 
@@ -160,9 +160,9 @@
                 android:textAlignment="textStart"
                 android:textColor="@color/black"
                 android:textAllCaps="false"
-                android:textSize="9sp"
-                android:fontFamily="@font/montserratsemibold"
-                android:layout_marginTop="10dp"
+                android:textSize="12sp"
+                android:fontFamily="@font/montserratregular"
+                android:layout_marginTop="5dp"
                 android:layout_marginStart="10dp"
                 />
 
@@ -230,9 +230,9 @@
                 android:textAlignment="textStart"
                 android:textColor="@color/black"
                 android:textAllCaps="false"
-                android:textSize="9sp"
-                android:fontFamily="@font/montserratsemibold"
-                android:layout_marginTop="10dp"
+                android:textSize="12sp"
+                android:fontFamily="@font/montserratregular"
+                android:layout_marginTop="5dp"
                 android:layout_marginStart="10dp"
                 />
 
@@ -296,9 +296,9 @@
                 android:textAlignment="textStart"
                 android:textColor="@color/black"
                 android:textAllCaps="false"
-                android:textSize="9sp"
-                android:fontFamily="@font/montserratsemibold"
-                android:layout_marginTop="10dp"
+                android:textSize="12sp"
+                android:fontFamily="@font/montserratregular"
+                android:layout_marginTop="5dp"
                 android:layout_marginStart="10dp"
                 />
 
