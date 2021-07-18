@@ -26,7 +26,6 @@ import read.code.yourreader.di.components.DaggerFactoryComponent
 import read.code.yourreader.di.modules.FactoryModule
 import read.code.yourreader.di.modules.RepositoryModule
 import read.code.yourreader.mvvm.viewmodels.AuthViewModel
-import read.code.yourreader.others.Constants
 
 
 class HomeAuth : AppCompatActivity() {
@@ -44,7 +43,7 @@ class HomeAuth : AppCompatActivity() {
     @RequiresApi(Build.VERSION_CODES.KITKAT)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        binding= ActivityHomeAuthBinding.inflate(layoutInflater)
+        binding = ActivityHomeAuthBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
         init()
@@ -66,12 +65,8 @@ class HomeAuth : AppCompatActivity() {
     private fun init() {
         val window: Window = this.window
         window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS)
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS)
-        }
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            window.statusBarColor = ContextCompat.getColor(this, R.color.my_statusbar_color)
-        }
+        window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS)
+        window.statusBarColor = ContextCompat.getColor(this, R.color.my_statusbar_color)
 
         mAuth = FirebaseAuth.getInstance()
         component = DaggerFactoryComponent.builder()
@@ -89,7 +84,6 @@ class HomeAuth : AppCompatActivity() {
 
         googleSignInClient = GoogleSignIn.getClient(this, gso)
     }
-
 
 
     override fun onStart() {

@@ -30,6 +30,7 @@ import kotlinx.coroutines.launch
 import read.code.yourreader.MVVVM.viewmodels.FilesViewModel
 import read.code.yourreader.data.Files
 import read.code.yourreader.databinding.FragmentBooksBinding
+import read.code.yourreader.others.Values
 import java.io.File
 
 
@@ -47,30 +48,29 @@ class BooksFragment : Fragment() {
     private val pdfPattern2 = ".docx"
     private val pdfPattern3 = ".doc"
     private val pdfPattern4 = ".txt"
-    private var isEmpty = true
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
         _binding = FragmentBooksBinding.inflate(inflater, container, false)
-        mFilesViewModel = ViewModelProvider(this).get(FilesViewModel::class.java)
-        MainScope().launch {
-            mFilesViewModel.readAllData.observe(requireActivity(), {
-                isEmpty = it.isNullOrEmpty()
-                Log.d(
-                    TAG,
-                    "checkDb: EMPTY: $isEmpty Null/MT: ${it.isNullOrEmpty()} Size ${it.size}"
-                )
-            })
-        }
-
+        init()
         binding.loadDocuBooks.setOnClickListener {
             binding.progressBarBooks.visibility = View.VISIBLE
             loadFiles()
         }
         return binding.root
     }
+
+    private fun init() {
+        mFilesViewModel = ViewModelProvider(this).get(FilesViewModel::class.java)
+        Log.d(TAG, "init: ${Values.isDbEmpty}")
+        if (!Values.isDbEmpty) {
+            hideLoadDocuLayout()
+            loadFiles()
+        }
+    }
+
 
     private fun handlePermissions() {
         if (SDK_INT >= Build.VERSION_CODES.R) {
@@ -140,7 +140,7 @@ class BooksFragment : Fragment() {
             if (!permissionGranted) {
                 Log.d(TAG, "loadFiles: No permissions")
             } else if (permissionGranted) {
-                if (isEmpty) {
+                if (Values.isDbEmpty) {
                     Log.d(TAG, "loadFiles: First Time User")
                     searchFiles(dir)
                     val fd = ParcelFileDescriptor.open(
@@ -156,7 +156,7 @@ class BooksFragment : Fragment() {
                     Print()
                     hideLoadDocuLayout()
 
-                } else if (!isEmpty) {
+                } else if (!Values.isDbEmpty) {
                     Log.d(TAG, "loadFiles: Not First Time User")
                     mFilesViewModel.readAllData.observe(requireActivity(), {
                         pdfs.add(it[0])
