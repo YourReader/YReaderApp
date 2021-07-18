@@ -4,105 +4,110 @@
     android:id="@+id/pdfVIew"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:orientation="vertical"
     android:padding="10dp"
     android:weightSum="100"
-    android:orientation="vertical"
     tools:context=".Fragments.HomeFragment">
 
 
     <com.github.barteksc.pdfviewer.PDFView
+        android:id="@+id/pdfViewHome"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_marginStart="20dp"
         android:layout_marginEnd="20dp"
         android:layout_weight="85"
-        android:id="@+id/pdfViewHome"
-        android:visibility="gone"
-        />
+        android:visibility="gone" />
 
 
     <TextView
+        android:id="@+id/lay_pitch"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/pitch"
-        android:id="@+id/lay_pitch"
         android:layout_marginStart="40dp"
         android:layout_weight="1"
-        android:visibility="gone"
-        android:fontFamily="@font/montserratsemibold" />
+        android:fontFamily="@font/montserratsemibold"
+        android:text="@string/pitch"
+        android:visibility="gone" />
+
     <SeekBar
+        android:id="@+id/seekBarPitch"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/seekBarPitch"
         android:layout_marginStart="40dp"
-        android:layout_marginEnd="40dp"
-        android:progress="50"
-        android:visibility="gone"
-        android:layout_weight="3"
         android:layout_marginTop="5dp"
-        />
+        android:layout_marginEnd="40dp"
+        android:layout_weight="3"
+        android:progress="50"
+        android:visibility="gone" />
 
     <TextView
+        android:id="@+id/lay_Speed"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/speed"
-        android:id="@+id/lay_Speed"
         android:layout_marginStart="40dp"
+        android:layout_weight="1"
         android:fontFamily="@font/montserratsemibold"
-        android:visibility="gone"
-        android:layout_weight="1" />
+        android:text="@string/speed"
+        android:visibility="gone" />
+
     <SeekBar
+        android:id="@+id/seekBarSpeed"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/seekBarSpeed"
-        android:progress="50"
-        android:visibility="gone"
-        android:layout_marginTop="5dp"
         android:layout_marginStart="40dp"
+        android:layout_marginTop="5dp"
         android:layout_marginEnd="40dp"
         android:layout_weight="3"
-        />
+        android:progress="50"
+        android:visibility="gone" />
+
+
+    <ProgressBar
+        android:id="@+id/pbar"
+        android:layout_width="70dp"
+        android:layout_height="70dp"
+        android:layout_gravity="center"
+        android:layout_marginTop="60dp" />
 
     <Button
+        android:id="@+id/btn_play"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="@string/play"
         android:fontFamily="@font/montserratsemibold"
-        android:id="@+id/btn_paly"
-        android:visibility="gone"/>
+        android:text="@string/play"
+        android:visibility="gone" />
 
     <RelativeLayout
+        android:id="@+id/lay_no_file"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:id="@+id/lay_no_file"
         android:padding="10dp"
 
         >
+
         <TextView
+            android:id="@+id/notice_noting"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:id="@+id/notice_noting"
-            android:fontFamily="@font/montserratsemibold"
-            android:text="@string/noting_loaded"
             android:layout_centerHorizontal="true"
             android:layout_centerVertical="true"
+            android:fontFamily="@font/montserratsemibold"
+            android:text="@string/noting_loaded"
             android:textColor="@color/black"
-            android:textSize="22sp"/>
+            android:textSize="22sp" />
 
         <Button
+            android:id="@+id/openFile_Home"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_below="@+id/notice_noting"
             android:layout_marginStart="40dp"
             android:layout_marginTop="15dp"
             android:layout_marginEnd="40dp"
+            android:background="@drawable/btn_circular"
             android:fontFamily="@font/montserratsemibold"
-            android:id="@+id/openFile_Home"
-            android:layout_below="@+id/notice_noting"
-            android:text="@string/open_file"
-            android:background="@drawable/btn_circular"/>
+            android:text="@string/open_file" />
     </RelativeLayout>
-
-
-
 
 </LinearLayout>

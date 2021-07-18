@@ -33,7 +33,7 @@ class HomeFragment : Fragment(), OnPageChangeListener, OnLoadCompleteListener, O
 
     lateinit var inputStream: InputStream
     lateinit var binding: FragmentHomeBinding
-    var tts: TextToSpeech?=null
+    var tts: TextToSpeech? = null
     var builder = StringBuilder()
 
 
@@ -65,22 +65,20 @@ class HomeFragment : Fragment(), OnPageChangeListener, OnLoadCompleteListener, O
             }
         }
 
-
         binding.openFileHome.setOnClickListener {
-
+            binding.pbar.visibility != binding.pbar.visibility
         }
 
-        binding.btnPaly.setOnClickListener {
+        binding.btnPlay.setOnClickListener {
             speakOut(builder.toString())
 
         }
 
-
         binding.seekBarSpeed.setOnSeekBarChangeListener(object : OnSeekBarChangeListener {
-            var speechRate:Float=0.1F
+            var speechRate: Float = 0.1F
             override fun onProgressChanged(seekBar: SeekBar, progress: Int, fromUser: Boolean) {
-                 speechRate= ((progress +1.0)/10).toFloat()
-                 speechRate = binding.seekBarSpeed.progress.toFloat() / 50
+                speechRate = ((progress + 1.0) / 10).toFloat()
+                speechRate = binding.seekBarSpeed.progress.toFloat() / 50
                 Log.d(TAG, "onProgressChanged: $speechRate")
             }
 
@@ -92,11 +90,11 @@ class HomeFragment : Fragment(), OnPageChangeListener, OnLoadCompleteListener, O
         })
 
         binding.seekBarPitch.setOnSeekBarChangeListener(object : OnSeekBarChangeListener {
-            var pitch :Float = 0.1F
+            var pitch: Float = 0.1F
             override fun onProgressChanged(seekBar: SeekBar, progress: Int, fromUser: Boolean) {
-                 pitch  =(progress.toFloat() +1)/100;
+                pitch = (progress.toFloat() + 1) / 100
                 if (pitch < 2.0)
-                Log.d(TAG, "onProgressChanged: $pitch")
+                    Log.d(TAG, "onProgressChanged: $pitch")
 
 
             }
@@ -132,7 +130,6 @@ class HomeFragment : Fragment(), OnPageChangeListener, OnLoadCompleteListener, O
     }
 
 
-    @RequiresApi(Build.VERSION_CODES.LOLLIPOP)
     private fun extractTextFromPdfFile(uri: Uri) {
         try {
             inputStream = requireContext().contentResolver.openInputStream(uri)!!
@@ -201,7 +198,7 @@ class HomeFragment : Fragment(), OnPageChangeListener, OnLoadCompleteListener, O
         binding.seekBarPitch.visibility = View.VISIBLE
         binding.seekBarSpeed.visibility = View.VISIBLE
         binding.laySpeed.visibility = View.VISIBLE
-        binding.btnPaly.visibility = View.VISIBLE
+        binding.btnPlay.visibility = View.VISIBLE
 
     }
 
@@ -213,13 +210,12 @@ class HomeFragment : Fragment(), OnPageChangeListener, OnLoadCompleteListener, O
         binding.seekBarPitch.visibility = View.GONE
         binding.seekBarSpeed.visibility = View.GONE
         binding.laySpeed.visibility = View.GONE
-        binding.btnPaly.visibility = View.GONE
+        binding.btnPlay.visibility = View.GONE
 
     }
 
     override fun onDestroy() {
-        if(tts!=null)
-        {
+        if (tts != null) {
             tts!!.stop()
             tts!!.shutdown()
         }
@@ -232,22 +228,23 @@ class HomeFragment : Fragment(), OnPageChangeListener, OnLoadCompleteListener, O
     }
 
     private fun InitialiseTTS() {
-        tts = TextToSpeech(context, this,"com.google.android.tts" )
-            }
+        tts = TextToSpeech(context, this, "com.google.android.tts")
+    }
 
     override fun onInit(status: Int) {
         if (status == TextToSpeech.SUCCESS) {
             val result = tts!!.setLanguage(Locale.ENGLISH)
-            if ( result == TextToSpeech.LANG_NOT_SUPPORTED) {
+            if (result == TextToSpeech.LANG_NOT_SUPPORTED) {
                 Toast.makeText(requireContext(), "Language Not Supported", Toast.LENGTH_SHORT)
                     .show()
 
             }
-            if (result == TextToSpeech.LANG_MISSING_DATA ){
+            if (result == TextToSpeech.LANG_MISSING_DATA) {
                 val installIntent = Intent()
                 installIntent.action = TextToSpeech.Engine.ACTION_INSTALL_TTS_DATA
                 startActivity(installIntent)
             }
 
-        }    }
+        }
+    }
 }
