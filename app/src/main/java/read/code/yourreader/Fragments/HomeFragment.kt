@@ -15,6 +15,7 @@ import android.widget.SeekBar.OnSeekBarChangeListener
 import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.fragment.app.Fragment
+import com.github.barteksc.pdfviewer.PDFView
 import com.github.barteksc.pdfviewer.listener.OnErrorListener
 import com.github.barteksc.pdfviewer.listener.OnLoadCompleteListener
 import com.github.barteksc.pdfviewer.listener.OnPageChangeListener
@@ -39,8 +40,10 @@ class HomeFragment : Fragment(), OnPageChangeListener, OnLoadCompleteListener, O
     lateinit var binding: FragmentHomeBinding
     var tts: TextToSpeech? = null
     var builderArray = ArrayList<String>()
+    var playEnabled=false
     var i = 0
-
+    var pdf:PDFView?=null
+    var str:String=""
     var pages = 0
 
 
@@ -71,16 +74,46 @@ class HomeFragment : Fragment(), OnPageChangeListener, OnLoadCompleteListener, O
                 }
             }
         }
+
+
+        binding.btnBack.setOnClickListener {
+            if (i!=0){
+                i--
+                pagesReader()
+            }
+            else{
+                Toast.makeText(requireContext(), "First page", Toast.LENGTH_SHORT).show()
+            }
+        }
+
+        binding.btnFront.setOnClickListener {
+            if (i<pages){
+                i++
+                pagesReader()
+            }
+            else{
+                Toast.makeText(requireContext(), "Pages Ended", Toast.LENGTH_SHORT).show()
+            }
+
+
+        }
 //
 //        binding.openFileHome.setOnClickListener {
 //            binding.pbar.visibility != binding.pbar.visibility
 //        }
 
         binding.btnPaly.setOnClickListener {
-
-            pagesReader()
-            binding.btnPaly.text = resources.getString(R.string.next)
-
+            if (!playEnabled)
+            {
+                binding.btnPaly.setImageResource(R.drawable.ic_pause)
+                pagesReader()
+                playEnabled=true
+            }
+            else{
+                binding.btnPaly.setImageResource(R.drawable.ic_play)
+                tts!!.stop()
+             playEnabled=false
+            }
         }
 
         binding.seekBarSpeed.setOnSeekBarChangeListener(object : OnSeekBarChangeListener {
@@ -94,6 +127,7 @@ class HomeFragment : Fragment(), OnPageChangeListener, OnLoadCompleteListener, O
             override fun onStartTrackingTouch(seekBar: SeekBar) {}
             override fun onStopTrackingTouch(seekBar: SeekBar) {
                 tts!!.setSpeechRate(speechRate)
+                pagesReader()
 
             }
         })
@@ -111,6 +145,7 @@ class HomeFragment : Fragment(), OnPageChangeListener, OnLoadCompleteListener, O
             override fun onStartTrackingTouch(seekBar: SeekBar) {}
             override fun onStopTrackingTouch(seekBar: SeekBar) {
                 tts!!.setPitch(pitch)
+                pagesReader()
 
             }
         })
@@ -207,7 +242,7 @@ class HomeFragment : Fragment(), OnPageChangeListener, OnLoadCompleteListener, O
         binding.seekBarPitch.visibility = View.VISIBLE
         binding.seekBarSpeed.visibility = View.VISIBLE
         binding.laySpeed.visibility = View.VISIBLE
-        binding.btnPaly.visibility = View.VISIBLE
+        binding.controler.visibility = View.VISIBLE
 
     }
 
@@ -219,7 +254,8 @@ class HomeFragment : Fragment(), OnPageChangeListener, OnLoadCompleteListener, O
         binding.seekBarPitch.visibility = View.GONE
         binding.seekBarSpeed.visibility = View.GONE
         binding.laySpeed.visibility = View.GONE
-        binding.btnPaly.visibility = View.GONE
+        binding.controler.visibility = View.GONE
+
 
     }
 
@@ -262,11 +298,12 @@ class HomeFragment : Fragment(), OnPageChangeListener, OnLoadCompleteListener, O
 
         if(i<=pages)
         {
-            val str = builderArray[i]
+            str = builderArray[i]
             speakOut(str)
-            i++
             Log.d(TAG, "onCreateView: i=$i")
             Log.d(TAG, "onCreateView: $str")
+            binding.pdfViewHome.jumpTo(i)
+
         }
 
 
