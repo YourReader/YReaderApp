@@ -15,16 +15,21 @@ import android.widget.SeekBar.OnSeekBarChangeListener
 import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.fragment.app.Fragment
+import com.github.barteksc.pdfviewer.PDFView
 import com.github.barteksc.pdfviewer.listener.OnErrorListener
 import com.github.barteksc.pdfviewer.listener.OnLoadCompleteListener
 import com.github.barteksc.pdfviewer.listener.OnPageChangeListener
 import com.itextpdf.text.pdf.PdfReader
+import com.itextpdf.text.pdf.parser.LocationTextExtractionStrategy
 import com.itextpdf.text.pdf.parser.PdfTextExtractor
+import read.code.yourreader.R
 import read.code.yourreader.databinding.FragmentHomeBinding
 import java.io.FileNotFoundException
 import java.io.IOException
 import java.io.InputStream
+import java.time.temporal.TemporalAdjusters.next
 import java.util.*
+import kotlin.collections.ArrayList
 
 
 class HomeFragment : Fragment(), OnPageChangeListener, OnLoadCompleteListener, OnErrorListener,
@@ -33,8 +38,13 @@ class HomeFragment : Fragment(), OnPageChangeListener, OnLoadCompleteListener, O
 
     lateinit var inputStream: InputStream
     lateinit var binding: FragmentHomeBinding
-    var tts: TextToSpeech?=null
-    var builder = StringBuilder()
+    var tts: TextToSpeech? = null
+    var builderArray = ArrayList<String>()
+    var playEnabled=false
+    var i = 0
+    var pdf:PDFView?=null
+    var str:String=""
+    var pages = 0
 
 
     override fun onCreateView(
@@ -66,37 +76,68 @@ class HomeFragment : Fragment(), OnPageChangeListener, OnLoadCompleteListener, O
         }
 
 
-        binding.openFileHome.setOnClickListener {
+        binding.btnBack.setOnClickListener {
+            if (i!=0){
+                i--
+                pagesReader()
+            }
+            else{
+                Toast.makeText(requireContext(), "First page", Toast.LENGTH_SHORT).show()
+            }
+        }
+
+        binding.btnFront.setOnClickListener {
+            if (i<pages){
+                i++
+                pagesReader()
+            }
+            else{
+                Toast.makeText(requireContext(), "Pages Ended", Toast.LENGTH_SHORT).show()
+            }
+
 
         }
+//
+//        binding.openFileHome.setOnClickListener {
+//            binding.pbar.visibility != binding.pbar.visibility
+//        }
 
         binding.btnPaly.setOnClickListener {
-            speakOut(builder.toString())
-
+            if (!playEnabled)
+            {
+                binding.btnPaly.setImageResource(R.drawable.ic_pause)
+                pagesReader()
+                playEnabled=true
+            }
+            else{
+                binding.btnPaly.setImageResource(R.drawable.ic_play)
+                tts!!.stop()
+             playEnabled=false
+            }
         }
 
-
         binding.seekBarSpeed.setOnSeekBarChangeListener(object : OnSeekBarChangeListener {
-            var speechRate:Float=0.1F
+            var speechRate: Float = 0.1F
             override fun onProgressChanged(seekBar: SeekBar, progress: Int, fromUser: Boolean) {
-                 speechRate= ((progress +1.0)/10).toFloat()
-                 speechRate = binding.seekBarSpeed.progress.toFloat() / 50
+                speechRate = ((progress + 1.0) / 10).toFloat()
+                speechRate = binding.seekBarSpeed.progress.toFloat() / 50
                 Log.d(TAG, "onProgressChanged: $speechRate")
             }
 
             override fun onStartTrackingTouch(seekBar: SeekBar) {}
             override fun onStopTrackingTouch(seekBar: SeekBar) {
                 tts!!.setSpeechRate(speechRate)
+                pagesReader()
 
             }
         })
 
         binding.seekBarPitch.setOnSeekBarChangeListener(object : OnSeekBarChangeListener {
-            var pitch :Float = 0.1F
+            var pitch: Float = 0.1F
             override fun onProgressChanged(seekBar: SeekBar, progress: Int, fromUser: Boolean) {
-                 pitch  =(progress.toFloat() +1)/100;
+                pitch = (progress.toFloat() + 1) / 100
                 if (pitch < 2.0)
-                Log.d(TAG, "onProgressChanged: $pitch")
+                    Log.d(TAG, "onProgressChanged: $pitch")
 
 
             }
@@ -104,6 +145,7 @@ class HomeFragment : Fragment(), OnPageChangeListener, OnLoadCompleteListener, O
             override fun onStartTrackingTouch(seekBar: SeekBar) {}
             override fun onStopTrackingTouch(seekBar: SeekBar) {
                 tts!!.setPitch(pitch)
+                pagesReader()
 
             }
         })
@@ -132,7 +174,6 @@ class HomeFragment : Fragment(), OnPageChangeListener, OnLoadCompleteListener, O
     }
 
 
-    @RequiresApi(Build.VERSION_CODES.LOLLIPOP)
     private fun extractTextFromPdfFile(uri: Uri) {
         try {
             inputStream = requireContext().contentResolver.openInputStream(uri)!!
@@ -144,12 +185,12 @@ class HomeFragment : Fragment(), OnPageChangeListener, OnLoadCompleteListener, O
         val reader: PdfReader?
         try {
             reader = PdfReader(inputStream)
-            val pages = reader.numberOfPages
+            pages = reader.numberOfPages
             for (i in 1..pages) {
-                fileContent = PdfTextExtractor.getTextFromPage(reader, i)
-
+                fileContent =
+                    PdfTextExtractor.getTextFromPage(reader, i, LocationTextExtractionStrategy())
+                builderArray.add(fileContent)
             }
-            builder.append(fileContent)
             reader.close()
         } catch (e: IOException) {
             Log.d(TAG, "extractTextFromPdfFile: ${e.message}")
@@ -201,7 +242,7 @@ class HomeFragment : Fragment(), OnPageChangeListener, OnLoadCompleteListener, O
         binding.seekBarPitch.visibility = View.VISIBLE
         binding.seekBarSpeed.visibility = View.VISIBLE
         binding.laySpeed.visibility = View.VISIBLE
-        binding.btnPaly.visibility = View.VISIBLE
+        binding.controler.visibility = View.VISIBLE
 
     }
 
@@ -213,13 +254,13 @@ class HomeFragment : Fragment(), OnPageChangeListener, OnLoadCompleteListener, O
         binding.seekBarPitch.visibility = View.GONE
         binding.seekBarSpeed.visibility = View.GONE
         binding.laySpeed.visibility = View.GONE
-        binding.btnPaly.visibility = View.GONE
+        binding.controler.visibility = View.GONE
+
 
     }
 
     override fun onDestroy() {
-        if(tts!=null)
-        {
+        if (tts != null) {
             tts!!.stop()
             tts!!.shutdown()
         }
@@ -232,22 +273,40 @@ class HomeFragment : Fragment(), OnPageChangeListener, OnLoadCompleteListener, O
     }
 
     private fun InitialiseTTS() {
-        tts = TextToSpeech(context, this,"com.google.android.tts" )
-            }
+        tts = TextToSpeech(context, this, "com.google.android.tts")
+    }
 
     override fun onInit(status: Int) {
         if (status == TextToSpeech.SUCCESS) {
             val result = tts!!.setLanguage(Locale.ENGLISH)
-            if ( result == TextToSpeech.LANG_NOT_SUPPORTED) {
+            if (result == TextToSpeech.LANG_NOT_SUPPORTED) {
                 Toast.makeText(requireContext(), "Language Not Supported", Toast.LENGTH_SHORT)
                     .show()
 
             }
-            if (result == TextToSpeech.LANG_MISSING_DATA ){
+            if (result == TextToSpeech.LANG_MISSING_DATA) {
                 val installIntent = Intent()
                 installIntent.action = TextToSpeech.Engine.ACTION_INSTALL_TTS_DATA
                 startActivity(installIntent)
             }
 
-        }    }
+        }
+    }
+
+
+    fun pagesReader() {
+
+        if(i<=pages)
+        {
+            str = builderArray[i]
+            speakOut(str)
+            Log.d(TAG, "onCreateView: i=$i")
+            Log.d(TAG, "onCreateView: $str")
+            binding.pdfViewHome.jumpTo(i)
+
+        }
+
+
+
+    }
 }
