@@ -20,23 +20,23 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.annotation.Nullable
-import androidx.annotation.RequiresApi
 import androidx.core.app.ActivityCompat
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
+import androidx.recyclerview.widget.LinearLayoutManager
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
+import read.code.yourreader.Adapter.FilesAdapter
 import read.code.yourreader.MVVVM.viewmodels.FilesViewModel
 import read.code.yourreader.data.Files
 import read.code.yourreader.databinding.FragmentBooksBinding
 import read.code.yourreader.others.Values
 import java.io.File
 
-
+@SuppressLint("SetTextI18n")
 class BooksFragment : Fragment() {
-    @RequiresApi(Build.VERSION_CODES.KITKAT)
     var dir = File(Environment.getExternalStorageDirectory().absolutePath)
     private var pdfs = ArrayList<Files>()
     private var _binding: FragmentBooksBinding? = null
@@ -45,6 +45,7 @@ class BooksFragment : Fragment() {
     private var permissionGranted = false
     private val TAG = "bFragment"
     private lateinit var mFilesViewModel: FilesViewModel
+    private val filesAdapter = FilesAdapter()
     private val pdfPattern = ".pdf"
     private val pdfPattern2 = ".docx"
     private val pdfPattern3 = ".doc"
@@ -60,6 +61,14 @@ class BooksFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         init()
+        binding.apply {
+            filesRecyclerView.apply {
+                adapter = filesAdapter
+                layoutManager = LinearLayoutManager(requireContext())
+                setHasFixedSize(true)
+            }
+        }
+
         binding.loadDocuBooks.setOnClickListener {
             binding.progressBarBooks.visibility = View.VISIBLE
             loadFiles()
@@ -67,7 +76,8 @@ class BooksFragment : Fragment() {
     }
 
     private fun init() {
-        mFilesViewModel = ViewModelProvider(this).get(FilesViewModel::class.java)
+        mFilesViewModel =
+            ViewModelProvider(this@BooksFragment).get(FilesViewModel::class.java)
         Log.d(TAG, "init: ${Values.isDbEmpty}")
         if (!Values.isDbEmpty) {
             hideLoadDocuLayout()
@@ -98,9 +108,18 @@ class BooksFragment : Fragment() {
                             )
                         )
                         pdfs.add(Files(path = FileList[i].toString(), type = pdfPattern))
-                        Log.d(TAG, "searchFiles: Successfully added $pdfPattern")
+                        Log.d(
+                            TAG,
+                            "searchFiles: S: ${
+                                "%.2f".format(
+                                    (FileList[i].length()).toFloat()
+                                            / 1048576.0
+                                )
+                            } MB name:${FileList[i].name}"
+                        )
                     }
                     if (FileList[i].name.endsWith(pdfPattern2)) {
+
                         mFilesViewModel.addFile(
                             Files(
                                 path = FileList[i].toString(),
@@ -109,6 +128,7 @@ class BooksFragment : Fragment() {
                         )
                         pdfs.add(Files(path = FileList[i].toString(), type = pdfPattern))
                         Log.d(TAG, "searchFiles: Successfully added $pdfPattern2")
+
                     }
                     if (FileList[i].name.endsWith(pdfPattern3)) {
                         mFilesViewModel.addFile(
@@ -128,7 +148,6 @@ class BooksFragment : Fragment() {
     @SuppressLint("SetTextI18n")
     private fun loadFiles() {
         handlePermissions()
-        Log.d(TAG, "loadFiles: ")
         GlobalScope.launch(Dispatchers.IO) {
             if (!permissionGranted) {
                 Log.d(TAG, "loadFiles: No permissions")
@@ -140,22 +159,20 @@ class BooksFragment : Fragment() {
                 } else if (!Values.isDbEmpty) {
                     Log.d(TAG, "loadFiles: Not First Time User")
                     lifecycleScope.launch(Dispatchers.Main) {
-                        mFilesViewModel.readAllData.observe(requireActivity(), {
-                            pdfs.add(it[0])
-                            pdfs[0]
-                            showData()
-                        })
+                        mFilesViewModel.readAllData.observe(viewLifecycleOwner) {
+                            filesAdapter.submitList(it)
+//                            showData()
+                        }
                     }
                 }
             }
         }
     }
 
-    @SuppressLint("SetTextI18n")
     private fun showData() {
         lifecycleScope.launch(Dispatchers.Main) {
             val fd = ParcelFileDescriptor.open(
-                File(pdfs[pdfs.size - 1].path),
+                File(pdfs[0].path),
                 ParcelFileDescriptor.MODE_READ_ONLY
             )
             hideLoadDocuLayout()
@@ -163,8 +180,7 @@ class BooksFragment : Fragment() {
             bitmap = Bitmap.createBitmap(1000, 1000, Bitmap.Config.ARGB_4444)
             val page: PdfRenderer.Page = renderer.openPage(0)
             page.render(bitmap, null, null, PdfRenderer.Page.RENDER_MODE_FOR_DISPLAY)
-            binding.bm.setImageBitmap(bitmap)
-            binding.hellotext.text = " ${pdfs[pdfs.size - 1]}   Size:  ${pdfs.size}"
+            Log.d(TAG, "showData: ${File(pdfs[0].path).length().toFloat() / 1048576.0}")
         }
     }
 

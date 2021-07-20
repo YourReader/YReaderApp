@@ -5,32 +5,13 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:fontFamily="@font/montserratsemibold"
-
     tools:context=".Fragments.BooksFragment"
     tools:ignore="HardcodedText">
 
-
-    <TextView
-        android:id="@+id/hellotext"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:text="Hello Books and docs Fragment"
-        android:fontFamily="@font/montserratsemibold"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.171" />
-
-    <ImageView
-        android:id="@+id/bm"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/hellotext" />
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/filesRecyclerView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
 
     <TextView
         android:id="@+id/notice_no_loaded"
@@ -65,9 +46,9 @@
         android:layout_height="wrap_content"
         android:layout_below="@id/notice_no_loaded"
         android:layout_margin="10dp"
+        android:fontFamily="@font/montserratsemibold"
         android:padding="10dp"
         android:text="Load Documents"
-        android:fontFamily="@font/montserratsemibold"
 
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"

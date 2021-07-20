@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
 
@@ -9,16 +10,14 @@
         android:layout_width="match_parent"
         android:layout_height="150dp"
         android:layout_margin="10dp"
-        app:cardElevation="10dp"
         android:padding="10dp"
-        app:cardCornerRadius="8dp">
+        app:cardCornerRadius="8dp"
+        app:cardElevation="10dp">
 
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:padding="5dp"
-
-            >
+            android:padding="5dp">
 
             <ImageView
                 android:id="@+id/img_listItem"
@@ -74,10 +73,7 @@
                 android:layout_below="@id/file_type_ListItem"
                 android:layout_marginStart="15dp"
                 android:layout_marginTop="10dp"
-                android:layout_toEndOf="@id/img_listItem"
-
-
-                >
+                android:layout_toEndOf="@id/img_listItem">
 
                 <RelativeLayout
                     android:id="@+id/Relitem1"
@@ -89,24 +85,22 @@
                         android:id="@+id/speed_ListItem"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:layout_centerHorizontal="true"
                         android:layout_marginStart="15dp"
                         android:layout_marginTop="10dp"
-                        android:layout_centerHorizontal="true"
 
                         android:fontFamily="@font/montserratregular"
                         android:text="@string/_2_3x"
                         android:textAlignment="center"
                         android:textColor="@color/black"
-                        android:textSize="14sp"
-
-                        />
+                        android:textSize="14sp" />
 
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_below="@id/speed_ListItem"
-                        android:layout_marginStart="15dp"
                         android:layout_centerHorizontal="true"
+                        android:layout_marginStart="15dp"
 
                         android:layout_marginTop="5dp"
                         android:fontFamily="@font/montserratregular"
@@ -114,8 +108,7 @@
                         android:textAlignment="center"
                         android:textColor="@color/black"
                         android:textSize="8sp"
-
-                        />
+                        tools:ignore="SmallSp" />
                 </RelativeLayout>
 
 
@@ -124,16 +117,15 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_toEndOf="@id/Relitem1"
-
                     android:padding="5dp">
 
                     <ImageView
                         android:id="@+id/doneTick_listItem"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:layout_centerHorizontal="true"
                         android:layout_marginStart="20dp"
                         android:layout_marginTop="10dp"
-                        android:layout_centerHorizontal="true"
                         android:fontFamily="@font/montserratregular"
                         android:src="@drawable/ic_baseline_done_24"
                         android:text="@string/_2_3x"
@@ -147,21 +139,16 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_below="@id/doneTick_listItem"
+                        android:layout_centerHorizontal="true"
                         android:layout_marginStart="20dp"
                         android:layout_marginTop="2dp"
                         android:fontFamily="@font/montserratregular"
-                        android:layout_centerHorizontal="true"
 
                         android:text="@string/done"
                         android:textAlignment="center"
                         android:textColor="@color/black"
-                        android:textSize="8sp"
-
-                        />
-
-
+                        android:textSize="8sp" />
                 </RelativeLayout>
-
 
                 <RelativeLayout
                     android:id="@+id/Relitem3"
@@ -175,28 +162,23 @@
                         android:id="@+id/like_img_List"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:layout_centerInParent="true"
                         android:layout_marginStart="0dp"
                         android:layout_marginTop="10dp"
                         android:fontFamily="@font/montserratregular"
-                        android:layout_centerInParent="true"
-
                         android:src="@drawable/ic_favorite"
-                        android:text="@string/_2_3x"
                         android:textAlignment="center"
-                        android:textColor="@color/black"
-                        android:textSize="14sp"
-
-                        />
+                        android:textSize="14sp" />
 
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_below="@+id/like_img_List"
+                        android:layout_centerHorizontal="true"
                         android:layout_marginStart="0dp"
                         android:layout_marginTop="2dp"
                         android:fontFamily="@font/montserratregular"
                         android:text="Add to Favourites"
-                        android:layout_centerHorizontal="true"
                         android:textAlignment="center"
                         android:textColor="@color/black"
                         android:textSize="8sp"
@@ -217,16 +199,11 @@
                     <ImageView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:src="@drawable/ic_dots"
-                        android:layout_marginStart="15dp"/>
+                        android:layout_marginStart="15dp"
+                        android:src="@drawable/ic_dots" />
                 </RelativeLayout>
-
-
             </RelativeLayout>
-
-
         </RelativeLayout>
-
 
     </com.google.android.material.card.MaterialCardView>
 </RelativeLayout>
