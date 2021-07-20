@@ -61,8 +61,7 @@
 
         </activity>
 
-        <receiver android:name=".Notifications.NotificationActionService"/>
-        <service android:name=".Notifications.OnClearFromRecentService"/>
+
 
         <provider
             android:name="androidx.core.content.FileProvider"
