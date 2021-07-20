@@ -85,5 +85,7 @@
     <string name="screen_on">Screen On</string>
     <string name="dark_mode">Dark Mode</string>
     <string name="account">Account</string>
+    <string name="pause">Pause</string>
+    <string name="next">Next Page</string>
 
 </resources>

@@ -15,16 +15,21 @@ import android.widget.SeekBar.OnSeekBarChangeListener
 import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.fragment.app.Fragment
+import com.github.barteksc.pdfviewer.PDFView
 import com.github.barteksc.pdfviewer.listener.OnErrorListener
 import com.github.barteksc.pdfviewer.listener.OnLoadCompleteListener
 import com.github.barteksc.pdfviewer.listener.OnPageChangeListener
 import com.itextpdf.text.pdf.PdfReader
+import com.itextpdf.text.pdf.parser.LocationTextExtractionStrategy
 import com.itextpdf.text.pdf.parser.PdfTextExtractor
+import read.code.yourreader.R
 import read.code.yourreader.databinding.FragmentHomeBinding
 import java.io.FileNotFoundException
 import java.io.IOException
 import java.io.InputStream
+import java.time.temporal.TemporalAdjusters.next
 import java.util.*
+import kotlin.collections.ArrayList
 
 
 class HomeFragment : Fragment(), OnPageChangeListener, OnLoadCompleteListener, OnErrorListener,
@@ -34,7 +39,12 @@ class HomeFragment : Fragment(), OnPageChangeListener, OnLoadCompleteListener, O
     lateinit var inputStream: InputStream
     lateinit var binding: FragmentHomeBinding
     var tts: TextToSpeech? = null
-    var builder = StringBuilder()
+    var builderArray = ArrayList<String>()
+    var playEnabled=false
+    var i = 0
+    var pdf:PDFView?=null
+    var str:String=""
+    var pages = 0
 
 
     override fun onCreateView(
@@ -65,18 +75,45 @@ class HomeFragment : Fragment(), OnPageChangeListener, OnLoadCompleteListener, O
             }
         }
 
-        binding.openFileHome.setOnClickListener {
-//            MainScope().launch {
-//                if (binding.pbar.visibility == View.VISIBLE)
-//                    binding.pbar.visibility = View.INVISIBLE
-//                else if (binding.pbar.visibility == View.INVISIBLE)
-//                    binding.pbar.visibility = View.VISIBLE
-//            }
+
+        binding.btnBack.setOnClickListener {
+            if (i!=0){
+                i--
+                pagesReader()
+            }
+            else{
+                Toast.makeText(requireContext(), "First page", Toast.LENGTH_SHORT).show()
+            }
         }
 
-        binding.btnPlay.setOnClickListener {
-            speakOut(builder.toString())
+        binding.btnFront.setOnClickListener {
+            if (i<pages){
+                i++
+                pagesReader()
+            }
+            else{
+                Toast.makeText(requireContext(), "Pages Ended", Toast.LENGTH_SHORT).show()
+            }
 
+
+        }
+//
+//        binding.openFileHome.setOnClickListener {
+//            binding.pbar.visibility != binding.pbar.visibility
+//        }
+
+        binding.btnPaly.setOnClickListener {
+            if (!playEnabled)
+            {
+                binding.btnPaly.setImageResource(R.drawable.ic_pause)
+                pagesReader()
+                playEnabled=true
+            }
+            else{
+                binding.btnPaly.setImageResource(R.drawable.ic_play)
+                tts!!.stop()
+             playEnabled=false
+            }
         }
 
         binding.seekBarSpeed.setOnSeekBarChangeListener(object : OnSeekBarChangeListener {
@@ -90,6 +127,7 @@ class HomeFragment : Fragment(), OnPageChangeListener, OnLoadCompleteListener, O
             override fun onStartTrackingTouch(seekBar: SeekBar) {}
             override fun onStopTrackingTouch(seekBar: SeekBar) {
                 tts!!.setSpeechRate(speechRate)
+                pagesReader()
 
             }
         })
@@ -107,6 +145,7 @@ class HomeFragment : Fragment(), OnPageChangeListener, OnLoadCompleteListener, O
             override fun onStartTrackingTouch(seekBar: SeekBar) {}
             override fun onStopTrackingTouch(seekBar: SeekBar) {
                 tts!!.setPitch(pitch)
+                pagesReader()
 
             }
         })
@@ -146,12 +185,12 @@ class HomeFragment : Fragment(), OnPageChangeListener, OnLoadCompleteListener, O
         val reader: PdfReader?
         try {
             reader = PdfReader(inputStream)
-            val pages = reader.numberOfPages
+            pages = reader.numberOfPages
             for (i in 1..pages) {
-                fileContent = PdfTextExtractor.getTextFromPage(reader, i)
-
+                fileContent =
+                    PdfTextExtractor.getTextFromPage(reader, i, LocationTextExtractionStrategy())
+                builderArray.add(fileContent)
             }
-            builder.append(fileContent)
             reader.close()
         } catch (e: IOException) {
             Log.d(TAG, "extractTextFromPdfFile: ${e.message}")
@@ -203,7 +242,7 @@ class HomeFragment : Fragment(), OnPageChangeListener, OnLoadCompleteListener, O
         binding.seekBarPitch.visibility = View.VISIBLE
         binding.seekBarSpeed.visibility = View.VISIBLE
         binding.laySpeed.visibility = View.VISIBLE
-        binding.btnPlay.visibility = View.VISIBLE
+        binding.controler.visibility = View.VISIBLE
 
     }
 
@@ -215,7 +254,8 @@ class HomeFragment : Fragment(), OnPageChangeListener, OnLoadCompleteListener, O
         binding.seekBarPitch.visibility = View.GONE
         binding.seekBarSpeed.visibility = View.GONE
         binding.laySpeed.visibility = View.GONE
-        binding.btnPlay.visibility = View.GONE
+        binding.controler.visibility = View.GONE
+
 
     }
 
@@ -251,5 +291,22 @@ class HomeFragment : Fragment(), OnPageChangeListener, OnLoadCompleteListener, O
             }
 
         }
+    }
+
+
+    fun pagesReader() {
+
+        if(i<=pages)
+        {
+            str = builderArray[i]
+            speakOut(str)
+            Log.d(TAG, "onCreateView: i=$i")
+            Log.d(TAG, "onCreateView: $str")
+            binding.pdfViewHome.jumpTo(i)
+
+        }
+
+
+
     }
 }
