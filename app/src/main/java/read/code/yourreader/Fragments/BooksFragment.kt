@@ -27,6 +27,7 @@ import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.launch
 import read.code.yourreader.Adapter.FilesAdapter
 import read.code.yourreader.MVVVM.viewmodels.FilesViewModel
@@ -60,7 +61,6 @@ class BooksFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        init()
         binding.apply {
             filesRecyclerView.apply {
                 adapter = filesAdapter
@@ -68,9 +68,12 @@ class BooksFragment : Fragment() {
                 setHasFixedSize(true)
             }
         }
-
+        Log.d(TAG, "onViewCreated: V? ${binding.progressBarBooks.visibility}")
+        init()
         binding.loadDocuBooks.setOnClickListener {
+            Log.d(TAG, "onViewCreated: V btn? ${binding.progressBarBooks.visibility}")
             binding.progressBarBooks.visibility = View.VISIBLE
+            Log.d(TAG, "onViewCreated: NOW btn? ${binding.progressBarBooks.visibility}")
             loadFiles()
         }
     }
@@ -147,6 +150,7 @@ class BooksFragment : Fragment() {
 
     @SuppressLint("SetTextI18n")
     private fun loadFiles() {
+        Log.d(TAG, "onViewCreated: last? ${binding.progressBarBooks.visibility}")
         handlePermissions()
         GlobalScope.launch(Dispatchers.IO) {
             if (!permissionGranted) {
@@ -155,10 +159,16 @@ class BooksFragment : Fragment() {
                 if (Values.isDbEmpty) {
                     Log.d(TAG, "loadFiles: First Time User")
                     searchFiles(dir)
-                    showData()
+                    MainScope().launch {
+                        mFilesViewModel.readAllData.observe(viewLifecycleOwner) {
+                            filesAdapter.submitList(it)
+                            hideLoadDocuLayout()
+//                            showData()
+                        }
+                    }
                 } else if (!Values.isDbEmpty) {
                     Log.d(TAG, "loadFiles: Not First Time User")
-                    lifecycleScope.launch(Dispatchers.Main) {
+                    MainScope().launch {
                         mFilesViewModel.readAllData.observe(viewLifecycleOwner) {
                             filesAdapter.submitList(it)
 //                            showData()
@@ -290,7 +300,6 @@ class BooksFragment : Fragment() {
         binding.noticeNoLoaded.visibility = View.GONE
         binding.loadDocuBooks.visibility = View.GONE
         binding.progressBarBooks.visibility = View.GONE
-
     }
 
     override fun onDestroy() {
