@@ -25,11 +25,13 @@ import androidx.core.app.ActivityCompat
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
-import kotlinx.coroutines.MainScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import read.code.yourreader.MVVVM.viewmodels.FilesViewModel
 import read.code.yourreader.data.Files
 import read.code.yourreader.databinding.FragmentBooksBinding
+import read.code.yourreader.others.Values
 import java.io.File
 
 
@@ -46,30 +48,31 @@ class BooksFragment : Fragment() {
     private val pdfPattern = ".pdf"
     private val pdfPattern2 = ".docx"
     private val pdfPattern3 = ".doc"
-    private val pdfPattern4 = ".txt"
-    private var isEmpty = true
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
         _binding = FragmentBooksBinding.inflate(inflater, container, false)
-        mFilesViewModel = ViewModelProvider(this).get(FilesViewModel::class.java)
-        MainScope().launch {
-            mFilesViewModel.readAllData.observe(requireActivity(), {
-                isEmpty = it.isNullOrEmpty()
-                Log.d(
-                    TAG,
-                    "checkDb: EMPTY: $isEmpty Null/MT: ${it.isNullOrEmpty()} Size ${it.size}"
-                )
-            })
-        }
+        return binding.root
+    }
 
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        init()
         binding.loadDocuBooks.setOnClickListener {
             binding.progressBarBooks.visibility = View.VISIBLE
             loadFiles()
         }
-        return binding.root
+    }
+
+    private fun init() {
+        mFilesViewModel = ViewModelProvider(this).get(FilesViewModel::class.java)
+        Log.d(TAG, "init: ${Values.isDbEmpty}")
+        if (!Values.isDbEmpty) {
+            hideLoadDocuLayout()
+            loadFiles()
+        }
     }
 
     private fun handlePermissions() {
@@ -117,16 +120,6 @@ class BooksFragment : Fragment() {
                         pdfs.add(Files(path = FileList[i].toString(), type = pdfPattern))
                         Log.d(TAG, "searchFiles: Successfully added $pdfPattern3")
                     }
-//                    if (FileList[i].name.endsWith(pdfPattern4)) {
-//                        mFilesViewModel.addFile(
-//                            Files(
-//                                path = FileList[i].toString(),
-//                                type = pdfPattern4
-//                            )
-//                        )
-//                        pdfs.add(Files(path = FileList[i].toString(), type = pdfPattern4))
-//                        Log.d(TAG, "searchFiles: Successfully added $pdfPattern4")
-//                    }
                 }
             }
         }
@@ -135,54 +128,43 @@ class BooksFragment : Fragment() {
     @SuppressLint("SetTextI18n")
     private fun loadFiles() {
         handlePermissions()
-
-        lifecycleScope.launch {
+        Log.d(TAG, "loadFiles: ")
+        GlobalScope.launch(Dispatchers.IO) {
             if (!permissionGranted) {
                 Log.d(TAG, "loadFiles: No permissions")
             } else if (permissionGranted) {
-                if (isEmpty) {
+                if (Values.isDbEmpty) {
                     Log.d(TAG, "loadFiles: First Time User")
                     searchFiles(dir)
-                    val fd = ParcelFileDescriptor.open(
-                        File(pdfs[pdfs.size - 1].path),
-                        ParcelFileDescriptor.MODE_READ_ONLY
-                    )
-                    val renderer = PdfRenderer(fd)
-                    bitmap = Bitmap.createBitmap(1000, 1000, Bitmap.Config.ARGB_4444)
-                    val page: PdfRenderer.Page = renderer.openPage(0)
-                    page.render(bitmap, null, null, PdfRenderer.Page.RENDER_MODE_FOR_DISPLAY)
-                    binding.bm.setImageBitmap(bitmap)
-                    binding.hellotext.text = " ${pdfs[pdfs.size - 1]}   Size:  ${pdfs.size}"
-                    Print()
-                    hideLoadDocuLayout()
-
-                } else if (!isEmpty) {
+                    showData()
+                } else if (!Values.isDbEmpty) {
                     Log.d(TAG, "loadFiles: Not First Time User")
-                    mFilesViewModel.readAllData.observe(requireActivity(), {
-                        pdfs.add(it[0])
-                        pdfs[0]
-                        val fd = ParcelFileDescriptor.open(
-                            File(pdfs[0].path),
-                            ParcelFileDescriptor.MODE_READ_ONLY
-                        )
-                        val renderer = PdfRenderer(fd)
-                        bitmap = Bitmap.createBitmap(1000, 1000, Bitmap.Config.ARGB_4444)
-                        val page: PdfRenderer.Page = renderer.openPage(0)
-                        page.render(bitmap, null, null, PdfRenderer.Page.RENDER_MODE_FOR_DISPLAY)
-                        hideLoadDocuLayout()
-                        binding.bm.setImageBitmap(bitmap)
-                        binding.hellotext.text = " ${pdfs[pdfs.size - 1]}   Size:  ${pdfs.size}"
-                    })
+                    lifecycleScope.launch(Dispatchers.Main) {
+                        mFilesViewModel.readAllData.observe(requireActivity(), {
+                            pdfs.add(it[0])
+                            pdfs[0]
+                            showData()
+                        })
+                    }
                 }
             }
         }
     }
 
-    private fun Print() {
-        MainScope().launch {
-            mFilesViewModel.readAllData.observe(requireActivity(), {
-                Log.d(TAG, "Print: ${it.size}")
-            })
+    @SuppressLint("SetTextI18n")
+    private fun showData() {
+        lifecycleScope.launch(Dispatchers.Main) {
+            val fd = ParcelFileDescriptor.open(
+                File(pdfs[pdfs.size - 1].path),
+                ParcelFileDescriptor.MODE_READ_ONLY
+            )
+            hideLoadDocuLayout()
+            val renderer = PdfRenderer(fd)
+            bitmap = Bitmap.createBitmap(1000, 1000, Bitmap.Config.ARGB_4444)
+            val page: PdfRenderer.Page = renderer.openPage(0)
+            page.render(bitmap, null, null, PdfRenderer.Page.RENDER_MODE_FOR_DISPLAY)
+            binding.bm.setImageBitmap(bitmap)
+            binding.hellotext.text = " ${pdfs[pdfs.size - 1]}   Size:  ${pdfs.size}"
         }
     }
 

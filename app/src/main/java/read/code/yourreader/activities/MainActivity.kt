@@ -26,10 +26,12 @@ import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.core.view.GravityCompat
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelProviders
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 import read.code.yourreader.Fragments.*
+import read.code.yourreader.MVVVM.viewmodels.FilesViewModel
 import read.code.yourreader.R
 import read.code.yourreader.databinding.ActivityMainBinding
 import read.code.yourreader.di.components.DaggerFactoryComponent
@@ -37,6 +39,7 @@ import read.code.yourreader.di.modules.FactoryModule
 import read.code.yourreader.di.modules.RepositoryModule
 import read.code.yourreader.mvvm.repository.MainRepository
 import read.code.yourreader.mvvm.viewmodels.MainViewModel
+import read.code.yourreader.others.Values
 
 
 class MainActivity : AppCompatActivity() {
@@ -47,6 +50,7 @@ class MainActivity : AppCompatActivity() {
     private var currentuser: FirebaseUser? = null
     lateinit var toggle: ActionBarDrawerToggle
     lateinit var binding: ActivityMainBinding
+    private lateinit var mFilesViewModel: FilesViewModel
 
     @RequiresApi(Build.VERSION_CODES.KITKAT)
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -118,10 +122,20 @@ class MainActivity : AppCompatActivity() {
             binding.drawerlayout.closeDrawer(GravityCompat.START)
     }
 
-    @RequiresApi(Build.VERSION_CODES.KITKAT)
+    //Checks if DB is empty or not
+    private fun checkDb() {
+        mFilesViewModel.readAllData.observe(this@MainActivity, {
+            Values.isDbEmpty = it.isNullOrEmpty()
+            Log.d(TAG, " MT: ${Values.isDbEmpty} Null: ${it.isNullOrEmpty()} Size ${it.size}")
+        })
+    }
+
     private fun init() {
 
         val window: Window = this.window
+
+        mFilesViewModel = ViewModelProvider(this).get(FilesViewModel::class.java)
+        checkDb()
 
         window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS)
 
