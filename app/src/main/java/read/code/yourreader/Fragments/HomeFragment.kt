@@ -66,7 +66,12 @@ class HomeFragment : Fragment(), OnPageChangeListener, OnLoadCompleteListener, O
         }
 
         binding.openFileHome.setOnClickListener {
-            binding.pbar.visibility != binding.pbar.visibility
+//            MainScope().launch {
+//                if (binding.pbar.visibility == View.VISIBLE)
+//                    binding.pbar.visibility = View.INVISIBLE
+//                else if (binding.pbar.visibility == View.INVISIBLE)
+//                    binding.pbar.visibility = View.VISIBLE
+//            }
         }
 
         binding.btnPlay.setOnClickListener {
