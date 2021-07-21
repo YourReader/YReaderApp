@@ -296,7 +296,7 @@ class HomeFragment : Fragment(), OnPageChangeListener, OnLoadCompleteListener, O
 
     fun pagesReader() {
 
-        if(i<=pages)
+        if(i<pages)
         {
             str = builderArray[i]
             speakOut(str)

@@ -68,6 +68,7 @@
             android:layout_weight="10"
             android:gravity="end|center"
             android:id="@+id/brightNessSwitch"
+            android:checked="true"
             />
 
 
@@ -174,6 +175,7 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="0dp"
             android:layout_weight="10"
+            android:checked="true"
             android:gravity="end|center"
             android:id="@+id/darkModeSwitch"
             />
@@ -245,6 +247,7 @@
             android:layout_marginStart="0dp"
             android:layout_weight="10"
             android:gravity="end|center"
+            android:checked="true"
             />
 
 
