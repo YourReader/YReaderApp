@@ -87,5 +87,7 @@
     <string name="account">Account</string>
     <string name="pause">Pause</string>
     <string name="next">Next Page</string>
+    <string name="upgrade_to_premium">Upgrade To Premium</string>
+    <string name="no_ads_best_quality_human_like_voice">No Ads, Best Quality Human like Voice</string>
 
 </resources>

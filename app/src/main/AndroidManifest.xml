@@ -18,7 +18,7 @@
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
-        android:theme="@style/Theme.AppTheme.Dark">
+        android:theme="@style/Theme.AppTheme">
         <activity
             android:name=".activities.HomeAuth"
             android:screenOrientation="portrait">
@@ -59,6 +59,20 @@
                 <data android:mimeType="application/pdf" />
             </intent-filter>
 
+
+            <intent-filter>
+                <action android:name="android.intent.action.SEND" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <data android:mimeType="application/docs" />
+            </intent-filter>
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+                <category android:name="android.intent.category.BROWSABLE" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <data android:scheme="content" />
+                <data android:scheme="file" />
+                <data android:mimeType="application/docs" />
+            </intent-filter>
         </activity>
 
 
@@ -72,6 +86,9 @@
                 android:name="android.support.FILE_PROVIDER_PATHS"
                 android:resource="@xml/provider_paths" />
         </provider>
+
+
+
     </application>
 
 </manifest>
