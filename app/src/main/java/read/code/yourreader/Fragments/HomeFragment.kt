@@ -59,10 +59,16 @@ class HomeFragment : Fragment(), OnPageChangeListener, OnLoadCompleteListener, O
             val action = intent.action
             val type = intent.type
             if (Intent.ACTION_SEND == action && type != null) {
-                if (type.equals("text/plain", ignoreCase = true)) {
-                    handleTextData(intent)
-                } else if (type.equals("application/pdf", ignoreCase = true)) {
-                    handlePdfFile(intent)
+                when {
+                    type.equals("text/plain", ignoreCase = true) -> {
+                        handleTextData(intent)
+                    }
+                    type.equals("application/pdf", ignoreCase = true) -> {
+                        handlePdfFile(intent)
+                    }
+                    type.equals("application/docs", ignoreCase = true) -> {
+                        handlePdfFile(intent)
+                    }
                 }
             }
 
@@ -280,9 +286,7 @@ class HomeFragment : Fragment(), OnPageChangeListener, OnLoadCompleteListener, O
         if (status == TextToSpeech.SUCCESS) {
             val result = tts!!.setLanguage(Locale.ENGLISH)
             if (result == TextToSpeech.LANG_NOT_SUPPORTED) {
-                Toast.makeText(requireContext(), "Language Not Supported", Toast.LENGTH_SHORT)
-                    .show()
-
+                Log.d(TAG, "onInit: Lang Not supported")
             }
             if (result == TextToSpeech.LANG_MISSING_DATA) {
                 val installIntent = Intent()
@@ -305,8 +309,5 @@ class HomeFragment : Fragment(), OnPageChangeListener, OnLoadCompleteListener, O
             binding.pdfViewHome.jumpTo(i)
 
         }
-
-
-
     }
 }

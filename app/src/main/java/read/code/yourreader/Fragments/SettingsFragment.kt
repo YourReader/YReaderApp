@@ -86,6 +86,10 @@ class SettingsFragment : Fragment() {
         })
         Log.d(TAG, "onCreateView: is checked = ${binding.darkModeSwitch.isChecked}")
 
+
+
+
+
         return binding.root
     }
 

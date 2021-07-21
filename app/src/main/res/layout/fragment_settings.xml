@@ -102,7 +102,7 @@
                 />
             <TextView
                 android:layout_width="wrap_content"
-                android:layout_height="15dp"
+                android:layout_height="wrap_content"
                 android:text="@string/keep_screen_on"
                 android:textAlignment="textStart"
                 android:textColor="@color/black"
@@ -156,7 +156,7 @@
                 />
             <TextView
                 android:layout_width="wrap_content"
-                android:layout_height="15dp"
+                android:layout_height="wrap_content"
                 android:text="@string/enable_dark_mode"
                 android:textAlignment="textStart"
                 android:textColor="@color/black"
@@ -227,7 +227,7 @@
                 />
             <TextView
                 android:layout_width="wrap_content"
-                android:layout_height="15dp"
+                android:layout_height="wrap_content"
                 android:text="@string/app_has_permission"
                 android:textAlignment="textStart"
                 android:textColor="@color/black"
@@ -284,7 +284,7 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Upgrade To Premium"
+                android:text="@string/upgrade_to_premium"
                 android:textColor="@color/black"
                 android:textAlignment="center"
                 android:textAllCaps="false"
@@ -294,8 +294,8 @@
                 />
             <TextView
                 android:layout_width="wrap_content"
-                android:layout_height="15dp"
-                android:text="No Ads, Best Quality Human like Voice"
+                android:layout_height="wrap_content"
+                android:text="@string/no_ads_best_quality_human_like_voice"
                 android:textAlignment="textStart"
                 android:textColor="@color/black"
                 android:textAllCaps="false"
