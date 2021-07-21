@@ -27,13 +27,14 @@ import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.launch
 import read.code.yourreader.Adapter.FilesAdapter
 import read.code.yourreader.MVVVM.viewmodels.FilesViewModel
+import read.code.yourreader.R
 import read.code.yourreader.data.Files
 import read.code.yourreader.databinding.FragmentBooksBinding
 import read.code.yourreader.others.Values
 import java.io.File
 
 @SuppressLint("SetTextI18n")
-class BooksFragment : Fragment() {
+class BooksFragment : Fragment(), FilesAdapter.OnCardViewClickListener {
     var dir = File(Environment.getExternalStorageDirectory().absolutePath)
     private var pdfs = ArrayList<Files>()
     private var _binding: FragmentBooksBinding? = null
@@ -41,7 +42,7 @@ class BooksFragment : Fragment() {
     private var permissionGranted = false
     private val TAG = "bFragment"
     private lateinit var mFilesViewModel: FilesViewModel
-    private val filesAdapter = FilesAdapter()
+    private val filesAdapter = FilesAdapter(this@BooksFragment)
     private val pdfPattern = ".pdf"
     private val pdfPattern2 = ".docx"
     private val pdfPattern3 = ".doc"
@@ -83,6 +84,12 @@ class BooksFragment : Fragment() {
         }
     }
 
+    override fun onCardClick(position: Int) {
+        requireActivity().supportFragmentManager.beginTransaction()
+            .replace(R.id.frame_main, HomeFragment())
+            .commit()
+    }
+
     private fun handlePermissions() {
         if (SDK_INT >= Build.VERSION_CODES.R) {
             checkPermissions(Manifest.permission.MANAGE_EXTERNAL_STORAGE, "MANAGE", 101)
@@ -98,24 +105,24 @@ class BooksFragment : Fragment() {
                 if (FileList[i].isDirectory) {
                     searchFiles(FileList[i])
                 } else {
-                    if (FileList[i].name.endsWith(pdfPattern)) {
-                        mFilesViewModel.addFile(
-                            Files(
-                                path = FileList[i].toString(),
-                                type = pdfPattern
-                            )
-                        )
-                        pdfs.add(Files(path = FileList[i].toString(), type = pdfPattern))
-                        Log.d(
-                            TAG,
-                            "searchFiles: S: ${
-                                "%.2f".format(
-                                    (FileList[i].length()).toFloat()
-                                            / 1048576.0
-                                )
-                            } MB name:${FileList[i].name}"
-                        )
-                    }
+//                    if (FileList[i].name.endsWith(pdfPattern)) {
+//                        mFilesViewModel.addFile(
+//                            Files(
+//                                path = FileList[i].toString(),
+//                                type = pdfPattern
+//                            )
+//                        )
+//                        pdfs.add(Files(path = FileList[i].toString(), type = pdfPattern))
+//                        Log.d(
+//                            TAG,
+//                            "searchFiles: S: ${
+//                                "%.2f".format(
+//                                    (FileList[i].length()).toFloat()
+//                                            / 1048576.0
+//                                )
+//                            } MB name:${FileList[i].name}"
+//                        )
+//                    }
                     if (FileList[i].name.endsWith(pdfPattern2)) {
 
                         mFilesViewModel.addFile(

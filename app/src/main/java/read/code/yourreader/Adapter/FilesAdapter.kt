@@ -6,6 +6,7 @@ import android.graphics.pdf.PdfRenderer
 import android.os.ParcelFileDescriptor
 import android.util.Log
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
@@ -16,7 +17,8 @@ import java.io.File
 import java.util.*
 
 @SuppressLint("SetTextI18n")
-class FilesAdapter : ListAdapter<Files, FilesAdapter.FilesViewHolder>(DiffCallBack()) {
+class FilesAdapter(private val listener: OnCardViewClickListener) :
+    ListAdapter<Files, FilesAdapter.FilesViewHolder>(DiffCallBack()) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): FilesViewHolder {
         val binding = ListitemBinding.inflate(LayoutInflater.from(parent.context), parent, false)
@@ -29,9 +31,18 @@ class FilesAdapter : ListAdapter<Files, FilesAdapter.FilesViewHolder>(DiffCallBa
         holder.bind(currentItem)
     }
 
-    class FilesViewHolder(private val binding: ListitemBinding) :
-        RecyclerView.ViewHolder(binding.root) {
+    inner class FilesViewHolder(private val binding: ListitemBinding) :
+        RecyclerView.ViewHolder(binding.root), View.OnClickListener {
         private lateinit var bitmap: Bitmap
+
+        init {
+            binding.cardViewItem.setOnClickListener(this)
+        }
+
+        override fun onClick(p0: View?) {
+            if (adapterPosition != RecyclerView.NO_POSITION)
+                listener.onCardClick(adapterPosition)
+        }
 
         @SuppressLint("DefaultLocale")
         fun bind(files: Files) {
@@ -56,6 +67,10 @@ class FilesAdapter : ListAdapter<Files, FilesAdapter.FilesViewHolder>(DiffCallBa
                 }
             }
         }
+    }
+
+    interface OnCardViewClickListener {
+        fun onCardClick(position: Int)
     }
 
     class DiffCallBack : DiffUtil.ItemCallback<Files>() {
