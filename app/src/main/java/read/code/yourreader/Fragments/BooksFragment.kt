@@ -5,14 +5,11 @@ import android.annotation.SuppressLint
 import android.app.AlertDialog
 import android.content.Intent
 import android.content.pm.PackageManager
-import android.graphics.Bitmap
-import android.graphics.pdf.PdfRenderer
 import android.net.Uri
 import android.os.Build
 import android.os.Build.VERSION.SDK_INT
 import android.os.Bundle
 import android.os.Environment
-import android.os.ParcelFileDescriptor
 import android.provider.Settings
 import android.util.Log
 import android.view.LayoutInflater
@@ -23,7 +20,6 @@ import androidx.annotation.Nullable
 import androidx.core.app.ActivityCompat
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
@@ -42,7 +38,6 @@ class BooksFragment : Fragment() {
     private var pdfs = ArrayList<Files>()
     private var _binding: FragmentBooksBinding? = null
     private val binding get() = _binding!!
-    private lateinit var bitmap: Bitmap
     private var permissionGranted = false
     private val TAG = "bFragment"
     private lateinit var mFilesViewModel: FilesViewModel
@@ -179,20 +174,6 @@ class BooksFragment : Fragment() {
         }
     }
 
-    private fun showData() {
-        lifecycleScope.launch(Dispatchers.Main) {
-            val fd = ParcelFileDescriptor.open(
-                File(pdfs[0].path),
-                ParcelFileDescriptor.MODE_READ_ONLY
-            )
-            hideLoadDocuLayout()
-            val renderer = PdfRenderer(fd)
-            bitmap = Bitmap.createBitmap(1000, 1000, Bitmap.Config.ARGB_4444)
-            val page: PdfRenderer.Page = renderer.openPage(0)
-            page.render(bitmap, null, null, PdfRenderer.Page.RENDER_MODE_FOR_DISPLAY)
-            Log.d(TAG, "showData: ${File(pdfs[0].path).length().toFloat() / 1048576.0}")
-        }
-    }
 
     private fun checkPermissions(permission: String, name: String, requestCode: Int) {
         Log.d(TAG, "checkPermissions: PERMISSION ASKED $name")
