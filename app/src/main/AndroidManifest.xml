@@ -58,28 +58,26 @@
                 <data android:scheme="file" />
                 <data android:mimeType="application/pdf" />
             </intent-filter>
-
-
             <intent-filter>
-                <action android:name="android.intent.action.SEND" />
-                <category android:name="android.intent.category.DEFAULT" />
-                <data android:mimeType="application/docs" />
-            </intent-filter>
-            <intent-filter>
+
                 <action android:name="android.intent.action.VIEW" />
+                <action android:name="android.intent.action.SEND" />
                 <category android:name="android.intent.category.BROWSABLE" />
                 <category android:name="android.intent.category.DEFAULT" />
                 <data android:scheme="content" />
                 <data android:scheme="file" />
-                <data android:mimeType="application/docs" />
+                <data android:mimeType="*/*" />
             </intent-filter>
+
+
+
         </activity>
 
 
 
         <provider
             android:name="androidx.core.content.FileProvider"
-            android:authorities="com.furthergrow.android_download_manager"
+            android:authorities="read.code.yourreader"
             android:exported="false"
             android:grantUriPermissions="true">
             <meta-data

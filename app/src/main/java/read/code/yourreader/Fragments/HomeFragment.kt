@@ -1,5 +1,6 @@
 package read.code.yourreader.Fragments
 
+import android.annotation.SuppressLint
 import android.content.ContentValues.TAG
 import android.content.Intent
 import android.net.Uri
@@ -10,6 +11,9 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.webkit.WebResourceRequest
+import android.webkit.WebView
+import android.webkit.WebViewClient
 import android.widget.SeekBar
 import android.widget.SeekBar.OnSeekBarChangeListener
 import android.widget.Toast
@@ -27,7 +31,6 @@ import read.code.yourreader.databinding.FragmentHomeBinding
 import java.io.FileNotFoundException
 import java.io.IOException
 import java.io.InputStream
-import java.time.temporal.TemporalAdjusters.next
 import java.util.*
 import kotlin.collections.ArrayList
 
@@ -36,15 +39,17 @@ class HomeFragment : Fragment(), OnPageChangeListener, OnLoadCompleteListener, O
     TextToSpeech.OnInitListener {
 
 
-    lateinit var inputStream: InputStream
+    private lateinit var inputStream: InputStream
     lateinit var binding: FragmentHomeBinding
     var tts: TextToSpeech? = null
     var builderArray = ArrayList<String>()
-    var playEnabled=false
+    var playEnabled = false
     var i = 0
-    var pdf:PDFView?=null
-    var str:String=""
-    var pages = 0
+    var str: String = ""
+    private var wordFile: Uri? = null
+    private val locales = Locale.getAvailableLocales()
+    private val localeList: MutableList<Locale> = ArrayList()
+    private var pages = 0
 
 
     override fun onCreateView(
@@ -66,8 +71,8 @@ class HomeFragment : Fragment(), OnPageChangeListener, OnLoadCompleteListener, O
                     type.equals("application/pdf", ignoreCase = true) -> {
                         handlePdfFile(intent)
                     }
-                    type.equals("application/docs", ignoreCase = true) -> {
-                        handlePdfFile(intent)
+                    type.equals("*/*", ignoreCase = true) -> {
+                        handleWordFile(intent)
                     }
                 }
             }
@@ -83,42 +88,35 @@ class HomeFragment : Fragment(), OnPageChangeListener, OnLoadCompleteListener, O
 
 
         binding.btnBack.setOnClickListener {
-            if (i!=0){
+            if (i != 0) {
                 i--
                 pagesReader()
-            }
-            else{
+            } else {
                 Toast.makeText(requireContext(), "First page", Toast.LENGTH_SHORT).show()
             }
         }
 
         binding.btnFront.setOnClickListener {
-            if (i<pages){
+            if (i < pages) {
                 i++
                 pagesReader()
-            }
-            else{
+            } else {
                 Toast.makeText(requireContext(), "Pages Ended", Toast.LENGTH_SHORT).show()
             }
 
 
         }
-//
-//        binding.openFileHome.setOnClickListener {
-//            binding.pbar.visibility != binding.pbar.visibility
-//        }
+
 
         binding.btnPaly.setOnClickListener {
-            if (!playEnabled)
-            {
+            if (!playEnabled) {
                 binding.btnPaly.setImageResource(R.drawable.ic_pause)
                 pagesReader()
-                playEnabled=true
-            }
-            else{
+                playEnabled = true
+            } else {
                 binding.btnPaly.setImageResource(R.drawable.ic_play)
                 tts!!.stop()
-             playEnabled=false
+                playEnabled = false
             }
         }
 
@@ -158,6 +156,12 @@ class HomeFragment : Fragment(), OnPageChangeListener, OnLoadCompleteListener, O
 
         return binding.root
     }
+
+    private fun handleWordFile(intent: Intent) {
+
+    }
+
+
 
     private fun handlePdfFile(intent: Intent) {
         InitialiseTTS()
@@ -239,6 +243,8 @@ class HomeFragment : Fragment(), OnPageChangeListener, OnLoadCompleteListener, O
         UnLoadPdfLayout()
     }
 
+ 
+
 
     private fun loadPdfLayout() {
         binding.layNoFile.visibility = View.GONE
@@ -283,12 +289,23 @@ class HomeFragment : Fragment(), OnPageChangeListener, OnLoadCompleteListener, O
     }
 
     override fun onInit(status: Int) {
+        var res = tts!!.setLanguage(Locale.ENGLISH)
+
         if (status == TextToSpeech.SUCCESS) {
-            val result = tts!!.setLanguage(Locale.ENGLISH)
-            if (result == TextToSpeech.LANG_NOT_SUPPORTED) {
-                Log.d(TAG, "onInit: Lang Not supported")
+            Locale.getAvailableLocales()
+
+            for (locale in locales) {
+                res = tts!!.isLanguageAvailable(locale)
+                if (res == TextToSpeech.LANG_COUNTRY_AVAILABLE) {
+                    localeList.add(locale)
+                    Log.d(TAG, "onInit: language is $locale")
+                }
             }
-            if (result == TextToSpeech.LANG_MISSING_DATA) {
+            if (res == TextToSpeech.LANG_NOT_SUPPORTED) {
+                Log.d(TAG, "onInit: Lang Not supported")
+
+            }
+            if (res == TextToSpeech.LANG_MISSING_DATA) {
                 val installIntent = Intent()
                 installIntent.action = TextToSpeech.Engine.ACTION_INSTALL_TTS_DATA
                 startActivity(installIntent)
@@ -300,8 +317,7 @@ class HomeFragment : Fragment(), OnPageChangeListener, OnLoadCompleteListener, O
 
     fun pagesReader() {
 
-        if(i<pages)
-        {
+        if (i < pages) {
             str = builderArray[i]
             speakOut(str)
             Log.d(TAG, "onCreateView: i=$i")
@@ -310,4 +326,21 @@ class HomeFragment : Fragment(), OnPageChangeListener, OnLoadCompleteListener, O
 
         }
     }
+
+    class AppWebViewClients : WebViewClient() {
+        override fun shouldOverrideUrlLoading(
+            view: WebView?,
+            request: WebResourceRequest?
+        ): Boolean {
+            view!!.loadUrl(request!!.url.toString());
+            return true; }
+
+        override fun onPageFinished(view: WebView?, url: String?) {
+            super.onPageFinished(view, url)
+
+        }
+
+
+    }
 }
+

@@ -1,11 +1,8 @@
 package read.code.yourreader.Fragments
 
 import android.content.ContentValues.TAG
-import android.content.Context
 import android.content.Context.MODE_PRIVATE
 import android.content.SharedPreferences
-import android.content.res.Configuration
-import android.os.Build
 import android.os.Bundle
 import android.util.Log
 import android.view.*
@@ -20,7 +17,6 @@ import read.code.yourreader.di.modules.FactoryModule
 import read.code.yourreader.di.modules.RepositoryModule
 import read.code.yourreader.mvvm.repository.MainRepository
 import read.code.yourreader.mvvm.viewmodels.MainViewModel
-
 
 
 class SettingsFragment : Fragment() {
@@ -42,7 +38,7 @@ class SettingsFragment : Fragment() {
     ): View {
         binding = FragmentSettingsBinding.inflate(layoutInflater)
 
-        mAuth= FirebaseAuth.getInstance()
+        mAuth = FirebaseAuth.getInstance()
         component = DaggerFactoryComponent.builder()
             .repositoryModule(RepositoryModule(requireContext()))
             .factoryModule(FactoryModule(MainRepository(requireContext())))
@@ -57,11 +53,11 @@ class SettingsFragment : Fragment() {
         }
 
 
-
-        val sharedPreferences: SharedPreferences =
+        //Dark Mode Settings
+        val sharedPreferencesDark: SharedPreferences =
             requireActivity().getSharedPreferences("switchDark", MODE_PRIVATE)
-        val editor = sharedPreferences.edit()
-        binding.darkModeSwitch.isChecked = sharedPreferences.getBoolean("switchDark", true)
+        val editor = sharedPreferencesDark.edit()
+        binding.darkModeSwitch.isChecked = sharedPreferencesDark.getBoolean("switchDark", true)
 
 
         Log.d(TAG, "onCreateView: theme=$")
@@ -87,12 +83,61 @@ class SettingsFragment : Fragment() {
         Log.d(TAG, "onCreateView: is checked = ${binding.darkModeSwitch.isChecked}")
 
 
+       //Screen On Settings
+        val sharedPreferencesScreenOn: SharedPreferences =
+            requireActivity().getSharedPreferences("switchScreen", MODE_PRIVATE)
+        val editor2 = sharedPreferencesScreenOn.edit()
+        binding.screenOnSwitch.isChecked = sharedPreferencesScreenOn.getBoolean("switchScreen", true)
+
+
+        binding.screenOnSwitch.setOnClickListener {
+            if (binding.screenOnSwitch.isChecked) {
+                editor2.putBoolean("switchScreen", true)
+                editor2.apply()
+                Log.d(TAG, "onCreateView: switchScreen Changed to On")
+            }
+            if (!binding.screenOnSwitch.isChecked) {
+                editor2.putBoolean("switchScreen", false)
+                editor2.apply()
+                Log.d(TAG, "onCreateView: switchScreen Changed to Off")
+
+
+            }
+            editor2.apply()
+            Toast.makeText(requireContext(), "Setting Saved", Toast.LENGTH_SHORT).show()
+        }
+
+
+
+
+        //Brightness  Settings
+        val sharedPreferencesBrightness: SharedPreferences =
+            requireActivity().getSharedPreferences("brightNessSwitch", MODE_PRIVATE)
+        val editor3 = sharedPreferencesBrightness.edit()
+        binding.brightNessSwitch.isChecked = sharedPreferencesBrightness.getBoolean("brightNessSwitch", true)
+
+
+        binding.brightNessSwitch.setOnClickListener {
+            if (binding.brightNessSwitch.isChecked) {
+                editor3.putBoolean("brightNessSwitch", true)
+                editor3.apply()
+                Log.d(TAG, "onCreateView: brightNessSwitch Changed to On")
+            }
+            if (!binding.brightNessSwitch.isChecked) {
+                editor3.putBoolean("brightNessSwitch", false)
+                editor3.apply()
+                Log.d(TAG, "onCreateView: brightNessSwitch Changed to Off")
+            }
+            editor3.commit()
+        }
+
+
+
 
 
 
         return binding.root
     }
-
 
 
 }

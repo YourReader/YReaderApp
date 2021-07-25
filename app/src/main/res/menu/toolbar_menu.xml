@@ -11,4 +11,16 @@
         android:id="@+id/action_item_two"
         android:title="@string/premium"
         app:showAsAction="withText" />
+
+    <item
+        android:id="@+id/action_item_langSettings"
+        android:title="@string/language_settings"
+        app:showAsAction="withText" />
+
+    <item
+        android:id="@+id/action_item_TTS"
+        android:title="@string/voice_quality"
+        app:showAsAction="withText" />
+
+
 </menu>
