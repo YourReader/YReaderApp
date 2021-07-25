@@ -14,6 +14,7 @@ import android.os.Build.VERSION.SDK_INT
 import android.os.Bundle
 import android.os.Environment
 import android.provider.Settings
+import android.speech.tts.TextToSpeech
 import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
@@ -287,10 +288,22 @@ class MainActivity : AppCompatActivity() {
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
 
-        if (toggle.onOptionsItemSelected(item)) {
-            return true
+        when(item.itemId)
+        {
+            R.id.action_item_langSettings -> {
+                val installIntent = Intent()
+                installIntent.action = TextToSpeech.Engine.ACTION_INSTALL_TTS_DATA
+                startActivity(installIntent)
+            }
+
+            R.id.action_item_TTS->{
+                val installIntent2 = Intent()
+                installIntent2.action = TextToSpeech.Engine.ACTION_CHECK_TTS_DATA
+                startActivity(installIntent2)
+            }
+
         }
-        return super.onOptionsItemSelected(item)
+        return true
 
     }
 
