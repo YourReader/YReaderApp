@@ -5,14 +5,11 @@ import android.annotation.SuppressLint
 import android.app.AlertDialog
 import android.content.Intent
 import android.content.pm.PackageManager
-import android.graphics.Bitmap
-import android.graphics.pdf.PdfRenderer
 import android.net.Uri
 import android.os.Build
 import android.os.Build.VERSION.SDK_INT
 import android.os.Bundle
 import android.os.Environment
-import android.os.ParcelFileDescriptor
 import android.provider.Settings
 import android.util.Log
 import android.view.LayoutInflater
@@ -23,7 +20,6 @@ import androidx.annotation.Nullable
 import androidx.core.app.ActivityCompat
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
@@ -31,22 +27,22 @@ import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.launch
 import read.code.yourreader.Adapter.FilesAdapter
 import read.code.yourreader.MVVVM.viewmodels.FilesViewModel
+import read.code.yourreader.R
 import read.code.yourreader.data.Files
 import read.code.yourreader.databinding.FragmentBooksBinding
 import read.code.yourreader.others.Values
 import java.io.File
 
 @SuppressLint("SetTextI18n")
-class BooksFragment : Fragment() {
+class BooksFragment : Fragment(), FilesAdapter.OnCardViewClickListener {
     var dir = File(Environment.getExternalStorageDirectory().absolutePath)
     private var pdfs = ArrayList<Files>()
     private var _binding: FragmentBooksBinding? = null
     private val binding get() = _binding!!
-    private lateinit var bitmap: Bitmap
     private var permissionGranted = false
     private val TAG = "bFragment"
     private lateinit var mFilesViewModel: FilesViewModel
-    private val filesAdapter = FilesAdapter()
+    private val filesAdapter = FilesAdapter(this@BooksFragment)
     private val pdfPattern = ".pdf"
     private val pdfPattern2 = ".docx"
     private val pdfPattern3 = ".doc"
@@ -88,6 +84,12 @@ class BooksFragment : Fragment() {
         }
     }
 
+    override fun onCardClick(position: Int) {
+        requireActivity().supportFragmentManager.beginTransaction()
+            .replace(R.id.frame_main, HomeFragment())
+            .commit()
+    }
+
     private fun handlePermissions() {
         if (SDK_INT >= Build.VERSION_CODES.R) {
             checkPermissions(Manifest.permission.MANAGE_EXTERNAL_STORAGE, "MANAGE", 101)
@@ -103,24 +105,24 @@ class BooksFragment : Fragment() {
                 if (FileList[i].isDirectory) {
                     searchFiles(FileList[i])
                 } else {
-                    if (FileList[i].name.endsWith(pdfPattern)) {
-                        mFilesViewModel.addFile(
-                            Files(
-                                path = FileList[i].toString(),
-                                type = pdfPattern
-                            )
-                        )
-                        pdfs.add(Files(path = FileList[i].toString(), type = pdfPattern))
-                        Log.d(
-                            TAG,
-                            "searchFiles: S: ${
-                                "%.2f".format(
-                                    (FileList[i].length()).toFloat()
-                                            / 1048576.0
-                                )
-                            } MB name:${FileList[i].name}"
-                        )
-                    }
+//                    if (FileList[i].name.endsWith(pdfPattern)) {
+//                        mFilesViewModel.addFile(
+//                            Files(
+//                                path = FileList[i].toString(),
+//                                type = pdfPattern
+//                            )
+//                        )
+//                        pdfs.add(Files(path = FileList[i].toString(), type = pdfPattern))
+//                        Log.d(
+//                            TAG,
+//                            "searchFiles: S: ${
+//                                "%.2f".format(
+//                                    (FileList[i].length()).toFloat()
+//                                            / 1048576.0
+//                                )
+//                            } MB name:${FileList[i].name}"
+//                        )
+//                    }
                     if (FileList[i].name.endsWith(pdfPattern2)) {
 
                         mFilesViewModel.addFile(
@@ -179,20 +181,6 @@ class BooksFragment : Fragment() {
         }
     }
 
-    private fun showData() {
-        lifecycleScope.launch(Dispatchers.Main) {
-            val fd = ParcelFileDescriptor.open(
-                File(pdfs[0].path),
-                ParcelFileDescriptor.MODE_READ_ONLY
-            )
-            hideLoadDocuLayout()
-            val renderer = PdfRenderer(fd)
-            bitmap = Bitmap.createBitmap(1000, 1000, Bitmap.Config.ARGB_4444)
-            val page: PdfRenderer.Page = renderer.openPage(0)
-            page.render(bitmap, null, null, PdfRenderer.Page.RENDER_MODE_FOR_DISPLAY)
-            Log.d(TAG, "showData: ${File(pdfs[0].path).length().toFloat() / 1048576.0}")
-        }
-    }
 
     private fun checkPermissions(permission: String, name: String, requestCode: Int) {
         Log.d(TAG, "checkPermissions: PERMISSION ASKED $name")
