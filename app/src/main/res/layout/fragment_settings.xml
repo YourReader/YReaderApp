@@ -3,8 +3,10 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
     tools:context=".Fragments.SettingsFragment">
+
 
     <TextView
         android:layout_width="wrap_content"
@@ -244,6 +246,7 @@
         <androidx.appcompat.widget.SwitchCompat
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:id="@+id/switchAccess"
             android:layout_marginStart="0dp"
             android:layout_weight="10"
             android:gravity="end|center"
