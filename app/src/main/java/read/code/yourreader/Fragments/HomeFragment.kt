@@ -340,23 +340,11 @@ class HomeFragment : Fragment(),
     }
 
     fun ReadFromUrl(intent:Intent){
-//        val url: Uri? = intent.getParcelableExtra(Intent.EXTRA_STREAM)
-//
-//        var buf: BufferedReader =  BufferedReader(InputStreamReader(URL(url!!.toString()).openStream()))
-//
-//        try{
-//            while ((buf.readLine()) != null) {
-//                urlData+=buf.readLine().toString()
-//            }
-//            buf.close()
-//            Log.d(TAG, "ReadFromUrl: \n\nData is \n$urlData")
-//        }
-//        catch(e: MalformedURLException) {
-//            Log.d(TAG, "ReadFromUrl: (\"Malformed URL: \"  )")
-//        }
-//        catch(e: IOException ) {
-//            Log.d(TAG, "ReadFromUrl: (\"IOException URL: \"  )")
-//        }
+        val uri: Uri? = intent.getParcelableExtra(Intent.EXTRA_STREAM)
+        Log.d(TAG, "ReadFromUrl: $uri")
+        Log.d(TAG, "ReadFromUrl: ${uri!!.encodedPath}")
+        Log.d(TAG, "ReadFromUrl: ${uri.authority}")
+        Log.d(TAG, "ReadFromUrl: ${uri.path}")
     }
 
     }
