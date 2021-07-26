@@ -8,6 +8,7 @@
     tools:context=".Fragments.BooksFragment"
     tools:ignore="HardcodedText">
 
+
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/filesRecyclerView"
         android:layout_width="match_parent"

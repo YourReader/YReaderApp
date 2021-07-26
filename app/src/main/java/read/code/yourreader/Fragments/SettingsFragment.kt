@@ -62,7 +62,7 @@ class SettingsFragment : Fragment() {
 
         Log.d(TAG, "onCreateView: theme=$")
 
-        binding.darkModeSwitch.setOnClickListener(View.OnClickListener {
+        binding.darkModeSwitch.setOnClickListener {
             if (binding.darkModeSwitch.isChecked) {
                 editor.putBoolean("switchDark", true)
                 editor.apply()
@@ -77,9 +77,9 @@ class SettingsFragment : Fragment() {
 
 
             }
-            editor.commit()
+            editor.apply()
             Toast.makeText(requireContext(), "Setting Saved", Toast.LENGTH_SHORT).show()
-        })
+        }
         Log.d(TAG, "onCreateView: is checked = ${binding.darkModeSwitch.isChecked}")
 
 
@@ -128,7 +128,30 @@ class SettingsFragment : Fragment() {
                 editor3.apply()
                 Log.d(TAG, "onCreateView: brightNessSwitch Changed to Off")
             }
-            editor3.commit()
+            editor3.apply()
+        }
+
+
+
+        //AccessFiles  Settings
+        val sharedPreferencesAccess : SharedPreferences =
+            requireActivity().getSharedPreferences("switchAccess", MODE_PRIVATE)
+        val editor4 = sharedPreferencesAccess.edit()
+        binding.switchAccess.isChecked = sharedPreferencesAccess.getBoolean("switchAccess", true)
+
+
+        binding.switchAccess.setOnClickListener {
+            if (binding.switchAccess.isChecked) {
+                editor4.putBoolean("switchAccess", true)
+                editor4.apply()
+                Log.d(TAG, "onCreateView: switchAccess Changed to On")
+            }
+            if (!binding.switchAccess.isChecked) {
+                editor4.putBoolean("switchAccess", false)
+                editor4.apply()
+                Log.d(TAG, "onCreateView: switchAccess Changed to Off")
+            }
+            editor4.apply()
         }
 
 

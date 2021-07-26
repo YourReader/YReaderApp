@@ -1,6 +1,5 @@
 package read.code.yourreader.Fragments
 
-import android.annotation.SuppressLint
 import android.content.ContentValues.TAG
 import android.content.Intent
 import android.net.Uri
@@ -19,7 +18,6 @@ import android.widget.SeekBar.OnSeekBarChangeListener
 import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.fragment.app.Fragment
-import com.github.barteksc.pdfviewer.PDFView
 import com.github.barteksc.pdfviewer.listener.OnErrorListener
 import com.github.barteksc.pdfviewer.listener.OnLoadCompleteListener
 import com.github.barteksc.pdfviewer.listener.OnPageChangeListener
@@ -35,7 +33,10 @@ import java.util.*
 import kotlin.collections.ArrayList
 
 
-class HomeFragment : Fragment(), OnPageChangeListener, OnLoadCompleteListener, OnErrorListener,
+class HomeFragment : Fragment(),
+    OnPageChangeListener,
+    OnLoadCompleteListener,
+    OnErrorListener,
     TextToSpeech.OnInitListener {
 
 
@@ -63,25 +64,36 @@ class HomeFragment : Fragment(), OnPageChangeListener, OnLoadCompleteListener, O
         if (intent != null) {
             val action = intent.action
             val type = intent.type
+            Log.d(TAG, "onCreateView: Type is $type")
             if (Intent.ACTION_SEND == action && type != null) {
                 when {
                     type.equals("text/plain", ignoreCase = true) -> {
+                        //Text,Blogs or URl
                         handleTextData(intent)
                     }
                     type.equals("application/pdf", ignoreCase = true) -> {
                         handlePdfFile(intent)
                     }
-                    type.equals("*/*", ignoreCase = true) -> {
+                    type.equals("application/vnd.openxmlformats-officedocument.wordprocessingml.document", ignoreCase = true) -> {
+                        //Word
                         handleWordFile(intent)
                     }
                 }
             }
 
             if (Intent.ACTION_VIEW == action && type != null) {
-                if (type.equals("text/plain", ignoreCase = true)) {
-                    handleTextData(intent)
-                } else if (type.equals("application/pdf", ignoreCase = true)) {
-                    handlePdfFile(intent)
+                when {
+                    type.equals("text/plain", ignoreCase = true) -> {
+                        //Text,Blogs or URl
+                        handleTextData(intent)
+                    }
+                    type.equals("application/pdf", ignoreCase = true) -> {
+                        handlePdfFile(intent)
+                    }
+                    type.equals("application/vnd.openxmlformats-officedocument.wordprocessingml.document", ignoreCase = true) -> {
+                        //Word
+                        handleWordFile(intent)
+                    }
                 }
             }
         }
@@ -109,14 +121,14 @@ class HomeFragment : Fragment(), OnPageChangeListener, OnLoadCompleteListener, O
 
 
         binding.btnPaly.setOnClickListener {
-            if (!playEnabled) {
+            playEnabled = if (!playEnabled) {
                 binding.btnPaly.setImageResource(R.drawable.ic_pause)
                 pagesReader()
-                playEnabled = true
+                true
             } else {
                 binding.btnPaly.setImageResource(R.drawable.ic_play)
                 tts!!.stop()
-                playEnabled = false
+                false
             }
         }
 
@@ -158,7 +170,7 @@ class HomeFragment : Fragment(), OnPageChangeListener, OnLoadCompleteListener, O
     }
 
     private fun handleWordFile(intent: Intent) {
-
+        //TODO Word Remaining
     }
 
 
@@ -166,20 +178,20 @@ class HomeFragment : Fragment(), OnPageChangeListener, OnLoadCompleteListener, O
     private fun handlePdfFile(intent: Intent) {
         InitialiseTTS()
 
-        val pdffile: Uri? = intent.getParcelableExtra(Intent.EXTRA_STREAM)
-        if (pdffile != null) {
-            Log.d("Pdf File Path : ", "" + pdffile.path)
-            extractTextFromPdfFile(pdffile)
-            displayFromUri(pdffile)
+        val pdfFile: Uri? = intent.getParcelableExtra(Intent.EXTRA_STREAM)
+        if (pdfFile != null) {
+            Log.d("Pdf File Path : ", "" + pdfFile.path)
+            extractTextFromPdfFile(pdfFile)
+            displayFromUri(pdfFile)
             Log.d(TAG, "handlePdfFile: Pdf Loaded")
         }
     }
 
     private fun handleTextData(intent: Intent) {
         InitialiseTTS()
-        val textdata = intent.getStringExtra(Intent.EXTRA_TEXT)
-        if (textdata != null) {
-            Log.d("Text Data : ", "" + textdata)
+        val textData = intent.getStringExtra(Intent.EXTRA_TEXT)
+        if (textData != null) {
+            Log.d("Text Data : ", "" + textData)
         }
     }
 
@@ -339,6 +351,24 @@ class HomeFragment : Fragment(), OnPageChangeListener, OnLoadCompleteListener, O
             super.onPageFinished(view, url)
 
         }
+
+
+    }
+
+    private fun getBodyText() {
+//        CoroutineScope(IO).launch {
+//            val builder = StringBuilder()
+//            try {
+//                val url = "http://www.example.com" //your website url
+//                val doc: DocumentsContract.Document = Jsoup.connect(url).get()
+//                val body: Element = doc.body
+//                builder.append(body.text)
+//            } catch (e: Exception) {
+//                builder.append("Error : ").append(e.message).append("\n")
+//            }
+//            //UiThreadStatement.runOnUiThread(Runnable { result.setText(builder.toString()) })
+//        }.start()
+
 
 
     }

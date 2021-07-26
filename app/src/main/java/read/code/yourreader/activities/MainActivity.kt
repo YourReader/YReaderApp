@@ -63,7 +63,6 @@ class MainActivity : AppCompatActivity() {
         setContentView(binding.root)
 
         init()
-        setSupportActionBar(binding.toolbarMain)
         val sharedPreferences: SharedPreferences = getSharedPreferences("switchDark", MODE_PRIVATE)
         val theme=sharedPreferences.getBoolean("switchDark", true)
 
