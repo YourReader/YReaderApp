@@ -5,18 +5,18 @@ import android.content.Intent
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
+import android.os.Parcelable
 import android.speech.tts.TextToSpeech
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.webkit.WebResourceRequest
-import android.webkit.WebView
-import android.webkit.WebViewClient
+
 import android.widget.SeekBar
 import android.widget.SeekBar.OnSeekBarChangeListener
 import android.widget.Toast
 import androidx.annotation.RequiresApi
+import androidx.core.net.toUri
 import androidx.fragment.app.Fragment
 import com.github.barteksc.pdfviewer.listener.OnErrorListener
 import com.github.barteksc.pdfviewer.listener.OnLoadCompleteListener
@@ -26,9 +26,9 @@ import com.itextpdf.text.pdf.parser.LocationTextExtractionStrategy
 import com.itextpdf.text.pdf.parser.PdfTextExtractor
 import read.code.yourreader.R
 import read.code.yourreader.databinding.FragmentHomeBinding
-import java.io.FileNotFoundException
-import java.io.IOException
-import java.io.InputStream
+import java.io.*
+import java.net.MalformedURLException
+import java.net.URL
 import java.util.*
 import kotlin.collections.ArrayList
 
@@ -51,6 +51,7 @@ class HomeFragment : Fragment(),
     private val locales = Locale.getAvailableLocales()
     private val localeList: MutableList<Locale> = ArrayList()
     private var pages = 0
+    var urlData=""
 
 
     override fun onCreateView(
@@ -69,7 +70,7 @@ class HomeFragment : Fragment(),
                 when {
                     type.equals("text/plain", ignoreCase = true) -> {
                         //Text,Blogs or URl
-                        handleTextData(intent)
+                        ReadFromUrl(intent)
                     }
                     type.equals("application/pdf", ignoreCase = true) -> {
                         handlePdfFile(intent)
@@ -328,7 +329,6 @@ class HomeFragment : Fragment(),
 
 
     fun pagesReader() {
-
         if (i < pages) {
             str = builderArray[i]
             speakOut(str)
@@ -339,38 +339,31 @@ class HomeFragment : Fragment(),
         }
     }
 
-    class AppWebViewClients : WebViewClient() {
-        override fun shouldOverrideUrlLoading(
-            view: WebView?,
-            request: WebResourceRequest?
-        ): Boolean {
-            view!!.loadUrl(request!!.url.toString());
-            return true; }
-
-        override fun onPageFinished(view: WebView?, url: String?) {
-            super.onPageFinished(view, url)
-
-        }
-
-
-    }
-
-    private fun getBodyText() {
-//        CoroutineScope(IO).launch {
-//            val builder = StringBuilder()
-//            try {
-//                val url = "http://www.example.com" //your website url
-//                val doc: DocumentsContract.Document = Jsoup.connect(url).get()
-//                val body: Element = doc.body
-//                builder.append(body.text)
-//            } catch (e: Exception) {
-//                builder.append("Error : ").append(e.message).append("\n")
+    fun ReadFromUrl(intent:Intent){
+//        val url: Uri? = intent.getParcelableExtra(Intent.EXTRA_STREAM)
+//
+//        var buf: BufferedReader =  BufferedReader(InputStreamReader(URL(url!!.toString()).openStream()))
+//
+//        try{
+//            while ((buf.readLine()) != null) {
+//                urlData+=buf.readLine().toString()
 //            }
-//            //UiThreadStatement.runOnUiThread(Runnable { result.setText(builder.toString()) })
-//        }.start()
-
-
+//            buf.close()
+//            Log.d(TAG, "ReadFromUrl: \n\nData is \n$urlData")
+//        }
+//        catch(e: MalformedURLException) {
+//            Log.d(TAG, "ReadFromUrl: (\"Malformed URL: \"  )")
+//        }
+//        catch(e: IOException ) {
+//            Log.d(TAG, "ReadFromUrl: (\"IOException URL: \"  )")
+//        }
+    }
 
     }
-}
+
+
+
+
+
+
 
