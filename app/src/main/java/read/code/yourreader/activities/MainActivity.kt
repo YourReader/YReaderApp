@@ -80,6 +80,9 @@ class MainActivity : AppCompatActivity() {
 
         }
         binding.toolbarMain.showOverflowMenu()
+        supportActionBar!!.setDisplayHomeAsUpEnabled(true)
+
+
 
         binding.navView.setNavigationItemSelectedListener {
             when (it.itemId) {

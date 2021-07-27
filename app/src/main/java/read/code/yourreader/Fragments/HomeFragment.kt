@@ -22,9 +22,13 @@ import com.github.barteksc.pdfviewer.listener.OnPageChangeListener
 import com.itextpdf.text.pdf.PdfReader
 import com.itextpdf.text.pdf.parser.LocationTextExtractionStrategy
 import com.itextpdf.text.pdf.parser.PdfTextExtractor
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers.IO
+import kotlinx.coroutines.launch
 import read.code.yourreader.R
 import read.code.yourreader.databinding.FragmentHomeBinding
 import java.io.*
+import java.net.URL
 import java.util.*
 import java.util.regex.Matcher
 import kotlin.collections.ArrayList
@@ -66,7 +70,7 @@ class HomeFragment : Fragment(),
                 when {
                     type.equals("text/plain", ignoreCase = true) -> {
                         //Text,Blogs or URl
-                        ReadFromUrl(intent)
+                        readFromUrl(intent)
                     }
                     type.equals("application/pdf", ignoreCase = true) -> {
                         handlePdfFile(intent)
@@ -338,18 +342,34 @@ class HomeFragment : Fragment(),
         }
     }
 
-    fun ReadFromUrl(intent: Intent) {
-        val clipData=intent.clipData
+    fun readFromUrl(intent: Intent) {
+        val clipData = intent.clipData
         Log.d(TAG, "ReadFromUrl:Clipdata=$clipData\n\n")
-        val url=extractLinks(clipData.toString())
+        val url = extractLinks(clipData.toString())
         Log.d(TAG, "ReadFromUrl: \n\nFinal URL = ${url[0]}")
 
-        var dataText=getDataFrommUrl(url[0])
+        var dataText = getDataFrommUrl(url[0])
 
 
     }
 
     private fun getDataFrommUrl(s: String): String {
+
+        var inputLine = " "
+        CoroutineScope(IO).launch {
+            val oracle = URL(s)
+            val input = BufferedReader(
+                InputStreamReader(oracle.openStream())
+            )
+            while (input.readLine()!= null){
+             inputLine += input.readLine()
+                Log.d(TAG, "getDataFrommUrl: $inputLine")
+            }
+            input.close()
+        }
+
+
+
 
         return ""
     }
@@ -363,6 +383,7 @@ class HomeFragment : Fragment(),
         }
         return links.toTypedArray()
     }
+
 
 }
 
