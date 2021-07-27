@@ -5,18 +5,16 @@ import android.content.Intent
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
-import android.os.Parcelable
 import android.speech.tts.TextToSpeech
 import android.util.Log
+import android.util.Patterns
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-
 import android.widget.SeekBar
 import android.widget.SeekBar.OnSeekBarChangeListener
 import android.widget.Toast
 import androidx.annotation.RequiresApi
-import androidx.core.net.toUri
 import androidx.fragment.app.Fragment
 import com.github.barteksc.pdfviewer.listener.OnErrorListener
 import com.github.barteksc.pdfviewer.listener.OnLoadCompleteListener
@@ -27,9 +25,8 @@ import com.itextpdf.text.pdf.parser.PdfTextExtractor
 import read.code.yourreader.R
 import read.code.yourreader.databinding.FragmentHomeBinding
 import java.io.*
-import java.net.MalformedURLException
-import java.net.URL
 import java.util.*
+import java.util.regex.Matcher
 import kotlin.collections.ArrayList
 
 
@@ -47,11 +44,10 @@ class HomeFragment : Fragment(),
     var playEnabled = false
     var i = 0
     var str: String = ""
-    private var wordFile: Uri? = null
     private val locales = Locale.getAvailableLocales()
     private val localeList: MutableList<Locale> = ArrayList()
     private var pages = 0
-    var urlData=""
+    val links: MutableList<String> = ArrayList()
 
 
     override fun onCreateView(
@@ -75,7 +71,10 @@ class HomeFragment : Fragment(),
                     type.equals("application/pdf", ignoreCase = true) -> {
                         handlePdfFile(intent)
                     }
-                    type.equals("application/vnd.openxmlformats-officedocument.wordprocessingml.document", ignoreCase = true) -> {
+                    type.equals(
+                        "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+                        ignoreCase = true
+                    ) -> {
                         //Word
                         handleWordFile(intent)
                     }
@@ -91,7 +90,10 @@ class HomeFragment : Fragment(),
                     type.equals("application/pdf", ignoreCase = true) -> {
                         handlePdfFile(intent)
                     }
-                    type.equals("application/vnd.openxmlformats-officedocument.wordprocessingml.document", ignoreCase = true) -> {
+                    type.equals(
+                        "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+                        ignoreCase = true
+                    ) -> {
                         //Word
                         handleWordFile(intent)
                     }
@@ -175,7 +177,6 @@ class HomeFragment : Fragment(),
     }
 
 
-
     private fun handlePdfFile(intent: Intent) {
         InitialiseTTS()
 
@@ -255,8 +256,6 @@ class HomeFragment : Fragment(),
         Toast.makeText(requireContext(), "Cant Load Pdf", Toast.LENGTH_SHORT).show()
         UnLoadPdfLayout()
     }
-
- 
 
 
     private fun loadPdfLayout() {
@@ -339,15 +338,33 @@ class HomeFragment : Fragment(),
         }
     }
 
-    fun ReadFromUrl(intent:Intent){
-        val uri: Uri? = intent.getParcelableExtra(Intent.EXTRA_STREAM)
-        Log.d(TAG, "ReadFromUrl: $uri")
-        Log.d(TAG, "ReadFromUrl: ${uri!!.encodedPath}")
-        Log.d(TAG, "ReadFromUrl: ${uri.authority}")
-        Log.d(TAG, "ReadFromUrl: ${uri.path}")
-    }
+    fun ReadFromUrl(intent: Intent) {
+        val clipData=intent.clipData
+        Log.d(TAG, "ReadFromUrl:Clipdata=$clipData\n\n")
+        val url=extractLinks(clipData.toString())
+        Log.d(TAG, "ReadFromUrl: \n\nFinal URL = ${url[0]}")
+
+        var dataText=getDataFrommUrl(url[0])
+
 
     }
+
+    private fun getDataFrommUrl(s: String): String {
+
+        return ""
+    }
+
+    private fun extractLinks(text: String): Array<String> {
+        val m: Matcher = Patterns.WEB_URL.matcher(text)
+        while (m.find()) {
+            val url: String = m.group()
+            Log.d(TAG, "URL extracted: $url")
+            links.add(url)
+        }
+        return links.toTypedArray()
+    }
+
+}
 
 
 

@@ -69,7 +69,14 @@
                 <data android:mimeType="*/*" />
             </intent-filter>
 
-
+            <intent-filter>
+                <data android:scheme="http"
+                    android:host="host.com"
+                    android:pathPrefix="/file.html" />
+                <action android:name="android.intent.action.VIEW" />
+                <category android:name="android.intent.category.BROWSABLE" />
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
 
         </activity>
 
