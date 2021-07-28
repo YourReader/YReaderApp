@@ -189,8 +189,8 @@ class MainActivity : AppCompatActivity() {
         setSupportActionBar(
             binding.toolbarMain
         )
-        supportActionBar?.setDisplayHomeAsUpEnabled(true)
-        supportActionBar?.setHomeButtonEnabled(true)
+        supportActionBar!!.setDisplayHomeAsUpEnabled(true)
+        supportActionBar!!.setHomeButtonEnabled(true)
 
         fragmentTransition(HomeFragment())
         binding.toolbarMain.title = "Home"
@@ -304,6 +304,14 @@ class MainActivity : AppCompatActivity() {
                 startActivity(installIntent2)
             }
 
+            else ->{
+                if (binding.drawerlayout.isDrawerOpen(GravityCompat.START)) {
+                    binding.drawerlayout.closeDrawer(GravityCompat.START);
+                } else {
+                    binding.drawerlayout.openDrawer(GravityCompat.START);
+                }
+            }
+
         }
         return true
 
@@ -369,4 +377,8 @@ class MainActivity : AppCompatActivity() {
         return true
     }
 
+    override fun onPostCreate(savedInstanceState: Bundle?) {
+        super.onPostCreate(savedInstanceState)
+        toggle.syncState()
+    }
 }
