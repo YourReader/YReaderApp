@@ -1,5 +1,6 @@
 package read.code.yourreader.Fragments
 
+import android.app.Activity.RESULT_OK
 import android.content.ContentValues.TAG
 import android.content.Intent
 import android.net.Uri
@@ -137,6 +138,12 @@ class HomeFragment : Fragment(),
                 tts!!.stop()
                 false
             }
+        }
+
+        binding.openFileHome.setOnClickListener {
+            val fileIntent = Intent(Intent.ACTION_GET_CONTENT)
+            fileIntent.type = "application/pdf"
+            startActivityForResult(fileIntent, 21)
         }
 
         binding.seekBarSpeed.setOnSeekBarChangeListener(object : OnSeekBarChangeListener {
@@ -361,8 +368,8 @@ class HomeFragment : Fragment(),
             val input = BufferedReader(
                 InputStreamReader(oracle.openStream())
             )
-            while (input.readLine()!= null){
-             inputLine += input.readLine()
+            while (input.readLine() != null) {
+                inputLine += input.readLine()
                 Log.d(TAG, "getDataFrommUrl: $inputLine")
             }
             input.close()
@@ -382,6 +389,28 @@ class HomeFragment : Fragment(),
             links.add(url)
         }
         return links.toTypedArray()
+    }
+
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        when (requestCode) {
+            21 -> {
+                if (resultCode == RESULT_OK) {
+                    val path = data!!.data
+                    handlePdfFilePath(path)
+                }
+            }
+            else -> {
+                Log.d(TAG, "onActivityResult: ELSE")
+
+            }
+        }
+    }
+
+    private fun handlePdfFilePath(path: Uri?) {
+        extractTextFromPdfFile(path!!)
+        displayFromUri(path)
     }
 
 
