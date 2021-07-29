@@ -8,6 +8,16 @@
     android:orientation="vertical"
     tools:context=".Fragments.HomeFragment">
 
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/text_Info"
+        android:text="@string/useInfo"
+        android:padding="10dp"
+        android:visibility="gone"
+        android:textColor="@color/black"
+        android:fontFamily="@font/montserratsemibold"
+        android:layout_margin="10dp"/>
 
     <com.github.barteksc.pdfviewer.PDFView
         android:layout_width="match_parent"

@@ -4,6 +4,7 @@ package read.code.yourreader.activities
 import android.Manifest
 import android.annotation.SuppressLint
 import android.app.AlertDialog
+import android.content.Context
 import android.content.Intent
 import android.content.SharedPreferences
 import android.content.pm.PackageManager
@@ -64,18 +65,16 @@ class MainActivity : AppCompatActivity() {
 
         init()
         val sharedPreferences: SharedPreferences = getSharedPreferences("switchDark", MODE_PRIVATE)
-        val theme=sharedPreferences.getBoolean("switchDark", true)
+        val theme = sharedPreferences.getBoolean("switchDark", true)
 
-        if (theme)
-        {
+        if (theme) {
             AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
-            resources.configuration.uiMode=Configuration.UI_MODE_NIGHT_YES
+            resources.configuration.uiMode = Configuration.UI_MODE_NIGHT_YES
             setTheme(R.style.Theme_AppTheme_Dark)
 
-        }
-        else{
+        } else {
             AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
-            resources.configuration.uiMode=Configuration.UI_MODE_NIGHT_NO
+            resources.configuration.uiMode = Configuration.UI_MODE_NIGHT_NO
             setTheme(R.style.Theme_AppTheme)
 
         }
@@ -109,7 +108,12 @@ class MainActivity : AppCompatActivity() {
                 }
                 R.id.menu_use -> {
                     binding.toolbarMain.title = "Use"
-                    // TODO: 7/15/2021
+                    val sharedPreferencesInfo: SharedPreferences =
+                        this.getSharedPreferences("Info", Context.MODE_PRIVATE)
+                    val editor = sharedPreferencesInfo.edit()
+                    editor.putBoolean("Info", false)
+                    editor.apply()
+                    fragmentTransition(HomeFragment())
                 }
                 R.id.home_menu -> {
                     binding.toolbarMain.title = "Home"
@@ -290,21 +294,20 @@ class MainActivity : AppCompatActivity() {
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
 
-        when(item.itemId)
-        {
+        when (item.itemId) {
             R.id.action_item_langSettings -> {
                 val installIntent = Intent()
                 installIntent.action = TextToSpeech.Engine.ACTION_INSTALL_TTS_DATA
                 startActivity(installIntent)
             }
 
-            R.id.action_item_TTS->{
+            R.id.action_item_TTS -> {
                 val installIntent2 = Intent()
                 installIntent2.action = TextToSpeech.Engine.ACTION_CHECK_TTS_DATA
                 startActivity(installIntent2)
             }
 
-            else ->{
+            else -> {
                 if (binding.drawerlayout.isDrawerOpen(GravityCompat.START)) {
                     binding.drawerlayout.closeDrawer(GravityCompat.START);
                 } else {

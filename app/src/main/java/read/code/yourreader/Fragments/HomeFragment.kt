@@ -2,7 +2,9 @@ package read.code.yourreader.Fragments
 
 import android.app.Activity.RESULT_OK
 import android.content.ContentValues.TAG
+import android.content.Context
 import android.content.Intent
+import android.content.SharedPreferences
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
@@ -45,14 +47,14 @@ class HomeFragment : Fragment(),
     private lateinit var inputStream: InputStream
     lateinit var binding: FragmentHomeBinding
     var tts: TextToSpeech? = null
-    var builderArray = ArrayList<String>()
-    var playEnabled = false
-    var i = 0
-    var str: String = ""
+    private var builderArray = ArrayList<String>()
+    private var playEnabled = false
+    private var i = 0
+    private var str: String = ""
     private val locales = Locale.getAvailableLocales()
     private val localeList: MutableList<Locale> = ArrayList()
     private var pages = 0
-    val links: MutableList<String> = ArrayList()
+    private val links: MutableList<String> = ArrayList()
 
 
     override fun onCreateView(
@@ -85,6 +87,26 @@ class HomeFragment : Fragment(),
                     }
                 }
             }
+
+            //App Info Pref
+            val sharedPreferences: SharedPreferences =
+                requireActivity().getSharedPreferences("Info", Context.MODE_PRIVATE)
+            val editor = sharedPreferences.edit()
+            val shown=sharedPreferences.getBoolean("Info", false)
+            if(shown)
+            {
+                binding.textInfo.visibility=View.GONE
+                Log.d(TAG, "onCreateView: Shown")
+            }else{
+                binding.layNoFile.visibility=View.GONE
+                binding.textInfo.visibility=View.VISIBLE
+                speakOut(resources.getString(R.string.useInfo))
+                editor.putBoolean("Info", true)
+                editor.apply()
+            }
+
+            Log.d(TAG, "onCreateView: theme=$")
+
 
             if (Intent.ACTION_VIEW == action && type != null) {
                 when {
@@ -216,7 +238,7 @@ class HomeFragment : Fragment(),
         } catch (e: FileNotFoundException) {
             Toast.makeText(requireContext(), "File Not Found", Toast.LENGTH_SHORT).show()
         }
-        var fileContent = ""
+        var fileContent: String
         val reader: PdfReader?
         try {
             reader = PdfReader(inputStream)
