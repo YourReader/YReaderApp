@@ -6,7 +6,6 @@ import android.graphics.pdf.PdfRenderer
 import android.os.ParcelFileDescriptor
 import android.util.Log
 import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
@@ -32,17 +31,20 @@ class FilesAdapter(private val listener: OnCardViewClickListener) :
     }
 
     inner class FilesViewHolder(private val binding: ListitemBinding) :
-        RecyclerView.ViewHolder(binding.root), View.OnClickListener {
+        RecyclerView.ViewHolder(binding.root) {
         private lateinit var bitmap: Bitmap
 
         init {
-            binding.cardViewItem.setOnClickListener(this)
+            binding.cardViewItem.setOnClickListener {
+                if (adapterPosition != RecyclerView.NO_POSITION)
+                    listener.onCardClick(getItem(adapterPosition))
+            }
+            binding.Relitem3.setOnClickListener {
+                if (adapterPosition != RecyclerView.NO_POSITION)
+                    listener.onFavoriteClick(getItem(adapterPosition), true)
+            }
         }
 
-        override fun onClick(p0: View?) {
-            if (adapterPosition != RecyclerView.NO_POSITION)
-                listener.onCardClick(adapterPosition)
-        }
 
         @SuppressLint("DefaultLocale")
         fun bind(files: Files) {
@@ -53,24 +55,22 @@ class FilesAdapter(private val listener: OnCardViewClickListener) :
                 sizeFileListItem.text = "${
                     "%.2f".format(file.length().toFloat() / 1048576.0)
                 } MB"
-                Log.d("HELLO", "bind:  name ${file.name}")
 
-                if (files.type == ".pdf") {
-                    val fd =
-                        ParcelFileDescriptor.open(file, ParcelFileDescriptor.MODE_READ_ONLY)
-                    val renderer = PdfRenderer(fd)
-                    bitmap = Bitmap.createBitmap(500, 500, Bitmap.Config.ARGB_4444)
-                    val page: PdfRenderer.Page = renderer.openPage(0)
-                    page.render(bitmap, null, null, PdfRenderer.Page.RENDER_MODE_FOR_DISPLAY)
+                val fd =
+                    ParcelFileDescriptor.open(file, ParcelFileDescriptor.MODE_READ_ONLY)
+                val renderer = PdfRenderer(fd)
+                bitmap = Bitmap.createBitmap(500, 500, Bitmap.Config.ARGB_4444)
+                val page: PdfRenderer.Page = renderer.openPage(0)
+                page.render(bitmap, null, null, PdfRenderer.Page.RENDER_MODE_FOR_DISPLAY)
 
-                    imgListItem.setImageBitmap(bitmap)
-                }
+                imgListItem.setImageBitmap(bitmap)
             }
         }
     }
 
     interface OnCardViewClickListener {
-        fun onCardClick(position: Int)
+        fun onCardClick(files: Files)
+        fun onFavoriteClick(files: Files, isFavorite: Boolean)
     }
 
     class DiffCallBack : DiffUtil.ItemCallback<Files>() {

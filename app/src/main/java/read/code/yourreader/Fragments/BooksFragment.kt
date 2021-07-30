@@ -64,12 +64,9 @@ class BooksFragment : Fragment(), FilesAdapter.OnCardViewClickListener {
                 setHasFixedSize(true)
             }
         }
-        Log.d(TAG, "onViewCreated: V? ${binding.progressBarBooks.visibility}")
         init()
         binding.loadDocuBooks.setOnClickListener {
-            Log.d(TAG, "onViewCreated: V btn? ${binding.progressBarBooks.visibility}")
             binding.progressBarBooks.visibility = View.VISIBLE
-            Log.d(TAG, "onViewCreated: NOW btn? ${binding.progressBarBooks.visibility}")
             loadFiles()
         }
     }
@@ -77,17 +74,22 @@ class BooksFragment : Fragment(), FilesAdapter.OnCardViewClickListener {
     private fun init() {
         mFilesViewModel =
             ViewModelProvider(this@BooksFragment).get(FilesViewModel::class.java)
-        Log.d(TAG, "init: ${Values.isDbEmpty}")
+        Log.d(TAG, "init:isDBEmpty ${Values.isDbEmpty}")
         if (!Values.isDbEmpty) {
             hideLoadDocuLayout()
             loadFiles()
         }
     }
 
-    override fun onCardClick(position: Int) {
+    override fun onCardClick(files: Files) {
         requireActivity().supportFragmentManager.beginTransaction()
             .replace(R.id.frame_main, HomeFragment())
             .commit()
+    }
+
+    override fun onFavoriteClick(file: Files, isFavorite: Boolean) {
+        Toast.makeText(requireContext(), "Added to Favorites", Toast.LENGTH_SHORT).show()
+        mFilesViewModel.onMarkedFavorite(file, isFavorite)
     }
 
     private fun handlePermissions() {
@@ -105,46 +107,46 @@ class BooksFragment : Fragment(), FilesAdapter.OnCardViewClickListener {
                 if (FileList[i].isDirectory) {
                     searchFiles(FileList[i])
                 } else {
-//                    if (FileList[i].name.endsWith(pdfPattern)) {
+                    if (FileList[i].name.endsWith(pdfPattern)) {
+                        mFilesViewModel.addFile(
+                            Files(
+                                path = FileList[i].toString(),
+                                type = pdfPattern
+                            )
+                        )
+                        pdfs.add(Files(path = FileList[i].toString(), type = pdfPattern))
+                        Log.d(
+                            TAG,
+                            "searchFiles: S: ${
+                                "%.2f".format(
+                                    (FileList[i].length()).toFloat()
+                                            / 1048576.0
+                                )
+                            } MB name:${FileList[i].name}"
+                        )
+                    }
+//                    if (FileList[i].name.endsWith(pdfPattern2)) {
+//
 //                        mFilesViewModel.addFile(
 //                            Files(
 //                                path = FileList[i].toString(),
-//                                type = pdfPattern
+//                                type = pdfPattern2
 //                            )
 //                        )
 //                        pdfs.add(Files(path = FileList[i].toString(), type = pdfPattern))
-//                        Log.d(
-//                            TAG,
-//                            "searchFiles: S: ${
-//                                "%.2f".format(
-//                                    (FileList[i].length()).toFloat()
-//                                            / 1048576.0
-//                                )
-//                            } MB name:${FileList[i].name}"
-//                        )
+//                        Log.d(TAG, "searchFiles: Successfully added $pdfPattern2")
+//
 //                    }
-                    if (FileList[i].name.endsWith(pdfPattern2)) {
-
-                        mFilesViewModel.addFile(
-                            Files(
-                                path = FileList[i].toString(),
-                                type = pdfPattern2
-                            )
-                        )
-                        pdfs.add(Files(path = FileList[i].toString(), type = pdfPattern))
-                        Log.d(TAG, "searchFiles: Successfully added $pdfPattern2")
-
-                    }
-                    if (FileList[i].name.endsWith(pdfPattern3)) {
-                        mFilesViewModel.addFile(
-                            Files(
-                                path = FileList[i].toString(),
-                                type = pdfPattern3
-                            )
-                        )
-                        pdfs.add(Files(path = FileList[i].toString(), type = pdfPattern))
-                        Log.d(TAG, "searchFiles: Successfully added $pdfPattern3")
-                    }
+//                    if (FileList[i].name.endsWith(pdfPattern3)) {
+//                        mFilesViewModel.addFile(
+//                            Files(
+//                                path = FileList[i].toString(),
+//                                type = pdfPattern3
+//                            )
+//                        )
+//                        pdfs.add(Files(path = FileList[i].toString(), type = pdfPattern))
+//                        Log.d(TAG, "searchFiles: Successfully added $pdfPattern3")
+//                    }
                 }
             }
         }
@@ -152,7 +154,6 @@ class BooksFragment : Fragment(), FilesAdapter.OnCardViewClickListener {
 
     @SuppressLint("SetTextI18n")
     private fun loadFiles() {
-        Log.d(TAG, "onViewCreated: last? ${binding.progressBarBooks.visibility}")
         handlePermissions()
         GlobalScope.launch(Dispatchers.IO) {
             if (!permissionGranted) {

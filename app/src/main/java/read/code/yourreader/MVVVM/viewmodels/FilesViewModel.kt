@@ -1,6 +1,7 @@
 package read.code.yourreader.MVVVM.viewmodels
 
 import android.app.Application
+import android.util.Log
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.asLiveData
@@ -26,6 +27,12 @@ class FilesViewModel(application: Application) : AndroidViewModel(application) {
     fun addFile(files: Files) {
         viewModelScope.launch(Dispatchers.IO) {
             repository.addFile(files)
+            Log.d("mActivity", "Adding data")
         }
+    }
+
+    fun onMarkedFavorite(file: Files, isFavorite: Boolean) = viewModelScope.launch {
+        repository.updateFile(file.copy(favorites = isFavorite))
+        Log.d("Favorite", "onMarkedFavorite: ${file.copy(favorites = isFavorite)}")
     }
 }
