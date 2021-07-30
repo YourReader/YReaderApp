@@ -11,4 +11,7 @@ class FilesRepository(private val filesDao: FileDao) {
         filesDao.insert(file)
     }
 
+    suspend fun updateFile(file: Files) {
+        filesDao.update(file)
+    }
 }
