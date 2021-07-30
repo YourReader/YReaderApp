@@ -44,8 +44,8 @@ class BooksFragment : Fragment(), FilesAdapter.OnCardViewClickListener {
     private lateinit var mFilesViewModel: FilesViewModel
     private val filesAdapter = FilesAdapter(this@BooksFragment)
     private val pdfPattern = ".pdf"
-    private val pdfPattern2 = ".docx"
-    private val pdfPattern3 = ".doc"
+//    private val pdfPattern2 = ".docx"
+//    private val pdfPattern3 = ".doc"
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,

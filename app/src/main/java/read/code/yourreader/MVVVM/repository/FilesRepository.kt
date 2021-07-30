@@ -7,6 +7,8 @@ class FilesRepository(private val filesDao: FileDao) {
 
     fun getAllFiles() = filesDao.getFiles()
 
+    fun getAllFavoriteFiles() = filesDao.getFiles(true)
+
     suspend fun addFile(file: Files) {
         filesDao.insert(file)
     }

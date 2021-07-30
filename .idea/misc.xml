@@ -4,6 +4,8 @@
     <option name="filePathToZoomLevelMap">
       <map>
         <entry key="..\:/Android Apps/YReaderApp/app/src/main/res/drawable/ic_favorite.xml" value="0.2708333333333333" />
+        <entry key="..\:/Android Apps/YReaderApp/app/src/main/res/layout/fragment_books.xml" value="0.2546875" />
+        <entry key="..\:/Android Apps/YReaderApp/app/src/main/res/layout/fragment_favorites.xml" value="0.2546875" />
         <entry key="..\:/Android Apps/YReaderApp/app/src/main/res/layout/listitem.xml" value="0.2546875" />
       </map>
     </option>

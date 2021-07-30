@@ -16,6 +16,6 @@ interface FileDao {
     @Delete
     suspend fun delete(files: Files)
 
-    @Query("SELECT * FROM files_table")
-    fun getFiles(): Flow<List<Files>>
+    @Query("SELECT * FROM files_table WHERE favorites = :isFavorite or favorites = 1 ")
+    fun getFiles(isFavorite: Boolean = false): Flow<List<Files>>
 }
