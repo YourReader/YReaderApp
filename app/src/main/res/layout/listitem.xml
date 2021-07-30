@@ -99,9 +99,8 @@
                         android:text="@string/_2_3x"
                         android:textAlignment="center"
                         android:textColor="@color/black"
-                        android:textSize="14sp"
 
-                        />
+                        android:textSize="14sp" />
 
                     <TextView
                         android:layout_width="wrap_content"
@@ -130,7 +129,7 @@
                         android:layout_height="wrap_content"
                         android:layout_centerInParent="true"
                         android:fontFamily="@font/montserratregular"
-                        android:src="@drawable/ic_favorite" />
+                        android:src="@drawable/ic_unfilled_favorite" />
 
                     <TextView
                         android:layout_width="wrap_content"
@@ -161,7 +160,6 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_centerInParent="true"
-                        android:layout_centerHorizontal="true"
                         android:src="@drawable/ic_trash" />
 
                     <TextView
