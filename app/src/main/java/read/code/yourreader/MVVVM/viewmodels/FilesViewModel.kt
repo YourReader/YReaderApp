@@ -15,13 +15,14 @@ import read.code.yourreader.data.Files
 class FilesViewModel(application: Application) : AndroidViewModel(application) {
 
     val readAllData: LiveData<List<Files>>
+    val readFavData: LiveData<List<Files>>
     private val repository: FilesRepository
 
     init {
         val filesDao = FileDatabase.getDatabase(application).filesDao()
         repository = FilesRepository(filesDao)
         readAllData = repository.getAllFiles().asLiveData()
-
+        readFavData = repository.getAllFavoriteFiles().asLiveData()
     }
 
     fun addFile(files: Files) {

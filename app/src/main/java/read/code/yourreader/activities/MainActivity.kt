@@ -152,6 +152,7 @@ class MainActivity : AppCompatActivity() {
         mFilesViewModel.readAllData.observe(this@MainActivity, {
             Values.isDbEmpty = it.isNullOrEmpty()
             Log.d(TAG, " MT: ${Values.isDbEmpty} Null: ${it.isNullOrEmpty()} Size ${it.size}")
+            Log.d(TAG, "checkDb: Values: $it")
         })
     }
 
@@ -309,9 +310,9 @@ class MainActivity : AppCompatActivity() {
 
             else -> {
                 if (binding.drawerlayout.isDrawerOpen(GravityCompat.START)) {
-                    binding.drawerlayout.closeDrawer(GravityCompat.START);
+                    binding.drawerlayout.closeDrawer(GravityCompat.START)
                 } else {
-                    binding.drawerlayout.openDrawer(GravityCompat.START);
+                    binding.drawerlayout.openDrawer(GravityCompat.START)
                 }
             }
 
