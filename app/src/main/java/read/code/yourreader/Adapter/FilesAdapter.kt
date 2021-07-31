@@ -42,7 +42,11 @@ class FilesAdapter(private val listener: OnCardViewClickListener) :
             }
             binding.Relitem3.setOnClickListener {
                 if (adapterPosition != RecyclerView.NO_POSITION)
-                    listener.onFavoriteClick(getItem(adapterPosition), true)
+                    listener.onFavoriteClick(
+                        getItem(adapterPosition),
+                        !getItem(adapterPosition).favorites
+                    )
+
             }
         }
 
