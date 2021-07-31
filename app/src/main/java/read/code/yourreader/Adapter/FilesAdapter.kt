@@ -10,6 +10,7 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
+import read.code.yourreader.R
 import read.code.yourreader.data.Files
 import read.code.yourreader.databinding.ListitemBinding
 import java.io.File
@@ -41,7 +42,11 @@ class FilesAdapter(private val listener: OnCardViewClickListener) :
             }
             binding.Relitem3.setOnClickListener {
                 if (adapterPosition != RecyclerView.NO_POSITION)
-                    listener.onFavoriteClick(getItem(adapterPosition), true)
+                    listener.onFavoriteClick(
+                        getItem(adapterPosition),
+                        !getItem(adapterPosition).favorites
+                    )
+
             }
         }
 
@@ -55,6 +60,8 @@ class FilesAdapter(private val listener: OnCardViewClickListener) :
                 sizeFileListItem.text = "${
                     "%.2f".format(file.length().toFloat() / 1048576.0)
                 } MB"
+                if (files.favorites)
+                    likeImgList.setImageResource(R.drawable.ic_filled_favorite)
 
                 val fd =
                     ParcelFileDescriptor.open(file, ParcelFileDescriptor.MODE_READ_ONLY)

@@ -37,6 +37,7 @@ class FavoritesFragment : Fragment(), FilesAdapter.OnCardViewClickListener {
                 setHasFixedSize(true)
             }
         }
+
         filesViewModel.readFavData.observe(requireActivity()) {
             if (it.isNotEmpty())
                 filesAdapter.submitList(it)

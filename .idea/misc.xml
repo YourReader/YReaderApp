@@ -3,10 +3,16 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
+        <entry key="..\:/Android Apps/YReaderApp/app/src/main/res/drawable/ic_baseline_done_24.xml" value="0.2708333333333333" />
+        <entry key="..\:/Android Apps/YReaderApp/app/src/main/res/drawable/ic_dots.xml" value="0.2708333333333333" />
         <entry key="..\:/Android Apps/YReaderApp/app/src/main/res/drawable/ic_favorite.xml" value="0.2708333333333333" />
+        <entry key="..\:/Android Apps/YReaderApp/app/src/main/res/drawable/ic_filled_favorite.xml" value="0.2462962962962963" />
+        <entry key="..\:/Android Apps/YReaderApp/app/src/main/res/drawable/ic_trash.xml" value="0.2708333333333333" />
+        <entry key="..\:/Android Apps/YReaderApp/app/src/main/res/drawable/ic_unfilled_baseline_done_24.xml" value="0.2462962962962963" />
         <entry key="..\:/Android Apps/YReaderApp/app/src/main/res/layout/fragment_books.xml" value="0.2546875" />
         <entry key="..\:/Android Apps/YReaderApp/app/src/main/res/layout/fragment_favorites.xml" value="0.2546875" />
         <entry key="..\:/Android Apps/YReaderApp/app/src/main/res/layout/listitem.xml" value="0.2546875" />
+        <entry key="..\:/Android Apps/YReaderApp/app/src/main/res/menu/drawer_menu.xml" value="0.2546875" />
       </map>
     </option>
   </component>
