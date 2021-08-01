@@ -28,13 +28,17 @@ import com.itextpdf.text.pdf.parser.PdfTextExtractor
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers.IO
 import kotlinx.coroutines.launch
+
 import read.code.yourreader.R
 import read.code.yourreader.databinding.FragmentHomeBinding
 import java.io.*
-import java.net.URL
+
 import java.util.*
 import java.util.regex.Matcher
 import kotlin.collections.ArrayList
+import org.jsoup.Jsoup
+import org.jsoup.nodes.Document
+import org.jsoup.select.Elements
 
 
 class HomeFragment : Fragment(),
@@ -78,13 +82,13 @@ class HomeFragment : Fragment(),
                     type.equals("application/pdf", ignoreCase = true) -> {
                         handlePdfFile(intent)
                     }
-                    type.equals(
-                        "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
-                        ignoreCase = true
-                    ) -> {
-                        //Word
-                        handleWordFile(intent)
-                    }
+//                    type.equals(
+//                        "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+//                        ignoreCase = true
+//                    ) -> {
+//                        //Word
+//                        handleWordFile(intent)
+//                    }
                 }
             }
 
@@ -92,14 +96,13 @@ class HomeFragment : Fragment(),
             val sharedPreferences: SharedPreferences =
                 requireActivity().getSharedPreferences("Info", Context.MODE_PRIVATE)
             val editor = sharedPreferences.edit()
-            val shown=sharedPreferences.getBoolean("Info", false)
-            if(shown)
-            {
-                binding.textInfo.visibility=View.GONE
+            val shown = sharedPreferences.getBoolean("Info", false)
+            if (shown) {
+                binding.textInfo.visibility = View.GONE
                 Log.d(TAG, "onCreateView: Shown")
-            }else{
-                binding.layNoFile.visibility=View.GONE
-                binding.textInfo.visibility=View.VISIBLE
+            } else {
+                binding.layNoFile.visibility = View.GONE
+                binding.textInfo.visibility = View.VISIBLE
                 speakOut(resources.getString(R.string.useInfo))
                 editor.putBoolean("Info", true)
                 editor.apply()
@@ -384,21 +387,17 @@ class HomeFragment : Fragment(),
 
     private fun getDataFrommUrl(s: String): String {
 
-        var inputLine = " "
         CoroutineScope(IO).launch {
-            val oracle = URL(s)
-            val input = BufferedReader(
-                InputStreamReader(oracle.openStream())
-            )
-            while (input.readLine() != null) {
-                inputLine += input.readLine()
-                Log.d(TAG, "getDataFrommUrl: $inputLine")
-            }
-            input.close()
+            val doc: Document = Jsoup.connect(s).get()
+            Log.d(TAG, "getDataFrommUrl: ${doc.title()}")
+            val element=doc.allElements
+
+
+
+
+            Log.d(TAG, "getDataFrommUrl: \n\nData is ${element.text()}")
+            Log.d(TAG, "getDataFrommUrl: \n Data is ${element.comments()}")
         }
-
-
-
 
         return ""
     }
@@ -437,6 +436,9 @@ class HomeFragment : Fragment(),
 
 
 }
+
+
+
 
 
 
