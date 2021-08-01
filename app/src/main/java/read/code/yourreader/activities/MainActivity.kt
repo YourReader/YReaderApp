@@ -65,7 +65,7 @@ class MainActivity : AppCompatActivity() {
 
         init()
         val sharedPreferences: SharedPreferences = getSharedPreferences("switchDark", MODE_PRIVATE)
-        val theme = sharedPreferences.getBoolean("switchDark", true)
+        val theme = sharedPreferences.getBoolean("switchDark", false)
 
         if (theme) {
             AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
