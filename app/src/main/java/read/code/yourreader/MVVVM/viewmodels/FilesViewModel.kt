@@ -25,15 +25,16 @@ class FilesViewModel(application: Application) : AndroidViewModel(application) {
         readFavData = repository.getAllFavoriteFiles().asLiveData()
     }
 
-    fun addFile(files: Files) {
-        viewModelScope.launch(Dispatchers.IO) {
-            repository.addFile(files)
-            Log.d("mActivity", "Adding data")
-        }
+    fun addFile(files: Files) = viewModelScope.launch(Dispatchers.IO) {
+        repository.addFile(files)
+        Log.d("mActivity", "Adding data")
+
     }
 
-    fun onMarkedFavorite(file: Files, isFavorite: Boolean) = viewModelScope.launch {
-        repository.updateFile(file.copy(favorites = isFavorite))
-        Log.d("Favorite", "onMarkedFavorite: ${file.copy(favorites = isFavorite)}")
-    }
+    fun updateFavoriteStatus(file: Files, isFavorite: Boolean) =
+        viewModelScope.launch(Dispatchers.IO) {
+
+            repository.updateFile(file.copy(favorites = isFavorite))
+        }
+
 }

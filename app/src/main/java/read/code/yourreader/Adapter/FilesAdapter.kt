@@ -4,7 +4,6 @@ import android.annotation.SuppressLint
 import android.graphics.Bitmap
 import android.graphics.pdf.PdfRenderer
 import android.os.ParcelFileDescriptor
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
@@ -26,9 +25,7 @@ class FilesAdapter(private val listener: OnCardViewClickListener) :
     }
 
     override fun onBindViewHolder(holder: FilesViewHolder, position: Int) {
-        val currentItem = getItem(position)
-        Log.d("HELLO", "onBindViewHolder: currentItem ${currentItem.type}")
-        holder.bind(currentItem)
+        holder.bind(getItem(position))
     }
 
     inner class FilesViewHolder(private val binding: ListitemBinding) :
@@ -60,8 +57,11 @@ class FilesAdapter(private val listener: OnCardViewClickListener) :
                 sizeFileListItem.text = "${
                     "%.2f".format(file.length().toFloat() / 1048576.0)
                 } MB"
+
                 if (files.favorites)
                     likeImgList.setImageResource(R.drawable.ic_filled_favorite)
+                else
+                    likeImgList.setImageResource(R.drawable.ic_unfilled_favorite)
 
                 val fd =
                     ParcelFileDescriptor.open(file, ParcelFileDescriptor.MODE_READ_ONLY)

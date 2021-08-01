@@ -4,12 +4,14 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import kotlinx.android.synthetic.main.fragment_favorites.*
 import read.code.yourreader.Adapter.FilesAdapter
 import read.code.yourreader.MVVVM.viewmodels.FilesViewModel
+import read.code.yourreader.R
 import read.code.yourreader.data.Files
 import read.code.yourreader.databinding.FragmentFavoritesBinding
 
@@ -21,7 +23,7 @@ class FavoritesFragment : Fragment(), FilesAdapter.OnCardViewClickListener {
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         // Inflate the layout for this fragment
         init()
         binding = FragmentFavoritesBinding.inflate(inflater, container, false)
@@ -50,10 +52,16 @@ class FavoritesFragment : Fragment(), FilesAdapter.OnCardViewClickListener {
     }
 
     override fun onCardClick(files: Files) {
-        TODO("Not yet implemented")
+        requireActivity().supportFragmentManager.beginTransaction()
+            .replace(R.id.frame_main, HomeFragment())
+            .commit()
     }
 
     override fun onFavoriteClick(files: Files, isFavorite: Boolean) {
-        TODO("Not yet implemented")
+        filesViewModel.updateFavoriteStatus(files, false)
+        Toast.makeText(requireContext(), "Removed from Favorites", Toast.LENGTH_SHORT).show()
+        filesViewModel.readFavData.observe(this@FavoritesFragment) {
+            filesAdapter.submitList(it)
+        }
     }
 }

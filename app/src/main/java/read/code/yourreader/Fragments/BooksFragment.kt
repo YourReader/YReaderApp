@@ -87,9 +87,12 @@ class BooksFragment : Fragment(), FilesAdapter.OnCardViewClickListener {
             .commit()
     }
 
-    override fun onFavoriteClick(file: Files, isFavorite: Boolean) {
-        Toast.makeText(requireContext(), "Added to Favorites", Toast.LENGTH_SHORT).show()
-        mFilesViewModel.onMarkedFavorite(file, isFavorite)
+    override fun onFavoriteClick(files: Files, isFavorite: Boolean) {
+        if (isFavorite)
+            Toast.makeText(requireContext(), "Added to Favorites", Toast.LENGTH_SHORT).show()
+        else
+            Toast.makeText(requireContext(), "Removed from Favorites", Toast.LENGTH_SHORT).show()
+        mFilesViewModel.updateFavoriteStatus(files, isFavorite)
     }
 
     private fun handlePermissions() {
