@@ -39,7 +39,10 @@ import kotlin.collections.ArrayList
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Document
 import org.jsoup.select.Elements
+import java.net.MalformedURLException
+import java.net.SocketTimeoutException
 import java.net.URL
+import java.net.URLEncoder
 
 
 class HomeFragment : Fragment(),
@@ -389,10 +392,21 @@ class HomeFragment : Fragment(),
     private fun getDataFrommUrl(s: String): String {
 
         CoroutineScope(IO).launch {
-            val doc=Jsoup.parse(URL(s),4000)
-            val link=doc.body()
 
-            Log.d(TAG, "getDataFrommUrl: Body link $link")
+            try {
+                val doc: Document = Jsoup.connect(s).get()
+                var link =Jsoup.parse(URL(s),4000)
+                val yourURLStr = URLEncoder.encode(s, "UTF-8")
+                Log.d(TAG, "getDataFrommUrl: \n\nNormal URL= $s\n\n")
+                Log.d(TAG, "getDataFrommUrl: URl= \n\n$yourURLStr\n")
+            } catch (ex: SocketTimeoutException) {
+                Log.d(TAG, "getDataFrommUrl: ${ex.message}")
+            } catch (ep: MalformedURLException) {
+                Toast.makeText(requireContext(), "URL not supported", Toast.LENGTH_SHORT).show()
+            } catch (e: IOException) {
+                Log.d(TAG, "getDataFrommUrl: ${e.message}")
+            }
+
         }
 
         return ""
