@@ -106,6 +106,7 @@ class MainActivity : AppCompatActivity() {
                     // TODO: 7/15/2021
 
                 }
+
                 R.id.menu_use -> {
                     binding.toolbarMain.title = "Use"
                     val sharedPreferencesInfo: SharedPreferences =

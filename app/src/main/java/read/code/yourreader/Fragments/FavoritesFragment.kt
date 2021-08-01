@@ -43,7 +43,6 @@ class FavoritesFragment : Fragment(), FilesAdapter.OnCardViewClickListener {
         filesViewModel.readFavData.observe(requireActivity()) {
             if (it.isNotEmpty())
                 filesAdapter.submitList(it)
-
         }
     }
 
@@ -63,5 +62,13 @@ class FavoritesFragment : Fragment(), FilesAdapter.OnCardViewClickListener {
         filesViewModel.readFavData.observe(this@FavoritesFragment) {
             filesAdapter.submitList(it)
         }
+    }
+
+    override fun onDoneClick(file: Files, isDone: Boolean) {
+        if (isDone)
+            Toast.makeText(requireContext(), "Marked as Finished", Toast.LENGTH_SHORT).show()
+        else
+            Toast.makeText(requireContext(), "Marked as Unfinished", Toast.LENGTH_SHORT).show()
+        filesViewModel.updateDoneStatus(file, isDone)
     }
 }

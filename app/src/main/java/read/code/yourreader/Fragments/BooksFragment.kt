@@ -35,8 +35,7 @@ import java.io.File
 
 @SuppressLint("SetTextI18n")
 class BooksFragment : Fragment(), FilesAdapter.OnCardViewClickListener {
-    var dir = File(Environment.getExternalStorageDirectory().absolutePath)
-    private var pdfs = ArrayList<Files>()
+    private var dir = File(Environment.getExternalStorageDirectory().absolutePath)
     private var _binding: FragmentBooksBinding? = null
     private val binding get() = _binding!!
     private var permissionGranted = false
@@ -95,6 +94,14 @@ class BooksFragment : Fragment(), FilesAdapter.OnCardViewClickListener {
         mFilesViewModel.updateFavoriteStatus(files, isFavorite)
     }
 
+    override fun onDoneClick(file: Files, isDone: Boolean) {
+        if (isDone)
+            Toast.makeText(requireContext(), "Marked as Finished", Toast.LENGTH_SHORT).show()
+        else
+            Toast.makeText(requireContext(), "Marked as Unfinished", Toast.LENGTH_SHORT).show()
+        mFilesViewModel.updateDoneStatus(file, isDone)
+    }
+
     private fun handlePermissions() {
         if (SDK_INT >= Build.VERSION_CODES.R) {
             checkPermissions(Manifest.permission.MANAGE_EXTERNAL_STORAGE, "MANAGE", 101)
@@ -117,7 +124,6 @@ class BooksFragment : Fragment(), FilesAdapter.OnCardViewClickListener {
                                 type = pdfPattern
                             )
                         )
-                        pdfs.add(Files(path = FileList[i].toString(), type = pdfPattern))
                         Log.d(
                             TAG,
                             "searchFiles: S: ${

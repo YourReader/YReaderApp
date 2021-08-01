@@ -9,6 +9,8 @@ class FilesRepository(private val filesDao: FileDao) {
 
     fun getAllFavoriteFiles() = filesDao.getFiles(true)
 
+    fun getAllDoneFiles() = filesDao.getDoneFiles()
+
     suspend fun addFile(file: Files) {
         filesDao.insert(file)
     }
@@ -16,4 +18,6 @@ class FilesRepository(private val filesDao: FileDao) {
     suspend fun updateFile(file: Files) {
         filesDao.update(file)
     }
+
+
 }
