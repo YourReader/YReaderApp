@@ -57,7 +57,7 @@ class SettingsFragment : Fragment() {
         val sharedPreferencesDark: SharedPreferences =
             requireActivity().getSharedPreferences("switchDark", MODE_PRIVATE)
         val editor = sharedPreferencesDark.edit()
-        binding.darkModeSwitch.isChecked = sharedPreferencesDark.getBoolean("switchDark", true)
+        binding.darkModeSwitch.isChecked = sharedPreferencesDark.getBoolean("switchDark", false)
 
 
         Log.d(TAG, "onCreateView: theme=$")

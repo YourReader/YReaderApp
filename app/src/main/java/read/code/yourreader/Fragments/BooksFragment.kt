@@ -43,8 +43,7 @@ class BooksFragment : Fragment(), FilesAdapter.OnCardViewClickListener {
     private lateinit var mFilesViewModel: FilesViewModel
     private val filesAdapter = FilesAdapter(this@BooksFragment)
     private val pdfPattern = ".pdf"
-//    private val pdfPattern2 = ".docx"
-//    private val pdfPattern3 = ".doc"
+
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -134,28 +133,7 @@ class BooksFragment : Fragment(), FilesAdapter.OnCardViewClickListener {
                             } MB name:${FileList[i].name}"
                         )
                     }
-//                    if (FileList[i].name.endsWith(pdfPattern2)) {
-//
-//                        mFilesViewModel.addFile(
-//                            Files(
-//                                path = FileList[i].toString(),
-//                                type = pdfPattern2
-//                            )
-//                        )
-//                        pdfs.add(Files(path = FileList[i].toString(), type = pdfPattern))
-//                        Log.d(TAG, "searchFiles: Successfully added $pdfPattern2")
-//
-//                    }
-//                    if (FileList[i].name.endsWith(pdfPattern3)) {
-//                        mFilesViewModel.addFile(
-//                            Files(
-//                                path = FileList[i].toString(),
-//                                type = pdfPattern3
-//                            )
-//                        )
-//                        pdfs.add(Files(path = FileList[i].toString(), type = pdfPattern))
-//                        Log.d(TAG, "searchFiles: Successfully added $pdfPattern3")
-//                    }
+
                 }
             }
         }

@@ -177,7 +177,7 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="0dp"
             android:layout_weight="10"
-            android:checked="true"
+            android:checked="false"
             android:gravity="end|center"
             android:id="@+id/darkModeSwitch"
             />
