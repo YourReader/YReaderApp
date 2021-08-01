@@ -392,20 +392,26 @@ class HomeFragment : Fragment(),
     private fun getDataFrommUrl(s: String): String {
 
         CoroutineScope(IO).launch {
+            if (Patterns.WEB_URL.matcher(s).matches()) {
+                try {
+                    val doc: Document = Jsoup.connect(s).get()
+                    var link = Jsoup.parse(URL(s), 4000)
+                    val yourURLStr = URLEncoder.encode(s, "UTF-8")
+                    Log.d(TAG, "getDataFrommUrl: \n\nNormal URL= $s\n\n")
 
-            try {
-                val doc: Document = Jsoup.connect(s).get()
-                var link =Jsoup.parse(URL(s),4000)
-                val yourURLStr = URLEncoder.encode(s, "UTF-8")
-                Log.d(TAG, "getDataFrommUrl: \n\nNormal URL= $s\n\n")
-                Log.d(TAG, "getDataFrommUrl: URl= \n\n$yourURLStr\n")
-            } catch (ex: SocketTimeoutException) {
-                Log.d(TAG, "getDataFrommUrl: ${ex.message}")
-            } catch (ep: MalformedURLException) {
+                    Log.d(TAG, "getDataFrommUrl: content ${link.getElementsByClass("content").text()}")
+
+                    Log.d(TAG, "getDataFrommUrl: \n\n\nBody = ${link.body().text()}")
+                } catch (ex: SocketTimeoutException) {
+                    Log.d(TAG, "getDataFrommUrl: ${ex.message}")
+                } catch (ep: MalformedURLException) {
+                } catch (e: IOException) {
+                    Log.d(TAG, "getDataFrommUrl: ${e.message}")
+                }
+            } else {
                 Toast.makeText(requireContext(), "URL not supported", Toast.LENGTH_SHORT).show()
-            } catch (e: IOException) {
-                Log.d(TAG, "getDataFrommUrl: ${e.message}")
             }
+
 
         }
 
