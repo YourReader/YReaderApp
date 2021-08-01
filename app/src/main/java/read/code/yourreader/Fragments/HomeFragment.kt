@@ -39,6 +39,7 @@ import kotlin.collections.ArrayList
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Document
 import org.jsoup.select.Elements
+import java.net.URL
 
 
 class HomeFragment : Fragment(),
@@ -388,15 +389,10 @@ class HomeFragment : Fragment(),
     private fun getDataFrommUrl(s: String): String {
 
         CoroutineScope(IO).launch {
-            val doc: Document = Jsoup.connect(s).get()
-            Log.d(TAG, "getDataFrommUrl: ${doc.title()}")
-            val element=doc.allElements
+            val doc=Jsoup.parse(URL(s),4000)
+            val link=doc.body()
 
-
-
-
-            Log.d(TAG, "getDataFrommUrl: \n\nData is ${element.text()}")
-            Log.d(TAG, "getDataFrommUrl: \n Data is ${element.comments()}")
+            Log.d(TAG, "getDataFrommUrl: Body link $link")
         }
 
         return ""
