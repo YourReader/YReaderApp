@@ -98,8 +98,8 @@
                         android:src="@drawable/ic_baseline_done_24"
                         android:text="@string/_2_3x"
                         android:textAlignment="center"
-                        android:textColor="@color/black"
 
+                        android:textColor="@color/black"
                         android:textSize="14sp" />
 
                     <TextView

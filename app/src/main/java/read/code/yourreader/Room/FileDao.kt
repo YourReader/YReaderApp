@@ -18,4 +18,7 @@ interface FileDao {
 
     @Query("SELECT * FROM files_table WHERE favorites = :isFavorite or favorites = 1 ")
     fun getFiles(isFavorite: Boolean = false): Flow<List<Files>>
+
+    @Query("SELECT * FROM files_table WHERE doneReading = 1")
+    fun getDoneFiles(): Flow<List<Files>>
 }

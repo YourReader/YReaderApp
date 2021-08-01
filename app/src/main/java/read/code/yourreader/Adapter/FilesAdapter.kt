@@ -43,7 +43,13 @@ class FilesAdapter(private val listener: OnCardViewClickListener) :
                         getItem(adapterPosition),
                         !getItem(adapterPosition).favorites
                     )
-
+            }
+            binding.Relitem2.setOnClickListener {
+                if (adapterPosition != RecyclerView.NO_POSITION)
+                    listener.onDoneClick(
+                        getItem(adapterPosition),
+                        !getItem(adapterPosition).doneReading
+                    )
             }
         }
 
@@ -63,6 +69,11 @@ class FilesAdapter(private val listener: OnCardViewClickListener) :
                 else
                     likeImgList.setImageResource(R.drawable.ic_unfilled_favorite)
 
+                if (files.doneReading)
+                    doneTickListItem.setImageResource(R.drawable.ic_baseline_done_24)
+                else
+                    doneTickListItem.setImageResource(R.drawable.ic_unfilled_baseline_done_24)
+
                 val fd =
                     ParcelFileDescriptor.open(file, ParcelFileDescriptor.MODE_READ_ONLY)
                 val renderer = PdfRenderer(fd)
@@ -78,6 +89,7 @@ class FilesAdapter(private val listener: OnCardViewClickListener) :
     interface OnCardViewClickListener {
         fun onCardClick(files: Files)
         fun onFavoriteClick(files: Files, isFavorite: Boolean)
+        fun onDoneClick(file: Files, isDone: Boolean)
     }
 
     class DiffCallBack : DiffUtil.ItemCallback<Files>() {

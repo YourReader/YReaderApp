@@ -16,6 +16,7 @@ class FilesViewModel(application: Application) : AndroidViewModel(application) {
 
     val readAllData: LiveData<List<Files>>
     val readFavData: LiveData<List<Files>>
+    val readDoneData: LiveData<List<Files>>
     private val repository: FilesRepository
 
     init {
@@ -23,7 +24,9 @@ class FilesViewModel(application: Application) : AndroidViewModel(application) {
         repository = FilesRepository(filesDao)
         readAllData = repository.getAllFiles().asLiveData()
         readFavData = repository.getAllFavoriteFiles().asLiveData()
+        readDoneData = repository.getAllDoneFiles().asLiveData()
     }
+
 
     fun addFile(files: Files) = viewModelScope.launch(Dispatchers.IO) {
         repository.addFile(files)
@@ -33,8 +36,13 @@ class FilesViewModel(application: Application) : AndroidViewModel(application) {
 
     fun updateFavoriteStatus(file: Files, isFavorite: Boolean) =
         viewModelScope.launch(Dispatchers.IO) {
-
             repository.updateFile(file.copy(favorites = isFavorite))
         }
+
+    fun updateDoneStatus(file: Files, isDone: Boolean) {
+        viewModelScope.launch(Dispatchers.IO) {
+            repository.updateFile(file.copy(doneReading = isDone))
+        }
+    }
 
 }
