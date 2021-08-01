@@ -10,10 +10,7 @@
         android:id="@+id/reading_now"
         android:icon="@drawable/ic_reading_now"
         android:title="@string/reading_now" />
-    <item
-        android:id="@+id/menu_use"
-        android:icon="@drawable/ic_use"
-        android:title="@string/how_to_use" />
+
     <item
         android:id="@+id/menu_haveread"
         android:icon="@drawable/ic_baseline_done_24"
@@ -36,6 +33,10 @@
         android:id="@+id/menu_Trash"
         android:icon="@drawable/ic_trash"
         android:title="@string/trash" />
+    <item
+        android:id="@+id/menu_use"
+        android:icon="@drawable/ic_use"
+        android:title="@string/how_to_use" />
 
 
     <group

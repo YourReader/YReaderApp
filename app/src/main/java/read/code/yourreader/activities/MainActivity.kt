@@ -375,7 +375,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
-        var inflater = menuInflater
+        val inflater = menuInflater
         inflater.inflate(R.menu.toolbar_menu, menu)
 
         return true
