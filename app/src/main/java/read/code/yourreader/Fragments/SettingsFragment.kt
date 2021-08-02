@@ -2,15 +2,19 @@ package read.code.yourreader.Fragments
 
 import android.content.ContentValues.TAG
 import android.content.Context.MODE_PRIVATE
+import android.content.DialogInterface
 import android.content.SharedPreferences
 import android.os.Bundle
 import android.util.Log
 import android.view.*
 import android.widget.Toast
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProviders
+import com.google.android.material.dialog.MaterialDialogs
 import com.google.firebase.auth.FirebaseAuth
+import read.code.yourreader.R
 import read.code.yourreader.databinding.FragmentSettingsBinding
 import read.code.yourreader.di.components.DaggerFactoryComponent
 import read.code.yourreader.di.modules.FactoryModule
@@ -25,7 +29,7 @@ class SettingsFragment : Fragment() {
     private lateinit var viewModel: MainViewModel
     private lateinit var component: DaggerFactoryComponent
     private lateinit var mAuth: FirebaseAuth
-
+    var permissionRevoke=false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -137,7 +141,7 @@ class SettingsFragment : Fragment() {
         val sharedPreferencesAccess : SharedPreferences =
             requireActivity().getSharedPreferences("switchAccess", MODE_PRIVATE)
         val editor4 = sharedPreferencesAccess.edit()
-        binding.switchAccess.isChecked = sharedPreferencesAccess.getBoolean("switchAccess", true)
+        binding.switchAccess.isChecked = sharedPreferencesAccess.getBoolean("switchAccess", false)
 
 
         binding.switchAccess.setOnClickListener {
@@ -147,12 +151,32 @@ class SettingsFragment : Fragment() {
                 Log.d(TAG, "onCreateView: switchAccess Changed to On")
             }
             if (!binding.switchAccess.isChecked) {
+                val dialog=AlertDialog.Builder(requireContext())
+                    .setTitle("Permission Revoke")
+                    .setMessage(R.string.dialog_messgae)
+                    .setPositiveButton("Yes"
+                    ) { dialog, which ->
+                        permissionRevoke=true
+                        dialog.dismiss()
+                    }
+                    .setNegativeButton("Cancle"
+                    ) { dialog, which ->
+                        binding.switchAccess.isChecked =true
+                        dialog.dismiss()
+                    }
+
+                dialog.show()
                 editor4.putBoolean("switchAccess", false)
                 editor4.apply()
                 Log.d(TAG, "onCreateView: switchAccess Changed to Off")
             }
             editor4.apply()
         }
+
+
+
+
+
 
 
 

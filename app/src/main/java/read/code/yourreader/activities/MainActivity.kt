@@ -56,13 +56,18 @@ class MainActivity : AppCompatActivity() {
     lateinit var toggle: ActionBarDrawerToggle
     lateinit var binding: ActivityMainBinding
     private lateinit var mFilesViewModel: FilesViewModel
+    var permissionMain=false
+
 
     @RequiresApi(Build.VERSION_CODES.KITKAT)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
-
+        //AccessFiles  Settings
+        val sharedPreferencesAccess : SharedPreferences =
+            getSharedPreferences("switchAccess", MODE_PRIVATE)
+        val editor4 = sharedPreferencesAccess.edit()
         init()
         val sharedPreferences: SharedPreferences = getSharedPreferences("switchDark", MODE_PRIVATE)
         val theme = sharedPreferences.getBoolean("switchDark", false)
@@ -81,8 +86,11 @@ class MainActivity : AppCompatActivity() {
         binding.toolbarMain.showOverflowMenu()
         supportActionBar!!.setDisplayHomeAsUpEnabled(true)
 
-
-
+        if (permissionMain)
+        {
+            editor4.putBoolean("switchAccess", true)
+            editor4.apply()
+        }
         binding.navView.setNavigationItemSelectedListener {
             when (it.itemId) {
                 R.id.reading_now -> {
@@ -202,6 +210,7 @@ class MainActivity : AppCompatActivity() {
         binding.toolbarMain.title = "Home"
 
 
+
     }
 
     private fun checkManagePermission(
@@ -212,8 +221,10 @@ class MainActivity : AppCompatActivity() {
     ) {
         if (SDK_INT >= Build.VERSION_CODES.R) {
             when {
-                Environment.isExternalStorageManager() ->
+                Environment.isExternalStorageManager() ->{
                     Log.d(TAG, "checkPermissions: $name permission Granted")
+                    permissionMain=true
+                }
 
                 shouldShowRequestPermissionRationale(permission) -> {
                     Log.d(TAG, "checkPermissions: IN THAT WEIRD SCOPE")
@@ -268,10 +279,12 @@ class MainActivity : AppCompatActivity() {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
         if (requestCode == 100 && grantResults.isNotEmpty())
             for (i in grantResults.indices)
-                if (grantResults[i] == PackageManager.PERMISSION_GRANTED)
+                if (grantResults[i] == PackageManager.PERMISSION_GRANTED) {
                     Log.d(TAG, "onRequestPermissionsResult: GRANTED $requestCode")
-                else
-                    showManagePermissionDialog(true, Manifest.permission.READ_EXTERNAL_STORAGE)
+
+                }
+                else{
+                    showManagePermissionDialog(true, Manifest.permission.READ_EXTERNAL_STORAGE)}
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, @Nullable data: Intent?) {
