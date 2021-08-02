@@ -310,17 +310,12 @@ class MainActivity : AppCompatActivity() {
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
 
         when (item.itemId) {
-            R.id.action_item_langSettings -> {
-                val installIntent = Intent()
-                installIntent.action = TextToSpeech.Engine.ACTION_INSTALL_TTS_DATA
-                startActivity(installIntent)
-            }
 
-            R.id.action_item_TTS -> {
-                val installIntent2 = Intent()
-                installIntent2.action = TextToSpeech.Engine.ACTION_CHECK_TTS_DATA
-                startActivity(installIntent2)
-            }
+
+
+
+
+
 
             else -> {
                 if (binding.drawerlayout.isDrawerOpen(GravityCompat.START)) {
@@ -388,12 +383,7 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
-        val inflater = menuInflater
-        inflater.inflate(R.menu.toolbar_menu, menu)
 
-        return true
-    }
 
     override fun onPostCreate(savedInstanceState: Bundle?) {
         super.onPostCreate(savedInstanceState)
