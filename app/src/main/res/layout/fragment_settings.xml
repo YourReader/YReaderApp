@@ -3,7 +3,6 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
     tools:context=".Fragments.SettingsFragment">
 
@@ -11,67 +10,66 @@
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginStart="20dp"
+        android:layout_marginTop="20dp"
+        android:fontFamily="@font/montserratsemibold"
         android:text="@string/reading"
-        android:textColor="@color/primary_color"
         android:textAlignment="center"
         android:textAllCaps="false"
-        android:textSize="16sp"
-        android:fontFamily="@font/montserratsemibold"
-        android:layout_marginTop="20dp"
-        android:layout_marginStart="20dp"
-        />
+        android:textColor="@color/primary_color"
+        android:textSize="16sp" />
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:weightSum="100"
         android:layout_marginTop="10dp"
-        android:padding="10dp"
         android:orientation="horizontal"
+        android:padding="10dp"
+        android:weightSum="100"
 
         >
+
         <LinearLayout
-            android:orientation="vertical"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="90"
-            >
+            android:orientation="vertical">
+
             <TextView
+                android:id="@+id/title_swipe"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:id="@+id/title_swipe"
+                android:layout_marginStart="10dp"
+                android:fontFamily="@font/montserratsemibold"
                 android:text="@string/brightness_by_swipe"
-                android:textColor="@color/black"
                 android:textAlignment="center"
                 android:textAllCaps="false"
-                android:textSize="16sp"
-                android:fontFamily="@font/montserratsemibold"
-                android:layout_marginStart="10dp"
-                />
+                android:textColor="@color/black"
+                android:textSize="16sp" />
+
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginStart="10dp"
+                android:layout_marginTop="5dp"
+                android:fontFamily="@font/montserratregular"
                 android:text="@string/adjust_brightness_by_swiping_up_and_down_on_left_side_of_screen"
                 android:textAlignment="textStart"
-                android:textColor="@color/black"
                 android:textAllCaps="false"
-                android:textSize="12sp"
-                android:fontFamily="@font/montserratregular"
-                android:layout_marginTop="5dp"
-                android:layout_marginStart="10dp"
-                />
+                android:textColor="@color/black"
+                android:textSize="12sp" />
 
         </LinearLayout>
 
 
         <androidx.appcompat.widget.SwitchCompat
+            android:id="@+id/brightNessSwitch"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="10"
-            android:gravity="end|center"
-            android:id="@+id/brightNessSwitch"
             android:checked="true"
-            />
+            android:elevation="1dp"
+            android:gravity="end|center" />
 
 
     </LinearLayout>
@@ -80,52 +78,53 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="10dp"
+        android:orientation="horizontal"
         android:padding="10dp"
         android:weightSum="100"
-        android:orientation="horizontal"
 
         >
+
         <LinearLayout
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:orientation="vertical"
             android:layout_weight="90"
-            >
+            android:orientation="vertical">
+
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginStart="10dp"
+                android:fontFamily="@font/montserratsemibold"
                 android:text="@string/screen_on"
-                android:textColor="@color/black"
                 android:textAlignment="center"
                 android:textAllCaps="false"
-                android:textSize="16sp"
-                android:fontFamily="@font/montserratsemibold"
-                android:layout_marginStart="10dp"
-                />
+                android:textColor="@color/black"
+                android:textSize="16sp" />
+
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginStart="10dp"
+                android:layout_marginTop="5dp"
+                android:fontFamily="@font/montserratregular"
                 android:text="@string/keep_screen_on"
                 android:textAlignment="textStart"
-                android:textColor="@color/black"
                 android:textAllCaps="false"
-                android:textSize="12sp"
-                android:fontFamily="@font/montserratregular"
-                android:layout_marginTop="5dp"
-                android:layout_marginStart="10dp"
-                />
+                android:textColor="@color/black"
+                android:textSize="12sp" />
 
         </LinearLayout>
 
 
         <androidx.appcompat.widget.SwitchCompat
+            android:id="@+id/screenOnSwitch"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="0dp"
             android:layout_weight="10"
-            android:gravity="end|center"
-            android:id="@+id/screenOnSwitch"
-            />
+
+            android:elevation="1dp"
+            android:gravity="end|center" />
 
 
     </LinearLayout>
@@ -134,53 +133,54 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="10dp"
+        android:orientation="horizontal"
         android:padding="10dp"
         android:weightSum="100"
-        android:orientation="horizontal"
 
         >
+
         <LinearLayout
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:orientation="vertical"
             android:layout_weight="90"
-            >
+            android:orientation="vertical">
+
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginStart="10dp"
+                android:fontFamily="@font/montserratsemibold"
                 android:text="@string/dark_mode"
-                android:textColor="@color/black"
                 android:textAlignment="center"
                 android:textAllCaps="false"
-                android:textSize="16sp"
-                android:fontFamily="@font/montserratsemibold"
-                android:layout_marginStart="10dp"
-                />
+                android:textColor="@color/black"
+                android:textSize="16sp" />
+
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginStart="10dp"
+                android:layout_marginTop="5dp"
+                android:fontFamily="@font/montserratregular"
                 android:text="@string/enable_dark_mode"
                 android:textAlignment="textStart"
-                android:textColor="@color/black"
                 android:textAllCaps="false"
-                android:textSize="12sp"
-                android:fontFamily="@font/montserratregular"
-                android:layout_marginTop="5dp"
-                android:layout_marginStart="10dp"
-                />
+                android:textColor="@color/black"
+                android:textSize="12sp" />
 
         </LinearLayout>
 
 
         <androidx.appcompat.widget.SwitchCompat
+            android:id="@+id/darkModeSwitch"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="0dp"
             android:layout_weight="10"
+
             android:checked="false"
-            android:gravity="end|center"
-            android:id="@+id/darkModeSwitch"
-            />
+            android:elevation="1dp"
+            android:gravity="end|center" />
 
 
     </LinearLayout>
@@ -189,69 +189,68 @@
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginStart="20dp"
+        android:layout_marginTop="20dp"
+        android:fontFamily="@font/montserratsemibold"
         android:text="@string/permissions"
-        android:textColor="@color/primary_color"
         android:textAlignment="center"
         android:textAllCaps="false"
-        android:textSize="16sp"
-        android:fontFamily="@font/montserratsemibold"
-        android:layout_marginTop="20dp"
-        android:layout_marginStart="20dp"
-        />
+        android:textColor="@color/primary_color"
+        android:textSize="16sp" />
 
 
     <LinearLayout
+        android:id="@+id/design_PermissionsPdf"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/design_PermissionsPdf"
         android:layout_marginTop="10dp"
+        android:orientation="horizontal"
         android:padding="10dp"
         android:weightSum="100"
-        android:orientation="horizontal"
 
         >
+
         <LinearLayout
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:orientation="vertical"
             android:layout_weight="90"
-            >
+            android:orientation="vertical">
+
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginStart="10dp"
+                android:fontFamily="@font/montserratsemibold"
                 android:text="@string/access_pdf_and_docs"
-                android:textColor="@color/black"
                 android:textAlignment="center"
                 android:textAllCaps="false"
-                android:textSize="16sp"
-                android:fontFamily="@font/montserratsemibold"
-                android:layout_marginStart="10dp"
-                />
+                android:textColor="@color/black"
+                android:textSize="16sp" />
+
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginStart="10dp"
+                android:layout_marginTop="5dp"
+                android:fontFamily="@font/montserratregular"
                 android:text="@string/app_has_permission"
                 android:textAlignment="textStart"
-                android:textColor="@color/black"
                 android:textAllCaps="false"
-                android:textSize="12sp"
-                android:fontFamily="@font/montserratregular"
-                android:layout_marginTop="5dp"
-                android:layout_marginStart="10dp"
-                />
+                android:textColor="@color/black"
+                android:textSize="12sp" />
 
         </LinearLayout>
 
 
         <androidx.appcompat.widget.SwitchCompat
+            android:id="@+id/switchAccess"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:id="@+id/switchAccess"
             android:layout_marginStart="0dp"
             android:layout_weight="10"
-            android:gravity="end|center"
             android:checked="false"
-            />
+            android:elevation="1dp"
+            android:gravity="end|center" />
 
 
     </LinearLayout>
@@ -259,76 +258,72 @@
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginStart="20dp"
+        android:layout_marginTop="20dp"
+        android:fontFamily="@font/montserratsemibold"
         android:text="@string/account"
-        android:textColor="@color/primary_color"
         android:textAlignment="center"
         android:textAllCaps="false"
-        android:textSize="16sp"
-        android:fontFamily="@font/montserratsemibold"
-        android:layout_marginTop="20dp"
-        android:layout_marginStart="20dp"
-        />
+        android:textColor="@color/primary_color"
+        android:textSize="16sp" />
+
     <LinearLayout
+        android:id="@+id/upgrade_toPremium"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="10dp"
-        android:id="@+id/upgrade_toPremium"
+        android:orientation="horizontal"
         android:padding="10dp"
         android:weightSum="100"
-        android:orientation="horizontal"
 
         >
+
         <LinearLayout
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:orientation="vertical"
             android:layout_weight="100"
-            >
+            android:orientation="vertical">
+
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginStart="10dp"
+                android:fontFamily="@font/montserratsemibold"
                 android:text="@string/upgrade_to_premium"
-                android:textColor="@color/black"
                 android:textAlignment="center"
                 android:textAllCaps="false"
-                android:textSize="16sp"
-                android:fontFamily="@font/montserratsemibold"
-                android:layout_marginStart="10dp"
-                />
+                android:textColor="@color/black"
+                android:textSize="16sp" />
+
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginStart="10dp"
+                android:layout_marginTop="5dp"
+                android:fontFamily="@font/montserratregular"
                 android:text="@string/no_ads_best_quality_human_like_voice"
                 android:textAlignment="textStart"
-                android:textColor="@color/black"
                 android:textAllCaps="false"
-                android:textSize="12sp"
-                android:fontFamily="@font/montserratregular"
-                android:layout_marginTop="5dp"
-                android:layout_marginStart="10dp"
-                />
+                android:textColor="@color/black"
+                android:textSize="12sp" />
 
         </LinearLayout>
 
 
-
-
-
     </LinearLayout>
 
     <TextView
+        android:id="@+id/SignOut_Settings"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/SignOut_Settings"
+        android:layout_marginStart="20dp"
+        android:layout_marginTop="20dp"
+        android:fontFamily="@font/montserratsemibold"
         android:text="@string/signout"
-        android:textColor="@color/black"
         android:textAlignment="center"
         android:textAllCaps="false"
-        android:textSize="16sp"
-        android:fontFamily="@font/montserratsemibold"
-        android:layout_marginTop="20dp"
-        android:layout_marginStart="20dp"
-        />
+        android:textColor="@color/black"
+        android:textSize="16sp" />
 
 
 </LinearLayout>
