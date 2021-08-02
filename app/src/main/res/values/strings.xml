@@ -92,5 +92,6 @@
     <string name="language_settings">Language Settings</string>
     <string name="voice_quality">Voice Quality</string>
     <string name="useInfo">Hi there i will tell you how to use this app</string>
+    <string name="dialog_messgae">By revoking permission app cant access your reading files you will need to open then manually</string>
 
 </resources>

@@ -250,7 +250,7 @@
             android:layout_marginStart="0dp"
             android:layout_weight="10"
             android:gravity="end|center"
-            android:checked="true"
+            android:checked="false"
             />
 
 
