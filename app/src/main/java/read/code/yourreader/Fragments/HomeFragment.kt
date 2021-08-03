@@ -42,6 +42,9 @@ import java.net.URLEncoder
 import java.util.*
 import java.util.regex.Matcher
 import kotlin.collections.ArrayList
+import android.content.pm.PackageManager
+import android.content.DialogInterface
+import androidx.appcompat.app.AlertDialog
 
 
 class HomeFragment : Fragment(),
@@ -56,6 +59,8 @@ class HomeFragment : Fragment(),
     var tts: TextToSpeech? = null
     private var builderArray = ArrayList<String>()
     private var playEnabled = false
+    val googleTtsPackage = "com.google.android.tts"
+    val picoPackage = "com.svox.pico"
     private var i = 0
     private var str: String = ""
     private val locales = Locale.getAvailableLocales()
@@ -348,31 +353,46 @@ class HomeFragment : Fragment(),
 
     private fun InitialiseTTS() {
         tts = TextToSpeech(context, this, "com.google.android.tts")
+
+
+
+    }
+
+
+    private fun confirmDialog() {
+        val d: AlertDialog.Builder = AlertDialog.Builder(requireContext())
+        d.setTitle("Install recommeded speech engine?")
+        d.setMessage("Your device isn't using the recommended speech engine. Do you wish to install it?")
+        d.setPositiveButton("Yes", DialogInterface.OnClickListener { dialog, arg1 ->
+            val installVoice = Intent(TextToSpeech.Engine.ACTION_INSTALL_TTS_DATA)
+            startActivity(installVoice)
+        })
+        d.setNegativeButton("No, later"
+        ) { dialog, arg1 ->
+            if (isPackageInstalled(
+                    requireContext().packageManager,
+                    picoPackage
+                )
+            ) tts!!.setEngineByPackageName(picoPackage)
+        }
+        d.show()
+    }
+
+
+    private fun isPackageInstalled(pm: PackageManager, packageName: String?): Boolean {
+        try {
+            pm.getPackageInfo(packageName!!, 0)
+        } catch (e: PackageManager.NameNotFoundException) {
+            return false
+        }
+        return true
     }
 
     override fun onInit(status: Int) {
-        var res = tts!!.setLanguage(Locale.ENGLISH)
-
-        if (status == TextToSpeech.SUCCESS) {
-            Locale.getAvailableLocales()
-
-            for (locale in locales) {
-                res = tts!!.isLanguageAvailable(locale)
-                if (res == TextToSpeech.LANG_COUNTRY_AVAILABLE) {
-                    localeList.add(locale)
-                    Log.d(TAG, "onInit: language is $locale")
-                }
-            }
-            if (res == TextToSpeech.LANG_NOT_SUPPORTED) {
-                Log.d(TAG, "onInit: Lang Not supported")
-
-            }
-            if (res == TextToSpeech.LANG_MISSING_DATA) {
-                val installIntent = Intent()
-                installIntent.action = TextToSpeech.Engine.ACTION_INSTALL_TTS_DATA
-                startActivity(installIntent)
-            }
-
+        if (status != TextToSpeech.ERROR) {
+            if (!isPackageInstalled(requireActivity().packageManager, googleTtsPackage))
+                confirmDialog()
+            else tts!!.setEngineByPackageName(googleTtsPackage);
         }
     }
 
