@@ -27,6 +27,9 @@ class FilesViewModel(application: Application) : AndroidViewModel(application) {
         readDoneData = repository.getAllDoneFiles().asLiveData()
     }
 
+    fun nukeDatabase() = viewModelScope.launch {
+        repository.deleteTheDatabase()
+    }
 
     fun addFile(files: Files) = viewModelScope.launch(Dispatchers.IO) {
         repository.addFile(files)
