@@ -15,9 +15,11 @@ import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelProviders
 import com.google.android.material.dialog.MaterialDialogs
 import com.google.firebase.auth.FirebaseAuth
+import read.code.yourreader.MVVVM.viewmodels.FilesViewModel
 import read.code.yourreader.R
 import read.code.yourreader.databinding.FragmentSettingsBinding
 import read.code.yourreader.di.components.DaggerFactoryComponent
