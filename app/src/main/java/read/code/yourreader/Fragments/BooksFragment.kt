@@ -81,8 +81,12 @@ class BooksFragment : Fragment(), FilesAdapter.OnCardViewClickListener {
 
     override fun onCardClick(files: Files) {
         mFilesViewModel.updateReadingStatus(files, true)
+        val b = Bundle()
+        b.putParcelable("Object", files)
+        val homeFrag = HomeFragment()
+        homeFrag.arguments = b
         requireActivity().supportFragmentManager.beginTransaction()
-            .replace(R.id.frame_main, HomeFragment())
+            .replace(R.id.frame_main, homeFrag)
             .commit()
     }
 

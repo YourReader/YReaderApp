@@ -32,6 +32,7 @@ import org.jsoup.Jsoup
 import org.jsoup.nodes.Document
 import read.code.yourreader.R
 import read.code.yourreader.activities.MainActivity
+import read.code.yourreader.data.Files
 import read.code.yourreader.databinding.FragmentHomeBinding
 import java.io.*
 import java.net.MalformedURLException
@@ -72,6 +73,14 @@ class HomeFragment : Fragment(),
         binding = FragmentHomeBinding.inflate(layoutInflater)
 
         (activity as MainActivity).setActionBarTitle("Home")
+
+        val bundle = this.arguments
+        Toast.makeText(
+            requireContext(),
+            "Found: ${bundle?.getParcelable<Files>("Object")}",
+            Toast.LENGTH_SHORT
+        )
+            .show()
 
         val intent = requireActivity().intent
         if (intent != null) {
