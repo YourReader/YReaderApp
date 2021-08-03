@@ -25,26 +25,17 @@ import com.github.barteksc.pdfviewer.listener.OnPageChangeListener
 import com.itextpdf.text.pdf.PdfReader
 import com.itextpdf.text.pdf.parser.LocationTextExtractionStrategy
 import com.itextpdf.text.pdf.parser.PdfTextExtractor
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers.IO
-import kotlinx.coroutines.launch
-import org.jsoup.Jsoup
-import org.jsoup.nodes.Document
 import read.code.yourreader.R
 import read.code.yourreader.activities.MainActivity
 import read.code.yourreader.data.Files
 import read.code.yourreader.databinding.FragmentHomeBinding
 import java.io.*
-import java.net.MalformedURLException
-import java.net.SocketTimeoutException
-import java.net.URL
-import java.net.URLEncoder
-import java.util.*
 import java.util.regex.Matcher
 import kotlin.collections.ArrayList
 import android.content.pm.PackageManager
 import android.content.DialogInterface
 import androidx.appcompat.app.AlertDialog
+import androidx.core.net.toUri
 
 
 class HomeFragment : Fragment(),
@@ -59,12 +50,10 @@ class HomeFragment : Fragment(),
     var tts: TextToSpeech? = null
     private var builderArray = ArrayList<String>()
     private var playEnabled = false
-    val googleTtsPackage = "com.google.android.tts"
-    val picoPackage = "com.svox.pico"
+    private val googleTtsPackage = "com.google.android.tts"
+    private val picoPackage = "com.svox.pico"
     private var i = 0
     private var str: String = ""
-    private val locales = Locale.getAvailableLocales()
-    private val localeList: MutableList<Locale> = ArrayList()
     private var pages = 0
     private val links: MutableList<String> = ArrayList()
 
@@ -84,8 +73,12 @@ class HomeFragment : Fragment(),
             requireContext(),
             "Found: ${bundle?.getParcelable<Files>("Object")}",
             Toast.LENGTH_SHORT
-        )
-            .show()
+        ).show()
+
+        if (bundle != null) {
+            val file: Files? = bundle.getParcelable<Files>("Object")
+            handlePdfFilePath((file!!.path).toUri())
+        }
 
         val intent = requireActivity().intent
         if (intent != null) {
@@ -139,13 +132,12 @@ class HomeFragment : Fragment(),
                     type.equals("application/pdf", ignoreCase = true) -> {
                         handlePdfFile(intent)
                     }
-                    type.equals(
-                        "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
-                        ignoreCase = true
-                    ) -> {
-                        //Word
-                        handleWordFile(intent)
-                    }
+//                    type.equals(
+//                        "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+//                        ignoreCase = true
+//                    ) -> {
+//                        //Word
+//                    }
                 }
             }
         }
@@ -227,10 +219,6 @@ class HomeFragment : Fragment(),
         return binding.root
     }
 
-    private fun handleWordFile(intent: Intent) {
-        //TODO Word Remaining
-    }
-
 
     private fun handlePdfFile(intent: Intent) {
         InitialiseTTS()
@@ -254,38 +242,56 @@ class HomeFragment : Fragment(),
 
 
     private fun extractTextFromPdfFile(uri: Uri) {
-        try {
-            inputStream = requireContext().contentResolver.openInputStream(uri)!!
-
-        } catch (e: FileNotFoundException) {
-            Toast.makeText(requireContext(), "File Not Found", Toast.LENGTH_SHORT).show()
-        }
+        Log.d(TAG, "extractTextFromPdfFile: URi $uri")
         var fileContent: String
         val reader: PdfReader?
         try {
+            inputStream = requireContext().contentResolver.openInputStream(uri)!!
             reader = PdfReader(inputStream)
-            pages = reader.numberOfPages
-            for (i in 1..pages) {
-                fileContent =
-                    PdfTextExtractor.getTextFromPage(reader, i, LocationTextExtractionStrategy())
-                builderArray.add(fileContent)
-            }
-            reader.close()
+                pages = reader.numberOfPages
+                for (i in 1..pages) {
+                    fileContent =
+                        PdfTextExtractor.getTextFromPage(
+                            reader,
+                            i,
+                            LocationTextExtractionStrategy()
+                        )
+                    builderArray.add(fileContent)
+                }
+                reader.close()
+
+
         } catch (e: IOException) {
             Log.d(TAG, "extractTextFromPdfFile: ${e.message}")
+        }
+        catch (e: FileNotFoundException) {
+            Toast.makeText(requireContext(), "File Not Found", Toast.LENGTH_SHORT).show()
         }
 
     }
 
     private fun displayFromUri(uri: Uri) {
         loadPdfLayout()
+        Log.d(TAG, "displayFromUri: URI $uri")
         binding.pdfViewHome.fromUri(uri)
             .password(null)
             .defaultPage(0)
             .enableSwipe(true)
             .swipeHorizontal(false)
             .enableDoubletap(true)
-            .enableAnnotationRendering(false)
+            .enableAnnotationRendering(true)
+            .load()
+    }
+    private fun displayFromUriFile(uri: File) {
+        loadPdfLayout()
+        Log.d(TAG, "displayFromUri: URI $uri")
+        binding.pdfViewHome.fromFile(uri)
+            .password(null)
+            .defaultPage(0)
+            .enableSwipe(true)
+            .swipeHorizontal(false)
+            .enableDoubletap(true)
+            .enableAnnotationRendering(true)
             .load()
     }
 
@@ -355,20 +361,20 @@ class HomeFragment : Fragment(),
         tts = TextToSpeech(context, this, "com.google.android.tts")
 
 
-
     }
 
 
     private fun confirmDialog() {
         val d: AlertDialog.Builder = AlertDialog.Builder(requireContext())
-        d.setTitle("Install recommeded speech engine?")
+        d.setTitle("Install recommended speech engine?")
         d.setMessage("Your device isn't using the recommended speech engine. Do you wish to install it?")
-        d.setPositiveButton("Yes", DialogInterface.OnClickListener { dialog, arg1 ->
+        d.setPositiveButton("Yes", DialogInterface.OnClickListener { _, _ ->
             val installVoice = Intent(TextToSpeech.Engine.ACTION_INSTALL_TTS_DATA)
             startActivity(installVoice)
         })
-        d.setNegativeButton("No, later"
-        ) { dialog, arg1 ->
+        d.setNegativeButton(
+            "No, later"
+        ) { _, _ ->
             if (isPackageInstalled(
                     requireContext().packageManager,
                     picoPackage
@@ -421,32 +427,32 @@ class HomeFragment : Fragment(),
 
     private fun getDataFrommUrl(s: String): String {
 
-        CoroutineScope(IO).launch {
-            if (Patterns.WEB_URL.matcher(s).matches()) {
-                try {
-                    val doc: Document = Jsoup.connect(s).get()
-                    var link = Jsoup.parse(URL(s), 4000)
-                    val yourURLStr = URLEncoder.encode(s, "UTF-8")
-                    Log.d(TAG, "getDataFrommUrl: \n\nNormal URL= $s\n\n")
-
-                    Log.d(
-                        TAG,
-                        "getDataFrommUrl: content ${link.getElementsByClass("content").text()}"
-                    )
-
-                    Log.d(TAG, "getDataFrommUrl: \n\n\nBody = ${link.body().text()}")
-                } catch (ex: SocketTimeoutException) {
-                    Log.d(TAG, "getDataFrommUrl: ${ex.message}")
-                } catch (ep: MalformedURLException) {
-                } catch (e: IOException) {
-                    Log.d(TAG, "getDataFrommUrl: ${e.message}")
-                }
-            } else {
-                Toast.makeText(requireContext(), "URL not supported", Toast.LENGTH_SHORT).show()
-            }
-
-
-        }
+//        CoroutineScope(IO).launch {
+//            if (Patterns.WEB_URL.matcher(s).matches()) {
+//                try {
+//                    val doc: Document = Jsoup.connect(s).get()
+//                    var link = Jsoup.parse(URL(s), 4000)
+//                    val yourURLStr = URLEncoder.encode(s, "UTF-8")
+//                    Log.d(TAG, "getDataFrommUrl: \n\nNormal URL= $s\n\n")
+//
+//                    Log.d(
+//                        TAG,
+//                        "getDataFrommUrl: content ${link.getElementsByClass("content").text()}"
+//                    )
+//
+//                    Log.d(TAG, "getDataFrommUrl: \n\n\nBody = ${link.body().text()}")
+//                } catch (ex: SocketTimeoutException) {
+//                    Log.d(TAG, "getDataFrommUrl: ${ex.message}")
+//                } catch (ep: MalformedURLException) {
+//                } catch (e: IOException) {
+//                    Log.d(TAG, "getDataFrommUrl: ${e.message}")
+//                }
+//            } else {
+//                Toast.makeText(requireContext(), "URL not supported", Toast.LENGTH_SHORT).show()
+//            }
+//
+//
+//        }
 
         return ""
     }
@@ -480,7 +486,8 @@ class HomeFragment : Fragment(),
 
     private fun handlePdfFilePath(path: Uri?) {
         extractTextFromPdfFile(path!!)
-        displayFromUri(path)
+        var file=File(path.toString())
+        displayFromUriFile(file)
     }
 
 
