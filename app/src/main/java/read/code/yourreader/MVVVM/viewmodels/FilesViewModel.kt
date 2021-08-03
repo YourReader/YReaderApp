@@ -14,6 +14,7 @@ import read.code.yourreader.data.Files
 
 class FilesViewModel(application: Application) : AndroidViewModel(application) {
 
+    val readCurrentReadData: LiveData<List<Files>>
     val readAllData: LiveData<List<Files>>
     val readFavData: LiveData<List<Files>>
     val readDoneData: LiveData<List<Files>>
@@ -25,8 +26,12 @@ class FilesViewModel(application: Application) : AndroidViewModel(application) {
         readAllData = repository.getAllFiles().asLiveData()
         readFavData = repository.getAllFavoriteFiles().asLiveData()
         readDoneData = repository.getAllDoneFiles().asLiveData()
+        readCurrentReadData = repository.getAllCurrentFiles().asLiveData()
     }
 
+    fun nukeDatabase() = viewModelScope.launch {
+        repository.deleteTheDatabase()
+    }
 
     fun addFile(files: Files) = viewModelScope.launch(Dispatchers.IO) {
         repository.addFile(files)
@@ -41,7 +46,14 @@ class FilesViewModel(application: Application) : AndroidViewModel(application) {
 
     fun updateDoneStatus(file: Files, isDone: Boolean) {
         viewModelScope.launch(Dispatchers.IO) {
-            repository.updateFile(file.copy(doneReading = isDone))
+            repository.updateFile(file.copy(doneReading = isDone, readingNow = false))
+        }
+    }
+
+    fun updateReadingStatus(files: Files, isReading: Boolean) {
+        viewModelScope.launch(Dispatchers.IO) {
+            repository.updateFile(files.copy(readingNow = isReading, doneReading = false))
+
         }
     }
 

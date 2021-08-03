@@ -11,6 +11,12 @@ class FilesRepository(private val filesDao: FileDao) {
 
     fun getAllDoneFiles() = filesDao.getDoneFiles()
 
+    fun getAllCurrentFiles() = filesDao.getCurrentReadingFiles()
+
+    suspend fun deleteTheDatabase() {
+        filesDao.deleteDatabase()
+    }
+
     suspend fun addFile(file: Files) {
         filesDao.insert(file)
     }

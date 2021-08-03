@@ -8,7 +8,9 @@ import android.content.SharedPreferences
 import android.os.Bundle
 import android.speech.tts.TextToSpeech
 import android.util.Log
-import android.view.*
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatDelegate
@@ -29,14 +31,10 @@ class SettingsFragment : Fragment() {
 
     lateinit var binding: FragmentSettingsBinding
     private lateinit var viewModel: MainViewModel
+    private lateinit var mFilesViewModel: FilesViewModel
     private lateinit var component: DaggerFactoryComponent
     private lateinit var mAuth: FirebaseAuth
-    var permissionRevoke=false
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-
-    }
+    var permissionRevoke = false
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -49,11 +47,16 @@ class SettingsFragment : Fragment() {
             .repositoryModule(RepositoryModule(requireContext()))
             .factoryModule(FactoryModule(MainRepository(requireContext())))
             .build() as DaggerFactoryComponent
+
         viewModel = ViewModelProviders.of(this, component.getFactory())
             .get(MainViewModel::class.java)
 
+        mFilesViewModel = ViewModelProvider(this@SettingsFragment).get(FilesViewModel::class.java)
 
         binding.SignOutSettings.setOnClickListener {
+//            Deletes the Database before user signs out
+            mFilesViewModel.nukeDatabase()
+
             viewModel.signOut()
             requireActivity().finish()
         }
@@ -81,13 +84,13 @@ class SettingsFragment : Fragment() {
                 editor.putBoolean("switchDark", true)
                 editor.apply()
                 Log.d(TAG, "onCreateView: Settings Changed to dark")
-                AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);
+                AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
             }
             if (!binding.darkModeSwitch.isChecked) {
                 editor.putBoolean("switchDark", false)
                 editor.apply()
                 Log.d(TAG, "onCreateView: Settings Changed to Light")
-                AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
+                AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
 
 
             }
@@ -97,11 +100,12 @@ class SettingsFragment : Fragment() {
         Log.d(TAG, "onCreateView: is checked = ${binding.darkModeSwitch.isChecked}")
 
 
-       //Screen On Settings
+        //Screen On Settings
         val sharedPreferencesScreenOn: SharedPreferences =
             requireActivity().getSharedPreferences("switchScreen", MODE_PRIVATE)
         val editor2 = sharedPreferencesScreenOn.edit()
-        binding.screenOnSwitch.isChecked = sharedPreferencesScreenOn.getBoolean("switchScreen", true)
+        binding.screenOnSwitch.isChecked =
+            sharedPreferencesScreenOn.getBoolean("switchScreen", true)
 
 
         binding.screenOnSwitch.setOnClickListener {
@@ -122,13 +126,12 @@ class SettingsFragment : Fragment() {
         }
 
 
-
-
         //Brightness  Settings
         val sharedPreferencesBrightness: SharedPreferences =
             requireActivity().getSharedPreferences("brightNessSwitch", MODE_PRIVATE)
         val editor3 = sharedPreferencesBrightness.edit()
-        binding.brightNessSwitch.isChecked = sharedPreferencesBrightness.getBoolean("brightNessSwitch", true)
+        binding.brightNessSwitch.isChecked =
+            sharedPreferencesBrightness.getBoolean("brightNessSwitch", true)
 
 
         binding.brightNessSwitch.setOnClickListener {
@@ -146,9 +149,8 @@ class SettingsFragment : Fragment() {
         }
 
 
-
         //AccessFiles  Settings
-        val sharedPreferencesAccess : SharedPreferences =
+        val sharedPreferencesAccess: SharedPreferences =
             requireActivity().getSharedPreferences("switchAccess", MODE_PRIVATE)
         val editor4 = sharedPreferencesAccess.edit()
         binding.switchAccess.isChecked = sharedPreferencesAccess.getBoolean("switchAccess", false)
@@ -161,17 +163,19 @@ class SettingsFragment : Fragment() {
                 Log.d(TAG, "onCreateView: switchAccess Changed to On")
             }
             if (!binding.switchAccess.isChecked) {
-                val dialog=AlertDialog.Builder(requireContext())
+                val dialog = AlertDialog.Builder(requireContext())
                     .setTitle("Permission Revoke")
                     .setMessage(R.string.dialog_messgae)
-                    .setPositiveButton("Yes"
+                    .setPositiveButton(
+                        "Yes"
                     ) { dialog, which ->
-                        permissionRevoke=true
+                        permissionRevoke = true
                         dialog.dismiss()
                     }
-                    .setNegativeButton("Cancle"
+                    .setNegativeButton(
+                        "Cancle"
                     ) { dialog, which ->
-                        binding.switchAccess.isChecked =true
+                        binding.switchAccess.isChecked = true
                         dialog.dismiss()
                     }
 
@@ -182,16 +186,6 @@ class SettingsFragment : Fragment() {
             }
             editor4.apply()
         }
-
-
-
-
-
-
-
-
-
-
 
         return binding.root
     }

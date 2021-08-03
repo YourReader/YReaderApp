@@ -8,6 +8,7 @@ import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
+import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.fragment_reading_now.*
 import read.code.yourreader.Adapter.FilesAdapter
 import read.code.yourreader.MVVVM.viewmodels.FilesViewModel
@@ -53,9 +54,15 @@ class DoneReadingFragment : Fragment(), FilesAdapter.OnCardViewClickListener {
     }
 
     override fun onCardClick(files: Files) {
+        mFilesViewModel.updateReadingStatus(files, true)
+        val b = Bundle()
+        b.putParcelable("Object", files)
+        val homeFrag = HomeFragment()
+        homeFrag.arguments = b
         requireActivity().supportFragmentManager.beginTransaction()
-            .replace(R.id.frame_main, HomeFragment())
+            .replace(R.id.frame_main, homeFrag)
             .commit()
+
     }
 
     override fun onFavoriteClick(files: Files, isFavorite: Boolean) {

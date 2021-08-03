@@ -10,25 +10,21 @@ class AuthViewModel(
     val repository: AuthRepository
 ) : ViewModel() {
 
-
-
-    fun login(email: String, password:String) = CoroutineScope(IO).launch {
-        repository.login(email,password)
+    fun login(email: String, password: String) = CoroutineScope(IO).launch {
+        repository.login(email, password)
     }
 
-    fun register(email: String, password:String) = CoroutineScope(IO).launch {
-        repository.register(email,password)
+    fun register(email: String, password: String) = CoroutineScope(IO).launch {
+        repository.register(email, password)
     }
-    fun forgotPassword(email:String)
-    {
+
+    fun forgotPassword(email: String) {
         repository.forgotPassword(email)
     }
 
-     fun sendUserToMainActivity() {
-       repository.sendUserToMainActivity()
+    fun sendUserToMainActivity() {
+        repository.sendUserToMainActivity()
     }
-
-
 
 
 }

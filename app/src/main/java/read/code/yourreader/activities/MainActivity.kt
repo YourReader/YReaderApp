@@ -15,9 +15,7 @@ import android.os.Build.VERSION.SDK_INT
 import android.os.Bundle
 import android.os.Environment
 import android.provider.Settings
-import android.speech.tts.TextToSpeech
 import android.util.Log
-import android.view.Menu
 import android.view.MenuItem
 import android.view.Window
 import android.view.WindowManager
@@ -64,6 +62,8 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
+
+
         //AccessFiles  Settings
         val sharedPreferencesAccess : SharedPreferences =
             getSharedPreferences("switchAccess", MODE_PRIVATE)
@@ -145,6 +145,10 @@ class MainActivity : AppCompatActivity() {
             }
             true
         }
+    }
+
+    fun setActionBarTitle(title: String) {
+        binding.toolbarMain.title = title
     }
 
     private fun fragmentTransition(fragment: Fragment) {
