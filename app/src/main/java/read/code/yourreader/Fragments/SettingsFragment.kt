@@ -141,7 +141,7 @@ class SettingsFragment : Fragment() {
                 editor3.putBoolean("brightNessSwitch", true)
                 editor3.apply()
                 Log.d(TAG, "onCreateView: brightNessSwitch Changed to On")
-            }
+13            }
             if (!binding.brightNessSwitch.isChecked) {
                 editor3.putBoolean("brightNessSwitch", false)
                 editor3.apply()
