@@ -7,8 +7,17 @@ class FilesRepository(private val filesDao: FileDao) {
 
     fun getAllFiles() = filesDao.getFiles()
 
+    fun getAllFavoriteFiles() = filesDao.getFiles(true)
+
+    fun getAllDoneFiles() = filesDao.getDoneFiles()
+
     suspend fun addFile(file: Files) {
         filesDao.insert(file)
     }
+
+    suspend fun updateFile(file: Files) {
+        filesDao.update(file)
+    }
+
 
 }

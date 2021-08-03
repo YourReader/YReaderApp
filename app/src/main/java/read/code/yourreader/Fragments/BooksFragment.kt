@@ -5,14 +5,11 @@ import android.annotation.SuppressLint
 import android.app.AlertDialog
 import android.content.Intent
 import android.content.pm.PackageManager
-import android.graphics.Bitmap
-import android.graphics.pdf.PdfRenderer
 import android.net.Uri
 import android.os.Build
 import android.os.Build.VERSION.SDK_INT
 import android.os.Bundle
 import android.os.Environment
-import android.os.ParcelFileDescriptor
 import android.provider.Settings
 import android.util.Log
 import android.view.LayoutInflater
@@ -20,34 +17,33 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.annotation.Nullable
-import androidx.annotation.RequiresApi
 import androidx.core.app.ActivityCompat
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.lifecycleScope
+import androidx.recyclerview.widget.LinearLayoutManager
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.launch
+import read.code.yourreader.Adapter.FilesAdapter
 import read.code.yourreader.MVVVM.viewmodels.FilesViewModel
+import read.code.yourreader.R
 import read.code.yourreader.data.Files
 import read.code.yourreader.databinding.FragmentBooksBinding
 import read.code.yourreader.others.Values
 import java.io.File
 
-
-class BooksFragment : Fragment() {
-    @RequiresApi(Build.VERSION_CODES.KITKAT)
-    var dir = File(Environment.getExternalStorageDirectory().absolutePath)
-    private var pdfs = ArrayList<Files>()
+@SuppressLint("SetTextI18n")
+class BooksFragment : Fragment(), FilesAdapter.OnCardViewClickListener {
+    private var dir = File(Environment.getExternalStorageDirectory().absolutePath)
     private var _binding: FragmentBooksBinding? = null
     private val binding get() = _binding!!
-    private lateinit var bitmap: Bitmap
     private var permissionGranted = false
     private val TAG = "bFragment"
     private lateinit var mFilesViewModel: FilesViewModel
+    private val filesAdapter = FilesAdapter(this@BooksFragment)
     private val pdfPattern = ".pdf"
-    private val pdfPattern2 = ".docx"
-    private val pdfPattern3 = ".doc"
+
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -59,6 +55,13 @@ class BooksFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        binding.apply {
+            filesRecyclerView.apply {
+                adapter = filesAdapter
+                layoutManager = LinearLayoutManager(requireContext())
+                setHasFixedSize(true)
+            }
+        }
         init()
         binding.loadDocuBooks.setOnClickListener {
             binding.progressBarBooks.visibility = View.VISIBLE
@@ -67,12 +70,35 @@ class BooksFragment : Fragment() {
     }
 
     private fun init() {
-        mFilesViewModel = ViewModelProvider(this).get(FilesViewModel::class.java)
-        Log.d(TAG, "init: ${Values.isDbEmpty}")
+        mFilesViewModel =
+            ViewModelProvider(this@BooksFragment).get(FilesViewModel::class.java)
+        Log.d(TAG, "init:isDBEmpty ${Values.isDbEmpty}")
         if (!Values.isDbEmpty) {
             hideLoadDocuLayout()
             loadFiles()
         }
+    }
+
+    override fun onCardClick(files: Files) {
+        requireActivity().supportFragmentManager.beginTransaction()
+            .replace(R.id.frame_main, HomeFragment())
+            .commit()
+    }
+
+    override fun onFavoriteClick(files: Files, isFavorite: Boolean) {
+        if (isFavorite)
+            Toast.makeText(requireContext(), "Added to Favorites", Toast.LENGTH_SHORT).show()
+        else
+            Toast.makeText(requireContext(), "Removed from Favorites", Toast.LENGTH_SHORT).show()
+        mFilesViewModel.updateFavoriteStatus(files, isFavorite)
+    }
+
+    override fun onDoneClick(file: Files, isDone: Boolean) {
+        if (isDone)
+            Toast.makeText(requireContext(), "Marked as Finished", Toast.LENGTH_SHORT).show()
+        else
+            Toast.makeText(requireContext(), "Marked as Unfinished", Toast.LENGTH_SHORT).show()
+        mFilesViewModel.updateDoneStatus(file, isDone)
     }
 
     private fun handlePermissions() {
@@ -97,29 +123,17 @@ class BooksFragment : Fragment() {
                                 type = pdfPattern
                             )
                         )
-                        pdfs.add(Files(path = FileList[i].toString(), type = pdfPattern))
-                        Log.d(TAG, "searchFiles: Successfully added $pdfPattern")
-                    }
-                    if (FileList[i].name.endsWith(pdfPattern2)) {
-                        mFilesViewModel.addFile(
-                            Files(
-                                path = FileList[i].toString(),
-                                type = pdfPattern2
-                            )
+                        Log.d(
+                            TAG,
+                            "searchFiles: S: ${
+                                "%.2f".format(
+                                    (FileList[i].length()).toFloat()
+                                            / 1048576.0
+                                )
+                            } MB name:${FileList[i].name}"
                         )
-                        pdfs.add(Files(path = FileList[i].toString(), type = pdfPattern))
-                        Log.d(TAG, "searchFiles: Successfully added $pdfPattern2")
                     }
-                    if (FileList[i].name.endsWith(pdfPattern3)) {
-                        mFilesViewModel.addFile(
-                            Files(
-                                path = FileList[i].toString(),
-                                type = pdfPattern3
-                            )
-                        )
-                        pdfs.add(Files(path = FileList[i].toString(), type = pdfPattern))
-                        Log.d(TAG, "searchFiles: Successfully added $pdfPattern3")
-                    }
+
                 }
             }
         }
@@ -128,7 +142,6 @@ class BooksFragment : Fragment() {
     @SuppressLint("SetTextI18n")
     private fun loadFiles() {
         handlePermissions()
-        Log.d(TAG, "loadFiles: ")
         GlobalScope.launch(Dispatchers.IO) {
             if (!permissionGranted) {
                 Log.d(TAG, "loadFiles: No permissions")
@@ -136,37 +149,26 @@ class BooksFragment : Fragment() {
                 if (Values.isDbEmpty) {
                     Log.d(TAG, "loadFiles: First Time User")
                     searchFiles(dir)
-                    showData()
+                    MainScope().launch {
+                        mFilesViewModel.readAllData.observe(viewLifecycleOwner) {
+                            filesAdapter.submitList(it)
+                            hideLoadDocuLayout()
+//                            showData()
+                        }
+                    }
                 } else if (!Values.isDbEmpty) {
                     Log.d(TAG, "loadFiles: Not First Time User")
-                    lifecycleScope.launch(Dispatchers.Main) {
-                        mFilesViewModel.readAllData.observe(requireActivity(), {
-                            pdfs.add(it[0])
-                            pdfs[0]
-                            showData()
-                        })
+                    MainScope().launch {
+                        mFilesViewModel.readAllData.observe(viewLifecycleOwner) {
+                            filesAdapter.submitList(it)
+//                            showData()
+                        }
                     }
                 }
             }
         }
     }
 
-    @SuppressLint("SetTextI18n")
-    private fun showData() {
-        lifecycleScope.launch(Dispatchers.Main) {
-            val fd = ParcelFileDescriptor.open(
-                File(pdfs[pdfs.size - 1].path),
-                ParcelFileDescriptor.MODE_READ_ONLY
-            )
-            hideLoadDocuLayout()
-            val renderer = PdfRenderer(fd)
-            bitmap = Bitmap.createBitmap(1000, 1000, Bitmap.Config.ARGB_4444)
-            val page: PdfRenderer.Page = renderer.openPage(0)
-            page.render(bitmap, null, null, PdfRenderer.Page.RENDER_MODE_FOR_DISPLAY)
-            binding.bm.setImageBitmap(bitmap)
-            binding.hellotext.text = " ${pdfs[pdfs.size - 1]}   Size:  ${pdfs.size}"
-        }
-    }
 
     private fun checkPermissions(permission: String, name: String, requestCode: Int) {
         Log.d(TAG, "checkPermissions: PERMISSION ASKED $name")
@@ -274,7 +276,6 @@ class BooksFragment : Fragment() {
         binding.noticeNoLoaded.visibility = View.GONE
         binding.loadDocuBooks.visibility = View.GONE
         binding.progressBarBooks.visibility = View.GONE
-
     }
 
     override fun onDestroy() {

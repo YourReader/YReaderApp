@@ -1,6 +1,7 @@
 package read.code.yourreader.MVVVM.viewmodels
 
 import android.app.Application
+import android.util.Log
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.asLiveData
@@ -14,18 +15,34 @@ import read.code.yourreader.data.Files
 class FilesViewModel(application: Application) : AndroidViewModel(application) {
 
     val readAllData: LiveData<List<Files>>
+    val readFavData: LiveData<List<Files>>
+    val readDoneData: LiveData<List<Files>>
     private val repository: FilesRepository
 
     init {
         val filesDao = FileDatabase.getDatabase(application).filesDao()
         repository = FilesRepository(filesDao)
         readAllData = repository.getAllFiles().asLiveData()
+        readFavData = repository.getAllFavoriteFiles().asLiveData()
+        readDoneData = repository.getAllDoneFiles().asLiveData()
+    }
+
+
+    fun addFile(files: Files) = viewModelScope.launch(Dispatchers.IO) {
+        repository.addFile(files)
+        Log.d("mActivity", "Adding data")
 
     }
 
-    fun addFile(files: Files) {
+    fun updateFavoriteStatus(file: Files, isFavorite: Boolean) =
         viewModelScope.launch(Dispatchers.IO) {
-            repository.addFile(files)
+            repository.updateFile(file.copy(favorites = isFavorite))
+        }
+
+    fun updateDoneStatus(file: Files, isDone: Boolean) {
+        viewModelScope.launch(Dispatchers.IO) {
+            repository.updateFile(file.copy(doneReading = isDone))
         }
     }
+
 }

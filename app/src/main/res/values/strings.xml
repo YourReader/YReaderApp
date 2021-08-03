@@ -87,5 +87,10 @@
     <string name="account">Account</string>
     <string name="pause">Pause</string>
     <string name="next">Next Page</string>
+    <string name="upgrade_to_premium">Upgrade To Premium</string>
+    <string name="no_ads_best_quality_human_like_voice">No Ads, Best Quality Human like Voice</string>
+    <string name="language_settings">Language Settings</string>
+    <string name="voice_quality">Voice Quality</string>
+    <string name="useInfo">Hi there i will tell you how to use this app</string>
 
 </resources>

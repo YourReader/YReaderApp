@@ -18,7 +18,7 @@
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
-        android:theme="@style/Theme.AppTheme.Dark">
+        android:theme="@style/Theme.AppTheme">
         <activity
             android:name=".activities.HomeAuth"
             android:screenOrientation="portrait">
@@ -58,21 +58,42 @@
                 <data android:scheme="file" />
                 <data android:mimeType="application/pdf" />
             </intent-filter>
+            <intent-filter>
+
+                <action android:name="android.intent.action.VIEW" />
+                <action android:name="android.intent.action.SEND" />
+                <category android:name="android.intent.category.BROWSABLE" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <data android:scheme="content" />
+                <data android:scheme="file" />
+                <data android:mimeType="*/*" />
+            </intent-filter>
+
+            <intent-filter>
+                <data android:scheme="http"
+                    android:host="host.com"
+                    android:pathPrefix="/file.html" />
+                <action android:name="android.intent.action.VIEW" />
+                <category android:name="android.intent.category.BROWSABLE" />
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
 
         </activity>
 
-        <receiver android:name=".Notifications.NotificationActionService"/>
-        <service android:name=".Notifications.OnClearFromRecentService"/>
+
 
         <provider
             android:name="androidx.core.content.FileProvider"
-            android:authorities="com.furthergrow.android_download_manager"
+            android:authorities="read.code.yourreader"
             android:exported="false"
             android:grantUriPermissions="true">
             <meta-data
                 android:name="android.support.FILE_PROVIDER_PATHS"
                 android:resource="@xml/provider_paths" />
         </provider>
+
+
+
     </application>
 
 </manifest>

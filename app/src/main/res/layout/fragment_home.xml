@@ -4,11 +4,20 @@
     android:id="@+id/pdfVIew"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:padding="10dp"
     android:weightSum="100"
     android:orientation="vertical"
     tools:context=".Fragments.HomeFragment">
 
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/text_Info"
+        android:text="@string/useInfo"
+        android:padding="10dp"
+        android:visibility="gone"
+        android:textColor="@color/black"
+        android:fontFamily="@font/montserratsemibold"
+        android:layout_margin="10dp"/>
 
     <com.github.barteksc.pdfviewer.PDFView
         android:layout_width="match_parent"
@@ -20,6 +29,7 @@
 
         android:id="@+id/pdfViewHome"
         />
+
 
 
     <TextView
@@ -82,7 +92,7 @@
             android:fontFamily="@font/montserratsemibold"
             android:id="@+id/btn_back"
             android:src="@drawable/backward"
-            />
+            android:contentDescription="@string/todo" />
 
         <ImageView
             android:layout_width="100dp"

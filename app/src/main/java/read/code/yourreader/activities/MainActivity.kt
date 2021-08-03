@@ -4,14 +4,18 @@ package read.code.yourreader.activities
 import android.Manifest
 import android.annotation.SuppressLint
 import android.app.AlertDialog
+import android.content.Context
 import android.content.Intent
+import android.content.SharedPreferences
 import android.content.pm.PackageManager
+import android.content.res.Configuration
 import android.net.Uri
 import android.os.Build
 import android.os.Build.VERSION.SDK_INT
 import android.os.Bundle
 import android.os.Environment
 import android.provider.Settings
+import android.speech.tts.TextToSpeech
 import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
@@ -22,6 +26,7 @@ import androidx.annotation.Nullable
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.app.AppCompatDelegate
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.core.view.GravityCompat
@@ -59,9 +64,24 @@ class MainActivity : AppCompatActivity() {
         setContentView(binding.root)
 
         init()
-        setSupportActionBar(binding.toolbarMain)
+        val sharedPreferences: SharedPreferences = getSharedPreferences("switchDark", MODE_PRIVATE)
+        val theme = sharedPreferences.getBoolean("switchDark", false)
 
+        if (theme) {
+            AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
+            resources.configuration.uiMode = Configuration.UI_MODE_NIGHT_YES
+            setTheme(R.style.Theme_AppTheme_Dark)
+
+        } else {
+            AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
+            resources.configuration.uiMode = Configuration.UI_MODE_NIGHT_NO
+            setTheme(R.style.Theme_AppTheme)
+
+        }
         binding.toolbarMain.showOverflowMenu()
+        supportActionBar!!.setDisplayHomeAsUpEnabled(true)
+
+
 
         binding.navView.setNavigationItemSelectedListener {
             when (it.itemId) {
@@ -86,9 +106,15 @@ class MainActivity : AppCompatActivity() {
                     // TODO: 7/15/2021
 
                 }
+
                 R.id.menu_use -> {
                     binding.toolbarMain.title = "Use"
-                    // TODO: 7/15/2021
+                    val sharedPreferencesInfo: SharedPreferences =
+                        this.getSharedPreferences("Info", Context.MODE_PRIVATE)
+                    val editor = sharedPreferencesInfo.edit()
+                    editor.putBoolean("Info", false)
+                    editor.apply()
+                    fragmentTransition(HomeFragment())
                 }
                 R.id.home_menu -> {
                     binding.toolbarMain.title = "Home"
@@ -127,6 +153,7 @@ class MainActivity : AppCompatActivity() {
         mFilesViewModel.readAllData.observe(this@MainActivity, {
             Values.isDbEmpty = it.isNullOrEmpty()
             Log.d(TAG, " MT: ${Values.isDbEmpty} Null: ${it.isNullOrEmpty()} Size ${it.size}")
+            Log.d(TAG, "checkDb: Values: $it")
         })
     }
 
@@ -168,8 +195,8 @@ class MainActivity : AppCompatActivity() {
         setSupportActionBar(
             binding.toolbarMain
         )
-        supportActionBar?.setDisplayHomeAsUpEnabled(true)
-        supportActionBar?.setHomeButtonEnabled(true)
+        supportActionBar!!.setDisplayHomeAsUpEnabled(true)
+        supportActionBar!!.setHomeButtonEnabled(true)
 
         fragmentTransition(HomeFragment())
         binding.toolbarMain.title = "Home"
@@ -269,10 +296,29 @@ class MainActivity : AppCompatActivity() {
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
 
-        if (toggle.onOptionsItemSelected(item)) {
-            return true
+        when (item.itemId) {
+            R.id.action_item_langSettings -> {
+                val installIntent = Intent()
+                installIntent.action = TextToSpeech.Engine.ACTION_INSTALL_TTS_DATA
+                startActivity(installIntent)
+            }
+
+            R.id.action_item_TTS -> {
+                val installIntent2 = Intent()
+                installIntent2.action = TextToSpeech.Engine.ACTION_CHECK_TTS_DATA
+                startActivity(installIntent2)
+            }
+
+            else -> {
+                if (binding.drawerlayout.isDrawerOpen(GravityCompat.START)) {
+                    binding.drawerlayout.closeDrawer(GravityCompat.START)
+                } else {
+                    binding.drawerlayout.openDrawer(GravityCompat.START)
+                }
+            }
+
         }
-        return super.onOptionsItemSelected(item)
+        return true
 
     }
 
@@ -330,10 +376,14 @@ class MainActivity : AppCompatActivity() {
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
-        var inflater = menuInflater
+        val inflater = menuInflater
         inflater.inflate(R.menu.toolbar_menu, menu)
 
         return true
     }
 
+    override fun onPostCreate(savedInstanceState: Bundle?) {
+        super.onPostCreate(savedInstanceState)
+        toggle.syncState()
+    }
 }

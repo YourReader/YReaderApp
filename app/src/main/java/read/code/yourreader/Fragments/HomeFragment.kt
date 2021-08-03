@@ -1,12 +1,16 @@
 package read.code.yourreader.Fragments
 
+import android.app.Activity.RESULT_OK
 import android.content.ContentValues.TAG
+import android.content.Context
 import android.content.Intent
+import android.content.SharedPreferences
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import android.speech.tts.TextToSpeech
 import android.util.Log
+import android.util.Patterns
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -15,36 +19,50 @@ import android.widget.SeekBar.OnSeekBarChangeListener
 import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.fragment.app.Fragment
-import com.github.barteksc.pdfviewer.PDFView
 import com.github.barteksc.pdfviewer.listener.OnErrorListener
 import com.github.barteksc.pdfviewer.listener.OnLoadCompleteListener
 import com.github.barteksc.pdfviewer.listener.OnPageChangeListener
 import com.itextpdf.text.pdf.PdfReader
 import com.itextpdf.text.pdf.parser.LocationTextExtractionStrategy
 import com.itextpdf.text.pdf.parser.PdfTextExtractor
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers.IO
+import kotlinx.coroutines.launch
+
 import read.code.yourreader.R
 import read.code.yourreader.databinding.FragmentHomeBinding
-import java.io.FileNotFoundException
-import java.io.IOException
-import java.io.InputStream
-import java.time.temporal.TemporalAdjusters.next
+import java.io.*
+
 import java.util.*
+import java.util.regex.Matcher
 import kotlin.collections.ArrayList
+import org.jsoup.Jsoup
+import org.jsoup.nodes.Document
+import org.jsoup.select.Elements
+import java.net.MalformedURLException
+import java.net.SocketTimeoutException
+import java.net.URL
+import java.net.URLEncoder
 
 
-class HomeFragment : Fragment(), OnPageChangeListener, OnLoadCompleteListener, OnErrorListener,
+class HomeFragment : Fragment(),
+    OnPageChangeListener,
+    OnLoadCompleteListener,
+    OnErrorListener,
     TextToSpeech.OnInitListener {
 
 
-    lateinit var inputStream: InputStream
+    private lateinit var inputStream: InputStream
     lateinit var binding: FragmentHomeBinding
     var tts: TextToSpeech? = null
-    var builderArray = ArrayList<String>()
-    var playEnabled=false
-    var i = 0
-    var pdf:PDFView?=null
-    var str:String=""
-    var pages = 0
+    private var builderArray = ArrayList<String>()
+    private var playEnabled = false
+    private var i = 0
+    private var str: String = ""
+    private val locales = Locale.getAvailableLocales()
+    private val localeList: MutableList<Locale> = ArrayList()
+    private var pages = 0
+    private val links: MutableList<String> = ArrayList()
 
 
     override fun onCreateView(
@@ -58,62 +76,103 @@ class HomeFragment : Fragment(), OnPageChangeListener, OnLoadCompleteListener, O
         if (intent != null) {
             val action = intent.action
             val type = intent.type
+            Log.d(TAG, "onCreateView: Type is $type")
             if (Intent.ACTION_SEND == action && type != null) {
-                if (type.equals("text/plain", ignoreCase = true)) {
-                    handleTextData(intent)
-                } else if (type.equals("application/pdf", ignoreCase = true)) {
-                    handlePdfFile(intent)
+                when {
+                    type.equals("text/plain", ignoreCase = true) -> {
+                        //Text,Blogs or URl
+                        readFromUrl(intent)
+                    }
+                    type.equals("application/pdf", ignoreCase = true) -> {
+                        handlePdfFile(intent)
+                    }
+//                    type.equals(
+//                        "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+//                        ignoreCase = true
+//                    ) -> {
+//                        //Word
+//                        handleWordFile(intent)
+//                    }
                 }
             }
 
+            //App Info Pref
+            val sharedPreferences: SharedPreferences =
+                requireActivity().getSharedPreferences("Info", Context.MODE_PRIVATE)
+            val editor = sharedPreferences.edit()
+            val shown = sharedPreferences.getBoolean("Info", false)
+            if (shown) {
+                binding.textInfo.visibility = View.GONE
+                Log.d(TAG, "onCreateView: Shown")
+            } else {
+                binding.layNoFile.visibility = View.GONE
+                binding.textInfo.visibility = View.VISIBLE
+                speakOut(resources.getString(R.string.useInfo))
+                editor.putBoolean("Info", true)
+                editor.apply()
+            }
+
+            Log.d(TAG, "onCreateView: theme=$")
+
+
             if (Intent.ACTION_VIEW == action && type != null) {
-                if (type.equals("text/plain", ignoreCase = true)) {
-                    handleTextData(intent)
-                } else if (type.equals("application/pdf", ignoreCase = true)) {
-                    handlePdfFile(intent)
+                when {
+                    type.equals("text/plain", ignoreCase = true) -> {
+                        //Text,Blogs or URl
+                        handleTextData(intent)
+                    }
+                    type.equals("application/pdf", ignoreCase = true) -> {
+                        handlePdfFile(intent)
+                    }
+                    type.equals(
+                        "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+                        ignoreCase = true
+                    ) -> {
+                        //Word
+                        handleWordFile(intent)
+                    }
                 }
             }
         }
 
 
         binding.btnBack.setOnClickListener {
-            if (i!=0){
+            if (i != 0) {
                 i--
                 pagesReader()
-            }
-            else{
+            } else {
                 Toast.makeText(requireContext(), "First page", Toast.LENGTH_SHORT).show()
             }
         }
 
         binding.btnFront.setOnClickListener {
-            if (i<pages){
+            if (i < pages) {
                 i++
                 pagesReader()
-            }
-            else{
+            } else {
                 Toast.makeText(requireContext(), "Pages Ended", Toast.LENGTH_SHORT).show()
             }
 
 
         }
-//
-//        binding.openFileHome.setOnClickListener {
-//            binding.pbar.visibility != binding.pbar.visibility
-//        }
+
 
         binding.btnPaly.setOnClickListener {
-            if (!playEnabled)
-            {
+            playEnabled = if (!playEnabled) {
                 binding.btnPaly.setImageResource(R.drawable.ic_pause)
                 pagesReader()
-                playEnabled=true
-            }
-            else{
+                true
+            } else {
                 binding.btnPaly.setImageResource(R.drawable.ic_play)
                 tts!!.stop()
-             playEnabled=false
+                false
             }
+        }
+
+        binding.openFileHome.setOnClickListener {
+            val fileIntent = Intent(Intent.ACTION_GET_CONTENT)
+            fileIntent.type = "application/pdf"
+            startActivityForResult(fileIntent, 21)
         }
 
         binding.seekBarSpeed.setOnSeekBarChangeListener(object : OnSeekBarChangeListener {
@@ -153,23 +212,28 @@ class HomeFragment : Fragment(), OnPageChangeListener, OnLoadCompleteListener, O
         return binding.root
     }
 
+    private fun handleWordFile(intent: Intent) {
+        //TODO Word Remaining
+    }
+
+
     private fun handlePdfFile(intent: Intent) {
         InitialiseTTS()
 
-        val pdffile: Uri? = intent.getParcelableExtra(Intent.EXTRA_STREAM)
-        if (pdffile != null) {
-            Log.d("Pdf File Path : ", "" + pdffile.path)
-            extractTextFromPdfFile(pdffile)
-            displayFromUri(pdffile)
+        val pdfFile: Uri? = intent.getParcelableExtra(Intent.EXTRA_STREAM)
+        if (pdfFile != null) {
+            Log.d("Pdf File Path : ", "" + pdfFile.path)
+            extractTextFromPdfFile(pdfFile)
+            displayFromUri(pdfFile)
             Log.d(TAG, "handlePdfFile: Pdf Loaded")
         }
     }
 
     private fun handleTextData(intent: Intent) {
         InitialiseTTS()
-        val textdata = intent.getStringExtra(Intent.EXTRA_TEXT)
-        if (textdata != null) {
-            Log.d("Text Data : ", "" + textdata)
+        val textData = intent.getStringExtra(Intent.EXTRA_TEXT)
+        if (textData != null) {
+            Log.d("Text Data : ", "" + textData)
         }
     }
 
@@ -181,7 +245,7 @@ class HomeFragment : Fragment(), OnPageChangeListener, OnLoadCompleteListener, O
         } catch (e: FileNotFoundException) {
             Toast.makeText(requireContext(), "File Not Found", Toast.LENGTH_SHORT).show()
         }
-        var fileContent = ""
+        var fileContent: String
         val reader: PdfReader?
         try {
             reader = PdfReader(inputStream)
@@ -277,14 +341,23 @@ class HomeFragment : Fragment(), OnPageChangeListener, OnLoadCompleteListener, O
     }
 
     override fun onInit(status: Int) {
+        var res = tts!!.setLanguage(Locale.ENGLISH)
+
         if (status == TextToSpeech.SUCCESS) {
-            val result = tts!!.setLanguage(Locale.ENGLISH)
-            if (result == TextToSpeech.LANG_NOT_SUPPORTED) {
-                Toast.makeText(requireContext(), "Language Not Supported", Toast.LENGTH_SHORT)
-                    .show()
+            Locale.getAvailableLocales()
+
+            for (locale in locales) {
+                res = tts!!.isLanguageAvailable(locale)
+                if (res == TextToSpeech.LANG_COUNTRY_AVAILABLE) {
+                    localeList.add(locale)
+                    Log.d(TAG, "onInit: language is $locale")
+                }
+            }
+            if (res == TextToSpeech.LANG_NOT_SUPPORTED) {
+                Log.d(TAG, "onInit: Lang Not supported")
 
             }
-            if (result == TextToSpeech.LANG_MISSING_DATA) {
+            if (res == TextToSpeech.LANG_MISSING_DATA) {
                 val installIntent = Intent()
                 installIntent.action = TextToSpeech.Engine.ACTION_INSTALL_TTS_DATA
                 startActivity(installIntent)
@@ -295,9 +368,7 @@ class HomeFragment : Fragment(), OnPageChangeListener, OnLoadCompleteListener, O
 
 
     fun pagesReader() {
-
-        if(i<=pages)
-        {
+        if (i < pages) {
             str = builderArray[i]
             speakOut(str)
             Log.d(TAG, "onCreateView: i=$i")
@@ -305,8 +376,83 @@ class HomeFragment : Fragment(), OnPageChangeListener, OnLoadCompleteListener, O
             binding.pdfViewHome.jumpTo(i)
 
         }
+    }
 
+    fun readFromUrl(intent: Intent) {
+        val clipData = intent.clipData
+        Log.d(TAG, "ReadFromUrl:Clipdata=$clipData\n\n")
+        val url = extractLinks(clipData.toString())
+        Log.d(TAG, "ReadFromUrl: \n\nFinal URL = ${url[0]}")
+
+        var dataText = getDataFrommUrl(url[0])
 
 
     }
+
+    private fun getDataFrommUrl(s: String): String {
+
+        CoroutineScope(IO).launch {
+
+            try {
+                val doc: Document = Jsoup.connect(s).get()
+                var link =Jsoup.parse(URL(s),4000)
+                val yourURLStr = URLEncoder.encode(s, "UTF-8")
+                Log.d(TAG, "getDataFrommUrl: \n\nNormal URL= $s\n\n")
+                Log.d(TAG, "getDataFrommUrl: URl= \n\n$yourURLStr\n")
+            } catch (ex: SocketTimeoutException) {
+                Log.d(TAG, "getDataFrommUrl: ${ex.message}")
+            } catch (ep: MalformedURLException) {
+                Toast.makeText(requireContext(), "URL not supported", Toast.LENGTH_SHORT).show()
+            } catch (e: IOException) {
+                Log.d(TAG, "getDataFrommUrl: ${e.message}")
+            }
+
+        }
+
+        return ""
+    }
+
+    private fun extractLinks(text: String): Array<String> {
+        val m: Matcher = Patterns.WEB_URL.matcher(text)
+        while (m.find()) {
+            val url: String = m.group()
+            Log.d(TAG, "URL extracted: $url")
+            links.add(url)
+        }
+        return links.toTypedArray()
+    }
+
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        when (requestCode) {
+            21 -> {
+                if (resultCode == RESULT_OK) {
+                    val path = data!!.data
+                    handlePdfFilePath(path)
+                }
+            }
+            else -> {
+                Log.d(TAG, "onActivityResult: ELSE")
+
+            }
+        }
+    }
+
+    private fun handlePdfFilePath(path: Uri?) {
+        extractTextFromPdfFile(path!!)
+        displayFromUri(path)
+    }
+
+
 }
+
+
+
+
+
+
+
+
+
+

@@ -13,5 +13,6 @@ data class Files(
     val path: String,
     val type: String,
     val favorites: Boolean = false,
-    val readingNow: Boolean = false
+    val readingNow: Boolean = false,
+    val doneReading: Boolean = false
 ) : Parcelable
