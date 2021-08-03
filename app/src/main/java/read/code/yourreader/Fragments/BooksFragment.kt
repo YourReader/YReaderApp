@@ -80,6 +80,7 @@ class BooksFragment : Fragment(), FilesAdapter.OnCardViewClickListener {
     }
 
     override fun onCardClick(files: Files) {
+        mFilesViewModel.updateReadingStatus(files, true)
         requireActivity().supportFragmentManager.beginTransaction()
             .replace(R.id.frame_main, HomeFragment())
             .commit()

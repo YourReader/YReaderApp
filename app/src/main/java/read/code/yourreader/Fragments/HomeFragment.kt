@@ -28,21 +28,19 @@ import com.itextpdf.text.pdf.parser.PdfTextExtractor
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers.IO
 import kotlinx.coroutines.launch
-
-import read.code.yourreader.R
-import read.code.yourreader.databinding.FragmentHomeBinding
-import java.io.*
-
-import java.util.*
-import java.util.regex.Matcher
-import kotlin.collections.ArrayList
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Document
-import org.jsoup.select.Elements
+import read.code.yourreader.R
+import read.code.yourreader.activities.MainActivity
+import read.code.yourreader.databinding.FragmentHomeBinding
+import java.io.*
 import java.net.MalformedURLException
 import java.net.SocketTimeoutException
 import java.net.URL
 import java.net.URLEncoder
+import java.util.*
+import java.util.regex.Matcher
+import kotlin.collections.ArrayList
 
 
 class HomeFragment : Fragment(),
@@ -72,6 +70,9 @@ class HomeFragment : Fragment(),
         // Inflate the layout for this fragment
         InitialiseTTS()
         binding = FragmentHomeBinding.inflate(layoutInflater)
+
+        (activity as MainActivity).setActionBarTitle("Home")
+
         val intent = requireActivity().intent
         if (intent != null) {
             val action = intent.action
@@ -399,7 +400,10 @@ class HomeFragment : Fragment(),
                     val yourURLStr = URLEncoder.encode(s, "UTF-8")
                     Log.d(TAG, "getDataFrommUrl: \n\nNormal URL= $s\n\n")
 
-                    Log.d(TAG, "getDataFrommUrl: content ${link.getElementsByClass("content").text()}")
+                    Log.d(
+                        TAG,
+                        "getDataFrommUrl: content ${link.getElementsByClass("content").text()}"
+                    )
 
                     Log.d(TAG, "getDataFrommUrl: \n\n\nBody = ${link.body().text()}")
                 } catch (ex: SocketTimeoutException) {
