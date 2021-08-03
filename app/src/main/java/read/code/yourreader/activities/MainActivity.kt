@@ -312,11 +312,6 @@ class MainActivity : AppCompatActivity() {
         when (item.itemId) {
 
 
-
-
-
-
-
             else -> {
                 if (binding.drawerlayout.isDrawerOpen(GravityCompat.START)) {
                     binding.drawerlayout.closeDrawer(GravityCompat.START)

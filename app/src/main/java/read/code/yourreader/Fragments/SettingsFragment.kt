@@ -3,8 +3,10 @@ package read.code.yourreader.Fragments
 import android.content.ContentValues.TAG
 import android.content.Context.MODE_PRIVATE
 import android.content.DialogInterface
+import android.content.Intent
 import android.content.SharedPreferences
 import android.os.Bundle
+import android.speech.tts.TextToSpeech
 import android.util.Log
 import android.view.*
 import android.widget.Toast
@@ -56,6 +58,14 @@ class SettingsFragment : Fragment() {
             requireActivity().finish()
         }
 
+        binding.languageChoose.setOnClickListener {
+            val installIntent = Intent()
+            installIntent.action = TextToSpeech.Engine.ACTION_INSTALL_TTS_DATA
+            startActivity(installIntent)
+        }
+        binding.settingsTts.setOnClickListener {
+            TODO("Remaining")
+        }
 
         //Dark Mode Settings
         val sharedPreferencesDark: SharedPreferences =
