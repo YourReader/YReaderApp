@@ -51,6 +51,7 @@ class FavoritesFragment : Fragment(), FilesAdapter.OnCardViewClickListener {
     }
 
     override fun onCardClick(files: Files) {
+        filesViewModel.updateReadingStatus(files, true)
         requireActivity().supportFragmentManager.beginTransaction()
             .replace(R.id.frame_main, HomeFragment())
             .commit()

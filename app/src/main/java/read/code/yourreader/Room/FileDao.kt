@@ -24,4 +24,7 @@ interface FileDao {
 
     @Query("DELETE FROM files_table")
     suspend fun deleteDatabase()
+
+    @Query("SELECT * FROM files_table WHERE readingNow = 1")
+    fun getCurrentReadingFiles(): Flow<List<Files>>
 }
