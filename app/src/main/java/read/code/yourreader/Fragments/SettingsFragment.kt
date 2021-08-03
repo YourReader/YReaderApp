@@ -52,7 +52,7 @@ class SettingsFragment : Fragment() {
         mFilesViewModel = ViewModelProvider(this@SettingsFragment).get(FilesViewModel::class.java)
 
         binding.SignOutSettings.setOnClickListener {
-            //Deletes the Database before user signs out
+//            Deletes the Database before user signs out
             mFilesViewModel.nukeDatabase()
 
             viewModel.signOut()
