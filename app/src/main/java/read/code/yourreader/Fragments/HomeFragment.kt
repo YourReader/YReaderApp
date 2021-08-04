@@ -77,7 +77,7 @@ class HomeFragment : Fragment(),
 
         if (bundle != null) {
             val file: Files? = bundle.getParcelable<Files>("Object")
-            handlePdfFilePath((file!!.path).toUri())
+            handlePdfFileBooks((file!!.path).toUri())
         }
 
         val intent = requireActivity().intent
@@ -217,6 +217,12 @@ class HomeFragment : Fragment(),
         })
 
         return binding.root
+    }
+
+    private fun handlePdfFileBooks(toUri: Uri) {
+        extractTextFromPdfFile(toUri)
+        val file=File(toUri.toString())
+        displayFromUriFile(file)
     }
 
 
@@ -407,8 +413,8 @@ class HomeFragment : Fragment(),
         if (i < pages) {
             str = builderArray[i]
             speakOut(str)
-            Log.d(TAG, "onCreateView: i=$i")
-            Log.d(TAG, "onCreateView: $str")
+            Log.d(TAG, "onCreateView: page i=$i")
+            Log.d(TAG, "onCreateView: text $str")
             binding.pdfViewHome.jumpTo(i)
 
         }
@@ -486,8 +492,7 @@ class HomeFragment : Fragment(),
 
     private fun handlePdfFilePath(path: Uri?) {
         extractTextFromPdfFile(path!!)
-        var file=File(path.toString())
-        displayFromUriFile(file)
+        displayFromUri(path)
     }
 
 
