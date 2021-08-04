@@ -220,8 +220,8 @@ class HomeFragment : Fragment(),
     }
 
     private fun handlePdfFileBooks(toUri: Uri) {
-        extractTextFromPdfFile(toUri)
         val file=File(toUri.toString())
+        extractTextFromPdfFile(Uri.fromFile(file))
         displayFromUriFile(file)
     }
 
