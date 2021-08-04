@@ -220,8 +220,8 @@ class HomeFragment : Fragment(),
     }
 
     private fun handlePdfFileBooks(toUri: Uri) {
-        extractTextFromPdfFile(toUri)
         val file=File(toUri.toString())
+        extractTextFromPdfFile(Uri.fromFile(file))
         displayFromUriFile(file)
     }
 
@@ -234,7 +234,6 @@ class HomeFragment : Fragment(),
             Log.d("Pdf File Path : ", "" + pdfFile.path)
             extractTextFromPdfFile(pdfFile)
             displayFromUri(pdfFile)
-            Log.d(TAG, "handlePdfFile: Pdf Loaded")
         }
     }
 
