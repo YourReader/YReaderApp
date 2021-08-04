@@ -234,7 +234,6 @@ class HomeFragment : Fragment(),
             Log.d("Pdf File Path : ", "" + pdfFile.path)
             extractTextFromPdfFile(pdfFile)
             displayFromUri(pdfFile)
-            Log.d(TAG, "handlePdfFile: Pdf Loaded")
         }
     }
 
