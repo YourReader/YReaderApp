@@ -27,6 +27,7 @@ class FavoritesFragment : Fragment(), FilesAdapter.OnCardViewClickListener {
         // Inflate the layout for this fragment
         init()
         binding = FragmentFavoritesBinding.inflate(inflater, container, false)
+
         return binding!!.root
     }
 
@@ -41,13 +42,13 @@ class FavoritesFragment : Fragment(), FilesAdapter.OnCardViewClickListener {
         }
 
         filesViewModel.readFavData.observe(requireActivity()) {
-            if (it.isNotEmpty())
-                filesAdapter.submitList(it)
+            filesAdapter.submitList(it)
         }
     }
 
     private fun init() {
-        filesViewModel = ViewModelProvider(this@FavoritesFragment).get(FilesViewModel::class.java)
+        filesViewModel =
+            ViewModelProvider(this@FavoritesFragment).get(FilesViewModel::class.java)
     }
 
     override fun onCardClick(files: Files) {

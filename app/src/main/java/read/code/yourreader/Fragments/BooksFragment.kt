@@ -20,10 +20,10 @@ import androidx.annotation.Nullable
 import androidx.core.app.ActivityCompat
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.launch
 import read.code.yourreader.Adapter.FilesAdapter
 import read.code.yourreader.MVVVM.viewmodels.FilesViewModel
@@ -50,11 +50,13 @@ class BooksFragment : Fragment(), FilesAdapter.OnCardViewClickListener {
         savedInstanceState: Bundle?
     ): View {
         _binding = FragmentBooksBinding.inflate(inflater, container, false)
+
         return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
         binding.apply {
             filesRecyclerView.apply {
                 adapter = filesAdapter
@@ -154,7 +156,7 @@ class BooksFragment : Fragment(), FilesAdapter.OnCardViewClickListener {
                 if (Values.isDbEmpty) {
                     Log.d(TAG, "loadFiles: First Time User")
                     searchFiles(dir)
-                    MainScope().launch {
+                    lifecycleScope.launch {
                         mFilesViewModel.readAllData.observe(viewLifecycleOwner) {
                             filesAdapter.submitList(it)
                             hideLoadDocuLayout()
@@ -163,8 +165,8 @@ class BooksFragment : Fragment(), FilesAdapter.OnCardViewClickListener {
                     }
                 } else if (!Values.isDbEmpty) {
                     Log.d(TAG, "loadFiles: Not First Time User")
-                    MainScope().launch {
-                        mFilesViewModel.readAllData.observe(viewLifecycleOwner) {
+                    lifecycleScope.launch {
+                        mFilesViewModel.readAllData.observe(requireActivity()) {
                             filesAdapter.submitList(it)
 //                            showData()
                         }

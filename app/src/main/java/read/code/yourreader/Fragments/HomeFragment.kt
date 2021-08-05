@@ -3,8 +3,10 @@ package read.code.yourreader.Fragments
 import android.app.Activity.RESULT_OK
 import android.content.ContentValues.TAG
 import android.content.Context
+import android.content.DialogInterface
 import android.content.Intent
 import android.content.SharedPreferences
+import android.content.pm.PackageManager
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
@@ -18,6 +20,8 @@ import android.widget.SeekBar
 import android.widget.SeekBar.OnSeekBarChangeListener
 import android.widget.Toast
 import androidx.annotation.RequiresApi
+import androidx.appcompat.app.AlertDialog
+import androidx.core.net.toUri
 import androidx.fragment.app.Fragment
 import com.github.barteksc.pdfviewer.listener.OnErrorListener
 import com.github.barteksc.pdfviewer.listener.OnLoadCompleteListener
@@ -26,16 +30,13 @@ import com.itextpdf.text.pdf.PdfReader
 import com.itextpdf.text.pdf.parser.LocationTextExtractionStrategy
 import com.itextpdf.text.pdf.parser.PdfTextExtractor
 import read.code.yourreader.R
-import read.code.yourreader.activities.MainActivity
 import read.code.yourreader.data.Files
 import read.code.yourreader.databinding.FragmentHomeBinding
-import java.io.*
+import java.io.File
+import java.io.FileNotFoundException
+import java.io.IOException
+import java.io.InputStream
 import java.util.regex.Matcher
-import kotlin.collections.ArrayList
-import android.content.pm.PackageManager
-import android.content.DialogInterface
-import androidx.appcompat.app.AlertDialog
-import androidx.core.net.toUri
 
 
 class HomeFragment : Fragment(),
@@ -66,15 +67,8 @@ class HomeFragment : Fragment(),
         InitialiseTTS()
         binding = FragmentHomeBinding.inflate(layoutInflater)
 
-        (activity as MainActivity).setActionBarTitle("Home")
 
         val bundle = this.arguments
-        Toast.makeText(
-            requireContext(),
-            "Found: ${bundle?.getParcelable<Files>("Object")}",
-            Toast.LENGTH_SHORT
-        ).show()
-
         if (bundle != null) {
             val file: Files? = bundle.getParcelable<Files>("Object")
             handlePdfFileBooks((file!!.path).toUri())
@@ -220,7 +214,7 @@ class HomeFragment : Fragment(),
     }
 
     private fun handlePdfFileBooks(toUri: Uri) {
-        val file=File(toUri.toString())
+        val file = File(toUri.toString())
         extractTextFromPdfFile(Uri.fromFile(file))
         displayFromUriFile(file)
     }
@@ -253,23 +247,22 @@ class HomeFragment : Fragment(),
         try {
             inputStream = requireContext().contentResolver.openInputStream(uri)!!
             reader = PdfReader(inputStream)
-                pages = reader.numberOfPages
-                for (i in 1..pages) {
-                    fileContent =
-                        PdfTextExtractor.getTextFromPage(
-                            reader,
-                            i,
-                            LocationTextExtractionStrategy()
-                        )
-                    builderArray.add(fileContent)
-                }
-                reader.close()
+            pages = reader.numberOfPages
+            for (i in 1..pages) {
+                fileContent =
+                    PdfTextExtractor.getTextFromPage(
+                        reader,
+                        i,
+                        LocationTextExtractionStrategy()
+                    )
+                builderArray.add(fileContent)
+            }
+            reader.close()
 
 
         } catch (e: IOException) {
             Log.d(TAG, "extractTextFromPdfFile: ${e.message}")
-        }
-        catch (e: FileNotFoundException) {
+        } catch (e: FileNotFoundException) {
             Toast.makeText(requireContext(), "File Not Found", Toast.LENGTH_SHORT).show()
         }
 
@@ -287,6 +280,7 @@ class HomeFragment : Fragment(),
             .enableAnnotationRendering(true)
             .load()
     }
+
     private fun displayFromUriFile(uri: File) {
         loadPdfLayout()
         Log.d(TAG, "displayFromUri: URI $uri")
@@ -403,7 +397,7 @@ class HomeFragment : Fragment(),
         if (status != TextToSpeech.ERROR) {
             if (!isPackageInstalled(requireActivity().packageManager, googleTtsPackage))
                 confirmDialog()
-            else tts!!.setEngineByPackageName(googleTtsPackage);
+            else tts!!.setEngineByPackageName(googleTtsPackage)
         }
     }
 

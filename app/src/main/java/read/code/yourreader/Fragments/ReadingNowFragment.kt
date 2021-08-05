@@ -31,6 +31,8 @@ class ReadingNowFragment : Fragment(), FilesAdapter.OnCardViewClickListener {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+
         binding.apply {
             readingNowRecyclerView.apply {
                 adapter = filesAdapter
