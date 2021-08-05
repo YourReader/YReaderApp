@@ -2,7 +2,6 @@ package read.code.yourreader.Fragments
 
 import android.content.ContentValues.TAG
 import android.content.Context.MODE_PRIVATE
-import android.content.DialogInterface
 import android.content.Intent
 import android.content.SharedPreferences
 import android.os.Bundle
@@ -17,10 +16,10 @@ import androidx.appcompat.app.AppCompatDelegate
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelProviders
-import com.google.android.material.dialog.MaterialDialogs
 import com.google.firebase.auth.FirebaseAuth
 import read.code.yourreader.MVVVM.viewmodels.FilesViewModel
 import read.code.yourreader.R
+import read.code.yourreader.activities.MainActivity
 import read.code.yourreader.databinding.FragmentSettingsBinding
 import read.code.yourreader.di.components.DaggerFactoryComponent
 import read.code.yourreader.di.modules.FactoryModule
@@ -43,6 +42,7 @@ class SettingsFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View {
         binding = FragmentSettingsBinding.inflate(layoutInflater)
+        (activity as MainActivity).setActionBarTitle("Settings")
 
         mAuth = FirebaseAuth.getInstance()
         component = DaggerFactoryComponent.builder()

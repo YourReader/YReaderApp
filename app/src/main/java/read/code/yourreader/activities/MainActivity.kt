@@ -17,6 +17,7 @@ import android.os.Environment
 import android.provider.Settings
 import android.util.Log
 import android.view.MenuItem
+import android.view.View
 import android.view.Window
 import android.view.WindowManager
 import android.widget.Toast
@@ -28,6 +29,7 @@ import androidx.appcompat.app.AppCompatDelegate
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.core.view.GravityCompat
+import androidx.drawerlayout.widget.DrawerLayout
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelProviders
@@ -46,6 +48,7 @@ import read.code.yourreader.others.Values
 
 
 class MainActivity : AppCompatActivity() {
+    private var clicked: Boolean = false
     private lateinit var mAuth: FirebaseAuth
     private lateinit var viewModel: MainViewModel
     private lateinit var component: DaggerFactoryComponent
@@ -54,7 +57,7 @@ class MainActivity : AppCompatActivity() {
     lateinit var toggle: ActionBarDrawerToggle
     lateinit var binding: ActivityMainBinding
     private lateinit var mFilesViewModel: FilesViewModel
-    var permissionMain=false
+    var permissionMain = false
 
 
     @RequiresApi(Build.VERSION_CODES.KITKAT)
@@ -65,7 +68,7 @@ class MainActivity : AppCompatActivity() {
 
 
         //AccessFiles  Settings
-        val sharedPreferencesAccess : SharedPreferences =
+        val sharedPreferencesAccess: SharedPreferences =
             getSharedPreferences("switchAccess", MODE_PRIVATE)
         val editor4 = sharedPreferencesAccess.edit()
         init()
@@ -86,37 +89,39 @@ class MainActivity : AppCompatActivity() {
         binding.toolbarMain.showOverflowMenu()
         supportActionBar!!.setDisplayHomeAsUpEnabled(true)
 
-        if (permissionMain)
-        {
+        if (permissionMain) {
             editor4.putBoolean("switchAccess", true)
             editor4.apply()
         }
         binding.navView.setNavigationItemSelectedListener {
+            clicked = true
             when (it.itemId) {
                 R.id.reading_now -> {
-                    binding.toolbarMain.title = "Reading now"
+                    setActionBarTitle("Reading Now ")
                     fragmentTransition(ReadingNowFragment())
                 }
+
                 R.id.books -> {
-                    binding.toolbarMain.title = "Books and Documents"
+                    setActionBarTitle("Books and Docs")
                     fragmentTransition(BooksFragment())
                 }
 
                 R.id.menu_haveread -> {
-                    binding.toolbarMain.title = "Done Reading"
+                    setActionBarTitle("Done Reading ")
                     fragmentTransition(DoneReadingFragment())
                 }
+
                 R.id.menu_settings -> {
-                    binding.toolbarMain.title = "Settings"
+                    setActionBarTitle("Settings ")
                     fragmentTransition(SettingsFragment())
                 }
+
                 R.id.menu_feedback -> {
                     // TODO: 7/15/2021
-
                 }
 
                 R.id.menu_use -> {
-                    binding.toolbarMain.title = "Use"
+                    setActionBarTitle("Use ")
                     val sharedPreferencesInfo: SharedPreferences =
                         this.getSharedPreferences("Info", Context.MODE_PRIVATE)
                     val editor = sharedPreferencesInfo.edit()
@@ -125,46 +130,86 @@ class MainActivity : AppCompatActivity() {
                     fragmentTransition(HomeFragment())
                 }
                 R.id.home_menu -> {
-                    binding.toolbarMain.title = "Home"
+                    setActionBarTitle("Home ")
                     fragmentTransition(HomeFragment())
                 }
 
                 R.id.menu_Downloads -> {
-                    binding.toolbarMain.title = "Downlaods"
+                    setActionBarTitle("Downloads ")
                     fragmentTransition(DownloadsFragment())
                 }
 
+
                 R.id.menu_fav -> {
-                    binding.toolbarMain.title = "Favorites"
+                    setActionBarTitle("Favourite ")
                     fragmentTransition(FavoritesFragment())
                 }
+
                 R.id.menu_Trash -> {
-                    binding.toolbarMain.title = "Trash"
+                    setActionBarTitle("Trash ")
                     fragmentTransition(TrashFragment())
                 }
+
             }
+            binding.drawerlayout.closeDrawer(GravityCompat.START)
             true
         }
     }
 
     fun setActionBarTitle(title: String) {
+        Log.d("TITLE", "setActionBarTitle:${binding.toolbarMain.title} ")
         binding.toolbarMain.title = title
     }
 
-    private fun fragmentTransition(fragment: Fragment) {
-        supportFragmentManager.beginTransaction().apply {
-            replace(R.id.frame_main, fragment)
-            commit()
-        }
-        if (binding.drawerlayout.isDrawerOpen(GravityCompat.START))
-            binding.drawerlayout.closeDrawer(GravityCompat.START)
+    private fun fragmentTransition(
+        fragment: Fragment,
+    ) {
+
+        binding.drawerlayout.addDrawerListener(object : DrawerLayout.DrawerListener {
+            override fun onDrawerSlide(drawerView: View, slideOffset: Float) {
+
+            }
+
+            override fun onDrawerOpened(drawerView: View) {
+
+            }
+
+            override fun onDrawerClosed(drawerView: View) {
+                if (clicked) {
+                    supportFragmentManager.beginTransaction().apply {
+                        replace(R.id.frame_main, fragment)
+                        disallowAddToBackStack()
+                        commit()
+                    }
+                    clicked = false
+                }
+
+            }
+
+            override fun onDrawerStateChanged(newState: Int) {
+
+            }
+        })
+
+//        if (binding.drawerlayout.isDrawerOpen(GravityCompat.START))
+//            binding.drawerlayout.closeDrawer(GravityCompat.START)
+//
+//        supportFragmentManager.beginTransaction().apply {
+//            replace(R.id.frame_main, fragment!!)
+//            addToBackStack(null)
+//            commit()
+//        }
+//
     }
 
     //Checks if DB is empty or not
     private fun checkDb() {
         mFilesViewModel.readAllData.observe(this@MainActivity, {
             Values.isDbEmpty = it.isNullOrEmpty()
-            Log.d(TAG, " MT: ${Values.isDbEmpty} Null: ${it.isNullOrEmpty()} Size ${it.size}")
+            Log.d(
+                TAG,
+                " MT: ${Values.isDbEmpty} Null: ${it.isNullOrEmpty()} Size ${it.size}"
+            )
             Log.d(TAG, "checkDb: Values: $it")
         })
     }
@@ -210,11 +255,15 @@ class MainActivity : AppCompatActivity() {
         supportActionBar!!.setDisplayHomeAsUpEnabled(true)
         supportActionBar!!.setHomeButtonEnabled(true)
 
-        fragmentTransition(HomeFragment())
-        binding.toolbarMain.title = "Home"
+        Log.d("TITLE", "onCreate:${binding.toolbarMain.title} ")
+        if (binding.drawerlayout.isDrawerOpen(GravityCompat.START))
+            binding.drawerlayout.closeDrawer(GravityCompat.START)
 
-
-
+        supportFragmentManager.beginTransaction().apply {
+            replace(R.id.frame_main, HomeFragment())
+            addToBackStack(null)
+            commit()
+        }
     }
 
     private fun checkManagePermission(
@@ -225,9 +274,9 @@ class MainActivity : AppCompatActivity() {
     ) {
         if (SDK_INT >= Build.VERSION_CODES.R) {
             when {
-                Environment.isExternalStorageManager() ->{
+                Environment.isExternalStorageManager() -> {
                     Log.d(TAG, "checkPermissions: $name permission Granted")
-                    permissionMain=true
+                    permissionMain = true
                 }
 
                 shouldShowRequestPermissionRationale(permission) -> {
@@ -255,10 +304,16 @@ class MainActivity : AppCompatActivity() {
                 setPositiveButton("Grant") { _, _ ->
 
                     try {
-                        val intent = Intent(Settings.ACTION_MANAGE_APP_ALL_FILES_ACCESS_PERMISSION)
+                        val intent =
+                            Intent(Settings.ACTION_MANAGE_APP_ALL_FILES_ACCESS_PERMISSION)
                         intent.addCategory("android.intent.category.DEFAULT")
                         intent.data =
-                            Uri.parse(String.format("package:%s", applicationContext.packageName))
+                            Uri.parse(
+                                String.format(
+                                    "package:%s",
+                                    applicationContext.packageName
+                                )
+                            )
                         startActivityForResult(intent, 2296)
                     } catch (e: Exception) {
                         val intent = Intent()
@@ -286,17 +341,28 @@ class MainActivity : AppCompatActivity() {
                 if (grantResults[i] == PackageManager.PERMISSION_GRANTED) {
                     Log.d(TAG, "onRequestPermissionsResult: GRANTED $requestCode")
 
+                } else {
+                    showManagePermissionDialog(
+                        true,
+                        Manifest.permission.READ_EXTERNAL_STORAGE
+                    )
                 }
-                else{
-                    showManagePermissionDialog(true, Manifest.permission.READ_EXTERNAL_STORAGE)}
     }
 
-    override fun onActivityResult(requestCode: Int, resultCode: Int, @Nullable data: Intent?) {
+    override fun onActivityResult(
+        requestCode: Int,
+        resultCode: Int,
+        @Nullable data: Intent?
+    ) {
         super.onActivityResult(requestCode, resultCode, data)
         if (requestCode == 2296) {
             if (SDK_INT >= Build.VERSION_CODES.R) {
                 if (Environment.isExternalStorageManager()) {
-                    Toast.makeText(this@MainActivity, "Permission Granted", Toast.LENGTH_SHORT)
+                    Toast.makeText(
+                        this@MainActivity,
+                        "Permission Granted",
+                        Toast.LENGTH_SHORT
+                    )
                         .show()
                 } else if (SDK_INT >= Build.VERSION_CODES.R) {
                     checkManagePermission(
@@ -314,8 +380,6 @@ class MainActivity : AppCompatActivity() {
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
 
         when (item.itemId) {
-
-
             else -> {
                 if (binding.drawerlayout.isDrawerOpen(GravityCompat.START)) {
                     binding.drawerlayout.closeDrawer(GravityCompat.START)
@@ -323,7 +387,6 @@ class MainActivity : AppCompatActivity() {
                     binding.drawerlayout.openDrawer(GravityCompat.START)
                 }
             }
-
         }
         return true
 
@@ -343,9 +406,19 @@ class MainActivity : AppCompatActivity() {
     private fun handlePermissions() {
         Log.d(TAG, "handlePermissions: $SDK_INT")
         if (SDK_INT >= Build.VERSION_CODES.R) {
-            checkManagePermission(Manifest.permission.MANAGE_EXTERNAL_STORAGE, "MANAGE", 101, false)
+            checkManagePermission(
+                Manifest.permission.MANAGE_EXTERNAL_STORAGE,
+                "MANAGE",
+                101,
+                false
+            )
         } else {
-            checkStoragePermission(Manifest.permission.READ_EXTERNAL_STORAGE, "STORAGE", 100, true)
+            checkStoragePermission(
+                Manifest.permission.READ_EXTERNAL_STORAGE,
+                "STORAGE",
+                100,
+                true
+            )
         }
     }
 
@@ -382,10 +455,9 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-
-
     override fun onPostCreate(savedInstanceState: Bundle?) {
         super.onPostCreate(savedInstanceState)
         toggle.syncState()
     }
+
 }

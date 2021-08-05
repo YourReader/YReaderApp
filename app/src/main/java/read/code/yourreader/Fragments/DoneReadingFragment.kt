@@ -7,9 +7,11 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.fragment_reading_now.*
+import kotlinx.coroutines.launch
 import read.code.yourreader.Adapter.FilesAdapter
 import read.code.yourreader.MVVVM.viewmodels.FilesViewModel
 import read.code.yourreader.R
@@ -28,12 +30,16 @@ class DoneReadingFragment : Fragment(), FilesAdapter.OnCardViewClickListener {
         init()
         _binding =
             FragmentDoneReadingBinding.inflate(inflater, container, false)
+
         return binding.root
     }
 
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+
+
         binding.apply {
             doneReadingRecyclerView.apply {
                 adapter = filesAdapter
@@ -42,9 +48,11 @@ class DoneReadingFragment : Fragment(), FilesAdapter.OnCardViewClickListener {
             }
         }
 
-        mFilesViewModel.readDoneData.observe(requireActivity()) {
-            if (it.isNotEmpty())
+
+        lifecycleScope.launch {
+            mFilesViewModel.readDoneData.observe(requireActivity()) {
                 filesAdapter.submitList(it)
+            }
         }
     }
 
@@ -62,14 +70,14 @@ class DoneReadingFragment : Fragment(), FilesAdapter.OnCardViewClickListener {
         requireActivity().supportFragmentManager.beginTransaction()
             .replace(R.id.frame_main, homeFrag)
             .commit()
-
     }
 
     override fun onFavoriteClick(files: Files, isFavorite: Boolean) {
         if (isFavorite)
             Toast.makeText(requireContext(), "Added to Favorites", Toast.LENGTH_SHORT).show()
         else
-            Toast.makeText(requireContext(), "Removed from Favorites", Toast.LENGTH_SHORT).show()
+            Toast.makeText(requireContext(), "Removed from Favorites", Toast.LENGTH_SHORT)
+                .show()
         mFilesViewModel.updateFavoriteStatus(files, isFavorite)
     }
 

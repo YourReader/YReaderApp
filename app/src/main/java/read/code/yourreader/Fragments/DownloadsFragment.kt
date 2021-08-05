@@ -6,6 +6,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import read.code.yourreader.R
+import read.code.yourreader.activities.MainActivity
 
 class DownloadsFragment : Fragment() {
 
@@ -16,6 +17,7 @@ class DownloadsFragment : Fragment() {
     ): View? {
         // Inflate the layout for this fragment
         var view = inflater.inflate(R.layout.fragment_downloads, container, false)
+        (activity as MainActivity).setActionBarTitle("Downloads")
 
         return view
     }
