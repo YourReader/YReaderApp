@@ -27,4 +27,7 @@ interface FileDao {
 
     @Query("SELECT * FROM files_table WHERE readingNow = 1")
     fun getCurrentReadingFiles(): Flow<List<Files>>
+
+    @Query("SELECT * FROM files_table WHERE inTrash = 1 ")
+    fun getTrashFiles(): Flow<List<Files>>
 }

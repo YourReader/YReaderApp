@@ -31,7 +31,7 @@
         android:title="@string/downlaods" />
     <item
         android:id="@+id/menu_Trash"
-        android:icon="@drawable/ic_trash"
+        android:icon="@drawable/ic_filled_trash"
         android:title="@string/trash" />
     <item
         android:id="@+id/menu_use"

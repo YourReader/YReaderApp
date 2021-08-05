@@ -77,4 +77,13 @@ class FavoritesFragment : Fragment(), FilesAdapter.OnCardViewClickListener {
             Toast.makeText(requireContext(), "Marked as Unfinished", Toast.LENGTH_SHORT).show()
         filesViewModel.updateDoneStatus(file, isDone)
     }
+
+    override fun onTrashClick(file: Files, isTrash: Boolean) {
+        if (isTrash)
+            Toast.makeText(requireContext(), "Added to trash", Toast.LENGTH_SHORT).show()
+        else
+            Toast.makeText(requireContext(), "Removed from trash", Toast.LENGTH_SHORT).show()
+        filesViewModel.updateTrashStatus(file, isTrash)
+
+    }
 }

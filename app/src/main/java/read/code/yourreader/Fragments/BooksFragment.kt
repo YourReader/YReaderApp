@@ -22,6 +22,7 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
+import kotlinx.coroutines.DelicateCoroutinesApi
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
@@ -33,6 +34,7 @@ import read.code.yourreader.databinding.FragmentBooksBinding
 import read.code.yourreader.others.Values
 import java.io.File
 
+@DelicateCoroutinesApi
 @SuppressLint("SetTextI18n")
 class BooksFragment : Fragment(), FilesAdapter.OnCardViewClickListener {
     private var dir = File(Environment.getExternalStorageDirectory().absolutePath)
@@ -106,6 +108,14 @@ class BooksFragment : Fragment(), FilesAdapter.OnCardViewClickListener {
         else
             Toast.makeText(requireContext(), "Marked as Unfinished", Toast.LENGTH_SHORT).show()
         mFilesViewModel.updateDoneStatus(file, isDone)
+    }
+
+    override fun onTrashClick(file: Files, isTrash: Boolean) {
+        if (isTrash)
+            Toast.makeText(requireContext(), "Added to trash", Toast.LENGTH_SHORT).show()
+        else
+            Toast.makeText(requireContext(), "Removed from trash", Toast.LENGTH_SHORT).show()
+        mFilesViewModel.updateTrashStatus(file, isTrash)
     }
 
     private fun handlePermissions() {

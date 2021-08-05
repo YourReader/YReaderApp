@@ -77,4 +77,12 @@ class ReadingNowFragment : Fragment(), FilesAdapter.OnCardViewClickListener {
         mFilesViewModel.updateDoneStatus(file, isDone)
     }
 
+    override fun onTrashClick(file: Files, isTrash: Boolean) {
+        if (isTrash)
+            Toast.makeText(requireContext(), "Added to trash", Toast.LENGTH_SHORT).show()
+        else
+            Toast.makeText(requireContext(), "Removed from trash", Toast.LENGTH_SHORT).show()
+        mFilesViewModel.updateTrashStatus(file, isTrash)
+    }
+
 }
