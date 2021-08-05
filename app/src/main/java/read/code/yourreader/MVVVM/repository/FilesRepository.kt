@@ -13,6 +13,12 @@ class FilesRepository(private val filesDao: FileDao) {
 
     fun getAllCurrentFiles() = filesDao.getCurrentReadingFiles()
 
+    fun getAllTrashFiles() = filesDao.getTrashFiles()
+
+    suspend fun deleteFile(file: Files) {
+        filesDao.delete(file)
+    }
+
     suspend fun deleteTheDatabase() {
         filesDao.deleteDatabase()
     }
@@ -24,8 +30,4 @@ class FilesRepository(private val filesDao: FileDao) {
     suspend fun updateFile(file: Files) {
         filesDao.update(file)
     }
-
-    fun getAllTrashFiles() = filesDao.getTrashFiles()
-
-
 }

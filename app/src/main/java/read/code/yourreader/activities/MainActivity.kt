@@ -166,40 +166,20 @@ class MainActivity : AppCompatActivity() {
     ) {
 
         binding.drawerlayout.addDrawerListener(object : DrawerLayout.DrawerListener {
-            override fun onDrawerSlide(drawerView: View, slideOffset: Float) {
-
-            }
-
-            override fun onDrawerOpened(drawerView: View) {
-
-            }
+            override fun onDrawerSlide(drawerView: View, slideOffset: Float) {}
+            override fun onDrawerOpened(drawerView: View) {}
+            override fun onDrawerStateChanged(newState: Int) {}
 
             override fun onDrawerClosed(drawerView: View) {
                 if (clicked) {
                     supportFragmentManager.beginTransaction().apply {
                         replace(R.id.frame_main, fragment)
-                        disallowAddToBackStack()
                         commit()
                     }
                     clicked = false
                 }
-
-            }
-
-            override fun onDrawerStateChanged(newState: Int) {
-
             }
         })
-
-//        if (binding.drawerlayout.isDrawerOpen(GravityCompat.START))
-//            binding.drawerlayout.closeDrawer(GravityCompat.START)
-//
-//        supportFragmentManager.beginTransaction().apply {
-//            replace(R.id.frame_main, fragment!!)
-//            addToBackStack(null)
-//            commit()
-//        }
-//
     }
 
     //Checks if DB is empty or not

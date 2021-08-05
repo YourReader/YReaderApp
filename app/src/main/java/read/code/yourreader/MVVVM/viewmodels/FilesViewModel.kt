@@ -35,6 +35,11 @@ class FilesViewModel(application: Application) : AndroidViewModel(application) {
         repository.deleteTheDatabase()
     }
 
+    fun deleteFile(file: Files) = viewModelScope.launch(Dispatchers.IO) {
+        repository.deleteFile(file)
+    }
+
+
     fun addFile(files: Files) = viewModelScope.launch(Dispatchers.IO) {
         repository.addFile(files)
         Log.d("mActivity", "Adding data")
@@ -83,6 +88,4 @@ class FilesViewModel(application: Application) : AndroidViewModel(application) {
             )
         }
     }
-
-
 }

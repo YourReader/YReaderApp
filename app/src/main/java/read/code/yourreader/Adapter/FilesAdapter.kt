@@ -102,7 +102,7 @@ class FilesAdapter(private val listener: OnCardViewClickListener) :
         fun onCardClick(files: Files)
         fun onFavoriteClick(files: Files, isFavorite: Boolean)
         fun onDoneClick(file: Files, isDone: Boolean)
-        fun onTrashClick(file: Files, isTrash: Boolean)
+        fun onTrashClick(files: Files, isTrash: Boolean)
     }
 
     class DiffCallBack : DiffUtil.ItemCallback<Files>() {

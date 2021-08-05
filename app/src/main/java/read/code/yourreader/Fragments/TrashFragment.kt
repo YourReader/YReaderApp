@@ -1,6 +1,7 @@
 package read.code.yourreader.Fragments
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -8,12 +9,14 @@ import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import read.code.yourreader.Adapter.FilesAdapter
 import read.code.yourreader.MVVVM.viewmodels.FilesViewModel
 import read.code.yourreader.R
 import read.code.yourreader.activities.MainActivity
 import read.code.yourreader.data.Files
 import read.code.yourreader.databinding.FragmentTrashBinding
+import java.io.File
 
 
 class TrashFragment : Fragment(), FilesAdapter.OnCardViewClickListener {
@@ -77,10 +80,26 @@ class TrashFragment : Fragment(), FilesAdapter.OnCardViewClickListener {
         mFilesViewModel.updateDoneStatus(file, isDone)
     }
 
-    override fun onTrashClick(file: Files, isTrash: Boolean) {
-        Toast.makeText(requireContext(), "Removed from trash", Toast.LENGTH_SHORT).show()
-        mFilesViewModel.updateTrashStatus(file, isTrash)
+    override fun onTrashClick(files: Files, isTrash: Boolean) {
+
+        MaterialAlertDialogBuilder(requireContext())
+            .setMessage("Are you sure you want to delete this file permanently?")
+            .setPositiveButton("Yes") { _, _ ->
+                val file = File(files.path)
+                if (file.exists()) {
+                    if (file.delete())
+                        Toast.makeText(requireContext(), "File Deleted", Toast.LENGTH_SHORT).show()
+                    else
+                        Toast.makeText(requireContext(), "File not Deleted", Toast.LENGTH_SHORT)
+                            .show()
+                    mFilesViewModel.deleteFile(files)
+                } else
+                    Toast.makeText(requireContext(), "Error Occurred", Toast.LENGTH_SHORT)
+                        .show()
+            }.setNegativeButton("No") { _, _ ->
+                Log.d("TAG", "onTrashClick:Canceled ")
+            }
+            .show()
+
     }
-
-
 }
