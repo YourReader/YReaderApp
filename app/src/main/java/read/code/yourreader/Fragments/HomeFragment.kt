@@ -27,11 +27,9 @@ import com.github.barteksc.pdfviewer.listener.OnErrorListener
 import com.github.barteksc.pdfviewer.listener.OnLoadCompleteListener
 import com.github.barteksc.pdfviewer.listener.OnPageChangeListener
 import com.itextpdf.text.exceptions.BadPasswordException
-import com.itextpdf.text.pdf.PdfDocument
 import com.itextpdf.text.pdf.PdfReader
 import com.itextpdf.text.pdf.parser.LocationTextExtractionStrategy
 import com.itextpdf.text.pdf.parser.PdfTextExtractor
-import kotlinx.android.synthetic.main.fragment_home.*
 import read.code.yourreader.R
 import read.code.yourreader.data.Files
 import read.code.yourreader.databinding.FragmentHomeBinding
@@ -374,10 +372,10 @@ class HomeFragment : Fragment(),
         val d: AlertDialog.Builder = AlertDialog.Builder(requireContext())
         d.setTitle("Install recommended speech engine?")
         d.setMessage("Your device isn't using the recommended speech engine. Do you wish to install it?")
-        d.setPositiveButton("Yes", DialogInterface.OnClickListener { _, _ ->
+        d.setPositiveButton("Yes") { _, _ ->
             val installVoice = Intent(TextToSpeech.Engine.ACTION_INSTALL_TTS_DATA)
             startActivity(installVoice)
-        })
+        }
         d.setNegativeButton(
             "No, later"
         ) { _, _ ->

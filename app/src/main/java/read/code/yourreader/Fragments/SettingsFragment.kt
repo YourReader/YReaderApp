@@ -58,7 +58,6 @@ class SettingsFragment : Fragment() {
         binding.SignOutSettings.setOnClickListener {
 //            Deletes the Database before user signs out
             mFilesViewModel.nukeDatabase()
-
             viewModel.signOut()
             requireActivity().finish()
         }
@@ -69,7 +68,7 @@ class SettingsFragment : Fragment() {
             startActivity(installIntent)
         }
         binding.settingsTts.setOnClickListener {
-            TODO("Remaining")
+
         }
 
         //Dark Mode Settings
