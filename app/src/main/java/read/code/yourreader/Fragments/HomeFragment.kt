@@ -288,8 +288,6 @@ class HomeFragment : Fragment(),
             .enableDoubletap(true)
             .enableAnnotationRendering(true)
             .load()
-
-
     }
 
     private fun displayFromUriFile(uri: File) {
@@ -350,8 +348,6 @@ class HomeFragment : Fragment(),
         binding.seekBarSpeed.visibility = View.GONE
         binding.laySpeed.visibility = View.GONE
         binding.controler.visibility = View.GONE
-
-
     }
 
     override fun onDestroy() {
