@@ -1,9 +1,11 @@
 package read.code.yourreader.Adapter
 
 import android.annotation.SuppressLint
+import android.content.ContentValues.TAG
 import android.graphics.Bitmap
 import android.graphics.pdf.PdfRenderer
 import android.os.ParcelFileDescriptor
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
@@ -86,15 +88,21 @@ class FilesAdapter(private val listener: OnCardViewClickListener) :
                 else
                     trashItem.setImageResource(R.drawable.ic_unfilled_trash)
 
-                val fd =
-                    ParcelFileDescriptor.open(file, ParcelFileDescriptor.MODE_READ_ONLY)
-                val renderer = PdfRenderer(fd)
-                bitmap = Bitmap.createBitmap(500, 500, Bitmap.Config.ARGB_4444)
-                val page: PdfRenderer.Page = renderer.openPage(0)
-                page.render(bitmap, null, null, PdfRenderer.Page.RENDER_MODE_FOR_DISPLAY)
+                if (file.canRead()) {
+                    val fd =
+                        ParcelFileDescriptor.open(file, ParcelFileDescriptor.MODE_READ_ONLY)
 
-                imgListItem.setImageBitmap(bitmap)
+                    val renderer = PdfRenderer(fd)
+                    bitmap = Bitmap.createBitmap(500, 500, Bitmap.Config.ARGB_4444)
+                    val page: PdfRenderer.Page = renderer.openPage(0)
+                    page.render(bitmap, null, null, PdfRenderer.Page.RENDER_MODE_FOR_DISPLAY)
+                    imgListItem.setImageBitmap(bitmap)
+                } else {
+                    Log.d(TAG, "bind: Invalid Files")
+                }
+
             }
+
         }
     }
 
