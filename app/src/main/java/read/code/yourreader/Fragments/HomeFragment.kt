@@ -26,9 +26,12 @@ import androidx.fragment.app.Fragment
 import com.github.barteksc.pdfviewer.listener.OnErrorListener
 import com.github.barteksc.pdfviewer.listener.OnLoadCompleteListener
 import com.github.barteksc.pdfviewer.listener.OnPageChangeListener
+import com.itextpdf.text.exceptions.BadPasswordException
+import com.itextpdf.text.pdf.PdfDocument
 import com.itextpdf.text.pdf.PdfReader
 import com.itextpdf.text.pdf.parser.LocationTextExtractionStrategy
 import com.itextpdf.text.pdf.parser.PdfTextExtractor
+import kotlinx.android.synthetic.main.fragment_home.*
 import read.code.yourreader.R
 import read.code.yourreader.data.Files
 import read.code.yourreader.databinding.FragmentHomeBinding
@@ -223,11 +226,13 @@ class HomeFragment : Fragment(),
     private fun handlePdfFile(intent: Intent) {
         InitialiseTTS()
 
+
         val pdfFile: Uri? = intent.getParcelableExtra(Intent.EXTRA_STREAM)
         if (pdfFile != null) {
             Log.d("Pdf File Path : ", "" + pdfFile.path)
             extractTextFromPdfFile(pdfFile)
             displayFromUri(pdfFile)
+
         }
     }
 
@@ -264,7 +269,11 @@ class HomeFragment : Fragment(),
             Log.d(TAG, "extractTextFromPdfFile: ${e.message}")
         } catch (e: FileNotFoundException) {
             Toast.makeText(requireContext(), "File Not Found", Toast.LENGTH_SHORT).show()
+        } catch (e: BadPasswordException) {
+            Toast.makeText(requireContext(), "Password Protected", Toast.LENGTH_SHORT).show()
         }
+
+
 
     }
 
@@ -279,6 +288,8 @@ class HomeFragment : Fragment(),
             .enableDoubletap(true)
             .enableAnnotationRendering(true)
             .load()
+
+
     }
 
     private fun displayFromUriFile(uri: File) {
@@ -419,42 +430,9 @@ class HomeFragment : Fragment(),
         val url = extractLinks(clipData.toString())
         Log.d(TAG, "ReadFromUrl: \n\nFinal URL = ${url[0]}")
 
-        var dataText = getDataFrommUrl(url[0])
-
 
     }
 
-    private fun getDataFrommUrl(s: String): String {
-
-//        CoroutineScope(IO).launch {
-//            if (Patterns.WEB_URL.matcher(s).matches()) {
-//                try {
-//                    val doc: Document = Jsoup.connect(s).get()
-//                    var link = Jsoup.parse(URL(s), 4000)
-//                    val yourURLStr = URLEncoder.encode(s, "UTF-8")
-//                    Log.d(TAG, "getDataFrommUrl: \n\nNormal URL= $s\n\n")
-//
-//                    Log.d(
-//                        TAG,
-//                        "getDataFrommUrl: content ${link.getElementsByClass("content").text()}"
-//                    )
-//
-//                    Log.d(TAG, "getDataFrommUrl: \n\n\nBody = ${link.body().text()}")
-//                } catch (ex: SocketTimeoutException) {
-//                    Log.d(TAG, "getDataFrommUrl: ${ex.message}")
-//                } catch (ep: MalformedURLException) {
-//                } catch (e: IOException) {
-//                    Log.d(TAG, "getDataFrommUrl: ${e.message}")
-//                }
-//            } else {
-//                Toast.makeText(requireContext(), "URL not supported", Toast.LENGTH_SHORT).show()
-//            }
-//
-//
-//        }
-
-        return ""
-    }
 
     private fun extractLinks(text: String): Array<String> {
         val m: Matcher = Patterns.WEB_URL.matcher(text)
